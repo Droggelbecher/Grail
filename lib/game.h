@@ -7,6 +7,7 @@
 #include <SDL/SDL.h>
 #include "viewport.h"
 #include "scene.h"
+#include "resource_manager.h"
 
 class Game {
 
@@ -14,6 +15,7 @@ class Game {
 
     Viewport* viewport;
     Scene* currentScene;
+    ResourceManager* resourceManager;
 
     void run();
 
@@ -25,14 +27,17 @@ class Game {
     void runChapter(size_t chapter);
 
     Viewport& getViewport() {
-      if(viewport == NULL) {
-        viewport = new Viewport();
-      }
+      if(!viewport) { viewport = new Viewport(); }
       return *viewport;
     }
 
     Scene& getCurrentScene() const { return *currentScene; };
     void goToScene(Scene& scene) { currentScene = &scene; };
+
+    ResourceManager& getResourceManager() {
+      if(!resourceManager) { resourceManager = new ResourceManager(); }
+      return *resourceManager;
+    }
 
     void renderEverything(uint32_t ticks);
     void handleEvent(const SDL_Event &event, uint32_t ticks);

@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 
   if(optind < argc) {
     wrappings(interpreter);
-    interpreter.loadPrelude(dirname(argv[0]) + path_delimiter + "prelude");
+    interpreter.loadPrelude(dirname(argv[0]) + pathDelimiter + "prelude");
     interpreter.loadDirectory(argv[optind]);
 
     /*

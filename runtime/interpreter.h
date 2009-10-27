@@ -18,7 +18,6 @@ class lua_exception : public std::exception {
 
 class Interpreter {
     static int l_panic(lua_State* L);
-    static int l_debug(lua_State* L);
 
   public:
     lua_State *L;

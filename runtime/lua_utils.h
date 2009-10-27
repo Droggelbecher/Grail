@@ -1,0 +1,27 @@
+
+#ifndef LUA_UTILS_H
+#define LUA_UTILS_H
+
+#include <string>
+#include <lua.hpp>
+
+/**
+ * luaGet<Type, int N>(lua_State* L)
+ *
+ * Get data from stack at position N as type Type
+ */
+
+// Default: Assume T is a class pointer
+template <typename T> extern T luaGet(lua_State* L, int n);
+template <> lua_Number luaGet<lua_Number>(lua_State* L, int n);
+template <> lua_Integer luaGet<lua_Integer>(lua_State* L, int n);
+template <> bool luaGet<bool>(lua_State* L, int n);
+template <> std::string luaGet<std::string>(lua_State* L, int N);
+
+/**
+ * Pushes a wrapper table for the given pointer
+ */
+void luaPushWrapper(lua_State* L, void* data, const char* className);
+
+#endif // LUA_UTILS_H
+

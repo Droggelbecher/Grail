@@ -6,7 +6,7 @@
 #include "image.h"
 
 class Scene {
-    const Image* background;
+    const Animation* background;
 
   public:
     Scene() : background(NULL) { }
@@ -14,7 +14,7 @@ class Scene {
       delete background;
     }
 
-    void setBackground(const Image& background) {
+    void setBackground(const Animation& background) {
       this->background = &background;
     }
 

@@ -1,5 +1,5 @@
 
-Game:getViewport():setup(300, 200)
+Game:getViewport():setup(800, 600)
 
 Game:registerChapter(0, function(n)
   print("Welcome to chapter 0")

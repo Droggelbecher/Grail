@@ -42,7 +42,7 @@ void Game::run() {
   } // while
 } // Game::run()
 
-Game::Game() : targetFPS(50.0), viewport(NULL), currentScene(NULL) {
+Game::Game() : targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
   SDL_Init(SDL_INIT_EVERYTHING);
 }
 
@@ -52,14 +52,14 @@ Game::~Game() {
 }
 
 void Game::runChapter(size_t chapter) {
-  if(initChapter != NULL) {
+  if(initChapter) {
     initChapter(chapter);
   }
   run();
 }
 
 void Game::renderEverything(uint32_t ticks) {
-  if(viewport != NULL && currentScene != NULL) {
+  if(viewport && currentScene) {
     viewport->renderScene(*currentScene, ticks);
   }
 }

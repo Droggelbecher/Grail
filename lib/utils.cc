@@ -1,5 +1,6 @@
 
 #include <string>
+#include <fstream>
 
 #include "utils.h"
 
@@ -15,5 +16,14 @@ std::string dirname(std::string path) {
   else {
     return path.substr(0, pos);
   }
+}
+
+void touch(std::string path) {
+  std::ofstream s(path.c_str());
+}
+
+bool exists(std::string path) {
+  std::ifstream s(path.c_str());
+  return (bool)s;
 }
 

@@ -1,6 +1,4 @@
 
-debug("Default prelude starting here")
-
 _ptr_to_table = {}
 
 local function wrap(ptr, clsname)
@@ -20,6 +18,8 @@ local function wrap(ptr, clsname)
 
   elseif clsname == 'scene' then
     r.setBackground = _Scene_setBackground
+
+  elseif clsname == 'resource_manager' then
 
   end
   return r
