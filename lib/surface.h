@@ -28,21 +28,14 @@ class Surface {
     const Surface& operator=(const Surface& s) { return *this; }
 
   public:
-  /*
-    Surface() : sdlSurface(NULL) {
-    }
-    */
 
     Surface(std::string &path) : sdlSurface(NULL) {
       loadFromFile(path);
       assert(sdlSurface != NULL);
       assert(sdlSurface == backup);
-      cerr << "new surface " << path << " addr: " << this << endl;
     }
-    
+
     ~Surface() {
-      cerr << "deleting surface " << this << endl;
-      //assert(false);
       if(sdlSurface != NULL) {
         SDL_FreeSurface(sdlSurface);
         sdlSurface = NULL;

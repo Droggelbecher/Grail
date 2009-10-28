@@ -1,48 +1,75 @@
 
-_ptr_to_table = {}
+--[[ prelude internal functions ]]--
 
-local function wrap(ptr, clsname)
-  r = {}
-  r._ptr = ptr
-  _ptr_to_table[ptr] = r
-
-  if clsname == 'game' then
-    r._chapter_ctors = {}
-    r.runChapter = _Game_runChapter
-    r.registerChapter = function(self, n, f) self._chapter_ctors[n] = f end
-    r.goToScene = _Game_goToScene
-    r.getViewport = _Game_getViewport
-
-  elseif clsname == 'viewport' then
-    r.setup = _Viewport_setup
-
-  elseif clsname == 'scene' then
-    r.setBackground = _Scene_setBackground
-
-  elseif clsname == 'resource_manager' then
-
-  end
-  return r
+_wrappers = {}
+local function getwrapper(classname)
+  return _wrappers[classname]
 end
 
---[[
-  If the given ptr has a wrapping table already, return it,
-  otherwise create one with make and return that.
-  ]]--
-function _wrap_or_get(ptr, clsname)
-  if _ptr_to_table[ptr] == nil then
-    return wrap(ptr, clsname)
-  else
-    return _ptr_to_table[ptr]
-  end
+local function makewrapper(classname, tbl)
+  if tbl == nil then tbl = {} end
+  tbl.__index = tbl
+  _wrappers[classname] = tbl
 end
+
+local function wrap(classname, ptr)
+  -- we need a silly table around ptr so it can have a metatable
+  container = {}
+  container._ptr = ptr
+
+  setmetatable(container, getwrapper(classname))
+  return container
+end
+
+local function wrapped(fn)
+  function fn_wrapped(...)
+    cls, ptr = fn(...)
+    return wrap(cls, ptr)
+  end
+  return fn_wrapped
+end
+
+
+--[[ exported ctor/getterfunctions ]]--
+
+function get(name)
+  classname, ptr = _get(name)
+  return wrap(classname, ptr)
+end
+
+function chapter(classname, ...)
+  cls, ptr = _create(classname, 1, ...)
+  return wrap(cls, ptr)
+end
+
+function application(classname, ...)
+  cls, ptr = _create(classname, 0, ...)
+  return wrap(cls, ptr)
+end
+
+
+
+--[[ wrappers ]]--
+
+makewrapper("Image")
+makewrapper("Game", {
+  _chapter_ctors = {},
+  registerChapter = function(self, n, f) self._chapter_ctors[n] = f end,
+  runChapter = _Game_runChapter,
+  goToScene = _Game_goToScene,
+  getViewport = wrapped(_Game_getViewport),
+})
+makewrapper("Viewport", {
+  setup = _Viewport_setup,
+})
+makewrapper("Scene", {
+  setBackground = _Scene_setBackground,
+})
 
 -- Global preconstructed objects
 
-Game = _Game_create()
+GAME = application("Game", "GAME")
 
--- Constructors
+print("[*] Loaded lua prelude")
 
-createImage = _Image_create
-createScene = _Scene_create
 

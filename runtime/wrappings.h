@@ -7,11 +7,18 @@
 using std::cout;
 using std::cerr;
 using std::endl;
+#include <string>
 
 #include <lua.hpp>
 #include "interpreter.h"
 
 extern Interpreter interpreter;
+
+
+// General
+
+int _create(lua_State* L);
+
 
 // Viewport
 

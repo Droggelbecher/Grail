@@ -1,3 +1,10 @@
 
-add_library(grail game.cc viewport.cc utils.cc vector2d.cc resource_manager.cc)
+add_library(grail
+  game.cc
+  registry.cc
+  resource_manager.cc
+  utils.cc
+  vector2d.cc
+  viewport.cc
+)
 

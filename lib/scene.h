@@ -2,14 +2,20 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <cassert>
 #include "vector2d.h"
-#include "image.h"
+#include "animation.h"
+#include "registry.h"
 
-class Scene {
+#include <iostream>
+using std::cerr;
+using std::endl;
+
+class Scene : public Registrable {
     const Animation* background;
 
   public:
-    Scene() : background(NULL) { }
+    Scene() : Registrable("Scene"), background(NULL) { }
     ~Scene() {
       delete background;
     }

@@ -9,6 +9,8 @@ using std::cerr;
 using std::clog;
 using std::endl;
 
+Game* Game::_instance = 0;
+
 void Game::run() {
   bool exit = false;
   uint32_t frameStart, frameEnd, frameDuration = 0;
@@ -42,7 +44,7 @@ void Game::run() {
   } // while
 } // Game::run()
 
-Game::Game() : targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
+Game::Game() : Registrable("Game"), targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
   SDL_Init(SDL_INIT_EVERYTHING);
 }
 

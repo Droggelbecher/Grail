@@ -14,12 +14,12 @@ using std::endl;
 #include "vector2d.h"
 #include "animation.h"
 
-class Image : Animation {
+class Image : public Animation {
   protected:
     const Surface& surface;
 
   public:
-    Image(std::string path) : surface(*(new Surface(path))) {
+    Image(std::string path) : Animation("Image"), surface(*(new Surface(path))) {
     }
 
     void renderAt(SDL_Surface* target, uint32_t ticks, InternalPosition p) const {

@@ -4,6 +4,14 @@
 
 #include <string>
 
+class Exception {
+  std::string _what;
+  public:
+    Exception(std::string what) : _what(what) { }
+    virtual const char* what() const throw() { return _what.c_str(); }
+};
+
+
 //
 // File(name) handling
 //

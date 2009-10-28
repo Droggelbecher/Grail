@@ -23,5 +23,8 @@ template <> std::string luaGet<std::string>(lua_State* L, int N);
  */
 void luaPushWrapper(lua_State* L, void* data, const char* className);
 
+#define BEGIN_LUA_STACK_ASSERTION() int __stack_assert = lua_gettop(L)
+#define END_LUA_STACK_ASSERTION(N) assert(lua_gettop(L) == (__stack_assert + (N)))
+
 #endif // LUA_UTILS_H
 

@@ -5,8 +5,9 @@
 #include <SDL/SDL.h>
 
 #include "scene.h"
+#include "registry.h"
 
-class Viewport {
+class Viewport : public Registrable {
     SDL_Surface* screen;
 
   public:
