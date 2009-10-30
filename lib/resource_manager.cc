@@ -27,9 +27,7 @@ SDL_RWops* ResourceManager::get(string path, Mode mode) {
   }
 
   if(!handler) {
-    assert(false);
-    // todo ^^
-    //throw std::exception("No resource handler could be found to handle '" + path + "'.");
+    throw Exception("No resource handler could be found to handle '" + path + "'.");
   }
   return handler->get(path, mode);
 } // get()

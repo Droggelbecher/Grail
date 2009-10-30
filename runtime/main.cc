@@ -34,16 +34,14 @@ int main(int argc, char** argv) {
   }
 
   if(optind < argc) {
+    Game.instance().getResourceManager().registerHandler(
+        "game",
+        new DirectoryResourceHandler(argv[optind])
+        )
+
     wrappings(interpreter);
     interpreter.loadPrelude(dirname(argv[0]) + pathDelimiter + "prelude");
-    interpreter.loadDirectory(argv[optind]);
-
-    /*
-    lua_getglobal(interpreter.L, "Game");
-    lua_getfield(interpreter.L, -1, "_ptr");
-    Game* g = (Game*)lua_touserdata(interpreter.L, -1);
-    g->runChapter(0);
-    */
+    interpreter.loadDirectory("./");
   }
   else {
     cerr << "Please specify path to a game to run" << endl;
