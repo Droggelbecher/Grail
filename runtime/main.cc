@@ -10,6 +10,7 @@
 #include "viewport.h"
 #include "utils.h"
 #include "wrappings.h"
+#include "lib/game.h"
 
 using std::cin;
 using std::cout;
@@ -22,7 +23,7 @@ Interpreter interpreter;
 
 int main(int argc, char** argv) {
 
-  cout << "basedir:" << dirname(argv[0]) << endl;
+  cout << "basedir:" << dirName(argv[0]) << endl;
 
   int c;
   while((c = getopt(argc, argv, "v")) != -1) {
@@ -34,14 +35,14 @@ int main(int argc, char** argv) {
   }
 
   if(optind < argc) {
-    Game.instance().getResourceManager().registerHandler(
-        "game",
-        new DirectoryResourceHandler(argv[optind])
-        )
+    Game::getInstance().getResourceManager().mount(
+        new DirectoryResourceHandler(argv[optind]),
+        "/"
+        );
 
     wrappings(interpreter);
-    interpreter.loadPrelude(dirname(argv[0]) + pathDelimiter + "prelude");
-    interpreter.loadDirectory("./");
+    interpreter.loadPrelude(dirName(argv[0]) + pathDelimiter + "prelude");
+    interpreter.loadDirectory("/");
   }
   else {
     cerr << "Please specify path to a game to run" << endl;

@@ -4,12 +4,14 @@
 
 #include <map>
 #include <string>
+#include <cassert>
 
 #include <SDL/SDL.h>
 
 class ResourceHandler;
 class ResourceManager;
 
+enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
 
 /**
  * A resource is similar to a file, however more general.
@@ -17,9 +19,24 @@ class ResourceManager;
  * decompressed gz file.
  */
 class Resource {
-  SDL_RWops* rw;
+    SDL_RWops* rw;
+
+  private:
+    // forbid copying
+    /*Resource(const Resource& other) {
+      rw = other.rw;
+      path = other.path;
+    }*/
+    Resource& operator=(const Resource& other) {
+      rw = other.rw;
+      path = other.path;
+      return *this;
+    }
+
   public:
-    Resource(SDL_RWops* rw) : rw(rw) { }
+    std::string path;
+
+    Resource(SDL_RWops* rw, std::string path = "") : rw(rw), path(path) { }
     ~Resource() { SDL_RWclose(rw); }
 
     /**
@@ -29,6 +46,24 @@ class Resource {
     SDL_RWops* getRW() {
       return rw;
     }
+
+    const char* createBuffer(size_t &size) {
+      assert(rw);
+
+      char* buffer;
+      SDL_RWseek(rw, 0, SEEK_END);
+      size = SDL_RWtell(rw);
+      SDL_RWseek(rw, 0, SEEK_SET);
+      buffer = new char[size];
+      size_t read = 0;
+      while(read < size) {
+        read += SDL_RWread(rw, buffer, sizeof(char), size - read);
+      }
+      return buffer;
+    }
+
+    friend class ResourceManager;
+    friend Resource getResource(std::string, ResourceMode);
 };
 
 /**
@@ -42,25 +77,32 @@ class Resource {
  */
 class ResourceManager {
     std::map<std::string, ResourceHandler*> resourceHandlers;
-    ResourceHandler* defaultHandler;
+    //ResourceHandler* defaultHandler;
 
   public:
-    enum Mode { MODE_READ = 'r', MODE_WRITE = 'w'};
-
-    ResourceManager() : defaultHandler(0) { }
+    ResourceManager() { }
     ~ResourceManager();
 
     /**
      * Register given resource handler under given name.
-     * Takes ownership of the given handler.
+     * Takes ownership of the given handler. (Ie you should not delete it
+     * after calling this method)
      */
-    void registerHandler(std::string name, ResourceHandler* handler);
+    //void registerHandler(std::string name, ResourceHandler* handler);
+    void mount(ResourceHandler* handler, std::string path);
+
+    /**
+     */
+    ResourceHandler* findHandler(std::string path, std::string &mountpoint);
 
     /**
      * Caller is responsible for freeing/closing the returned RWops
      */
-    SDL_RWops* getRW(std::string path, Mode mode);
-    Resource
+    SDL_RWops* getRW(std::string path, ResourceMode mode);
+
+    /**
+     */
+    Resource get(std::string path, ResourceMode mode) { return Resource(getRW(path, mode), path); }
 };
 
 /**
@@ -74,7 +116,7 @@ class ResourceHandler {
     ResourceHandler() { }
     virtual ~ResourceHandler() { }
 
-    virtual SDL_RWops* get(std::string path, ResourceManager::Mode mode) = 0;
+    virtual SDL_RWops* getRW(std::string path, ResourceMode mode) = 0;
 };
 
 /**
@@ -86,7 +128,7 @@ class DirectoryResourceHandler : public ResourceHandler {
   public:
     DirectoryResourceHandler(std::string dir);
 
-    SDL_RWops* get(std::string path, ResourceManager::Mode mode);
+    SDL_RWops* getRW(std::string path, ResourceMode mode);
 };
 
 #endif // RESOURCE_MANAGER_H

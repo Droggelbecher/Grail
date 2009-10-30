@@ -4,7 +4,9 @@
 #include <lua.hpp>
 
 #include "interpreter.h"
-#include "utils.h"
+#include "lib/utils.h"
+#include "lib/shortcuts.h"
+#include "lib/resource_manager.h"
 
 using std::string;
 using std::cerr;
@@ -22,8 +24,14 @@ Interpreter::Interpreter() {
 }
 
 void Interpreter::loadDirectory(string dir) {
-  int r = luaL_dofile(L, (dir + pathDelimiter + "init.lua").c_str());
-  if(r) {
+  Resource r = getResource(dir + pathDelimiter + "init.lua", MODE_READ);
+
+  size_t size;
+  const char* buffer = r.createBuffer(size);
+  luaL_loadbuffer(L, buffer, size, r.path.c_str());
+  int error = lua_pcall(L, 0, LUA_MULTRET, 0);
+
+  if(error) {
     throw lua_exception(L);
   }
 }

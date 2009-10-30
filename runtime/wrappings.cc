@@ -35,7 +35,7 @@ int publish(lua_State* L, Registrable& obj) {
  */
 int _get(lua_State* L) {
   string name = luaGet<string>(L, 1);
-  Registrable& obj = Game::instance().getRegistry().get(name);
+  Registrable& obj = Game::getInstance().getRegistry().get(name);
   publish(L, obj);
   return 2;
 }
@@ -67,7 +67,7 @@ int _create(lua_State* L) {
 
   // name
   else if(classname == "Game") {
-    obj = &(Game::instance());
+    obj = &(Game::getInstance());
     ((Game*)obj)->initChapter = &Game_initChapter;
   }
 
@@ -82,10 +82,10 @@ int _create(lua_State* L) {
   obj->classname = classname;
 
   if(scope == 0) {
-    Game::instance().getRegistry().registerApplication(*obj, name);
+    Game::getInstance().getRegistry().registerApplication(*obj, name);
   }
   else {
-    Game::instance().getRegistry().registerChapter(*obj, name);
+    Game::getInstance().getRegistry().registerChapter(*obj, name);
   }
 
   publish(L, *obj);
@@ -128,7 +128,7 @@ void Game_initChapter(size_t n) {
 }
 
 int _Game_instance(lua_State* L) {
-  Game *obj = &(Game::instance());
+  Game *obj = &(Game::getInstance());
   obj->initChapter = &Game_initChapter;
   assert(obj != NULL);
   return publish(L, *obj);

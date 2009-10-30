@@ -11,12 +11,14 @@ using std::endl;
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+#include "shortcuts.h"
+
 class Surface {
     SDL_Surface* sdlSurface;
     SDL_Surface* backup;
 
     void loadFromFile(std::string filename) {
-      sdlSurface = IMG_Load(filename.c_str());
+      sdlSurface = IMG_Load_RW(getRW(filename, MODE_READ), true);
       backup = sdlSurface;
       assert(sdlSurface != NULL);
       assert(sdlSurface == backup);

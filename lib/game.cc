@@ -11,6 +11,10 @@ using std::endl;
 
 Game* Game::_instance = 0;
 
+Game::Game() : Registrable("Game"), targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
+  SDL_Init(SDL_INIT_EVERYTHING);
+}
+
 void Game::run() {
   bool exit = false;
   uint32_t frameStart, frameEnd, frameDuration = 0;
@@ -44,13 +48,16 @@ void Game::run() {
   } // while
 } // Game::run()
 
-Game::Game() : Registrable("Game"), targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
-  SDL_Init(SDL_INIT_EVERYTHING);
-}
-
 Game::~Game() {
   delete viewport;
   SDL_Quit();
+}
+
+Game& Game::getInstance() {
+  if(!_instance) {
+    _instance = new Game();
+  }
+  return *_instance;
 }
 
 void Game::runChapter(size_t chapter) {
@@ -58,6 +65,28 @@ void Game::runChapter(size_t chapter) {
     initChapter(chapter);
   }
   run();
+}
+
+Viewport& Game::getViewport() {
+  if(!viewport) { viewport = new Viewport(); }
+  return *viewport;
+}
+
+Scene& Game::getCurrentScene() const {
+  return *currentScene;
+}
+
+void Game::goToScene(Scene& scene) {
+  currentScene = &scene;
+}
+
+ResourceManager& Game::getResourceManager() {
+  if(!resourceManager) { resourceManager = new ResourceManager(); }
+  return *resourceManager;
+}
+
+Registry& Game::getRegistry() {
+  return registry;
 }
 
 void Game::renderEverything(uint32_t ticks) {

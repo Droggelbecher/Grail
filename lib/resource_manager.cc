@@ -1,45 +1,68 @@
 
 #include <cassert>
 #include <string>
+#include <map>
+#include <iostream>
 using std::string;
+using std::map;
+using std::cerr;
+using std::endl;
 
 #include "resource_manager.h"
 #include "utils.h"
 
-void ResourceManager::registerHandler(string name, ResourceHandler* handler) {
-  resourceHandlers[name] = handler;
-  defaultHandler = handler;
+ResourceManager::~ResourceManager() {
+  map<string, ResourceHandler*>::const_iterator iter;
+
+  for(iter = resourceHandlers.begin(); iter != resourceHandlers.end(); iter++) {
+    delete iter->second;
+  }
+  resourceHandlers.clear();
+}
+
+void ResourceManager::mount(ResourceHandler* handler, string path) {
+  assert(isAbsolute(path));
+  resourceHandlers[normalizePath(path)] = handler;
 };
 
-SDL_RWops* ResourceManager::get(string path, Mode mode) {
-  ResourceHandler* handler = 0;
+ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
+  map<string, ResourceHandler*>::const_iterator iter;
+  string sub;
 
-  size_t pos = path.find(':');
-  if(pos == string::npos) {
-    handler = defaultHandler;
-  }
-  else {
-    string key = path.substr(0, pos);
-    path = path.substr(pos+1);
-    if(resourceHandlers.count(key)) {
-      handler = resourceHandlers[path.substr(0, pos)];
+  path = normalizePath(path);
+
+  for(iter = resourceHandlers.begin(); iter != resourceHandlers.end(); iter++) {
+    if(isParentOrEqualPath(iter->first, path)) {
+      mountpoint = iter->first;
+      return iter->second;
     }
   }
+  return 0;
+}
+
+SDL_RWops* ResourceManager::getRW(string path, ResourceMode mode) {
+  path = normalizePath(path);
+
+  string mountpoint;
+  ResourceHandler* handler = findHandler(path, mountpoint);
 
   if(!handler) {
-    throw Exception("No resource handler could be found to handle '" + path + "'.");
+    throw Exception(
+        string("No resource handler could be found for \"") + path + string("\".")
+    );
   }
-  return handler->get(path, mode);
-} // get()
+
+  return handler->getRW(path.substr(mountpoint.length()), mode);
+} // getRW()
 
 
 DirectoryResourceHandler::DirectoryResourceHandler(std::string dir) : baseDirectory(dir) {
 }
 
-SDL_RWops* DirectoryResourceHandler::get(string path, ResourceManager::Mode mode) {
+SDL_RWops* DirectoryResourceHandler::getRW(string path, ResourceMode mode) {
   string fullpath = baseDirectory + pathDelimiter + path;
 
-  if(mode == ResourceManager::MODE_WRITE && !exists(fullpath)) {
+  if(mode == MODE_WRITE && !exists(fullpath)) {
     touch(fullpath);
   }
 

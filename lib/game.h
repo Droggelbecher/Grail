@@ -27,30 +27,17 @@ class Game : public Registrable {
   public:
     ~Game();
 
-    static Game& instance() {
-      if(!_instance) {
-        _instance = new Game();
-      }
-      return *_instance;
-    }
+    static Game& getInstance();
 
     void (*initChapter)(size_t);
     void runChapter(size_t chapter);
 
-    Viewport& getViewport() {
-      if(!viewport) { viewport = new Viewport(); }
-      return *viewport;
-    }
+    Viewport& getViewport();
+    Scene& getCurrentScene() const;
+    void goToScene(Scene& scene);
 
-    Scene& getCurrentScene() const { return *currentScene; };
-    void goToScene(Scene& scene) { currentScene = &scene; };
-
-    ResourceManager& getResourceManager() {
-      if(!resourceManager) { resourceManager = new ResourceManager(); }
-      return *resourceManager;
-    }
-
-    Registry& getRegistry() { return registry; }
+    ResourceManager& getResourceManager();
+    Registry& getRegistry();
 
     void renderEverything(uint32_t ticks);
     void handleEvent(const SDL_Event &event, uint32_t ticks);
