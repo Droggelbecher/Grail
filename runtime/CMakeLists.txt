@@ -1,6 +1,6 @@
 
-link_directories(lib)
-include_directories(../lib .. /usr/include/lua5.1)
+link_directories(${GRAIL_LIBDIR})
+include_directories(${GRAIL_LIBDIR} .. ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR})
 
 add_executable(grail_runtime
   interpreter.cc
@@ -9,7 +9,7 @@ add_executable(grail_runtime
   wrappings.cc
 )
 
-set(LIBS grail lua5.1 SDL SDL_image png)
+set(LIBS grail ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBARY} ${LUA_LIBRARIES})
 
 target_link_libraries(grail_runtime ${LIBS})
 
