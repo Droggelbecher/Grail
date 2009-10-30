@@ -18,11 +18,6 @@ template <> lua_Integer luaGet<lua_Integer>(lua_State* L, int n);
 template <> bool luaGet<bool>(lua_State* L, int n);
 template <> std::string luaGet<std::string>(lua_State* L, int N);
 
-/**
- * Pushes a wrapper table for the given pointer
- */
-void luaPushWrapper(lua_State* L, void* data, const char* className);
-
 #define BEGIN_LUA_STACK_ASSERTION() int __stack_assert = lua_gettop(L)
 #define END_LUA_STACK_ASSERTION(N) assert(lua_gettop(L) == (__stack_assert + (N)))
 

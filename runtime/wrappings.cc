@@ -8,6 +8,7 @@
 #include "lib/registry.h"
 #include "lib/image.h"
 #include "lib/utils.h"
+#include "lib/user_interface.h"
 
 #include "lua_utils.h"
 
@@ -73,6 +74,7 @@ int _create(lua_State* L) {
 
   // name
   else if(classname == "Scene") { obj = new Scene(); }
+  else if(classname == "UserInterface") { obj = new UserInterface(); }
 
   else {
     throw Exception(string("Don't know how to construct a \"") + classname + string("\" object."));
@@ -158,9 +160,22 @@ int _Game_goToScene(lua_State* L) {
 
 int _Game_getResourceManager(lua_State* L) {
   Game* game = luaGet<Game*>(L, 1);
-  luaPushWrapper(L, (void*)&(game->getResourceManager()), "resource_manager");
-  return 1;
+  ResourceManager &rm = game->getResourceManager();
+  return publish(L, rm);
 }
+
+int _Game_setUserInterface(lua_State* L) {
+  Game* game = luaGet<Game*>(L, 1);
+  UserInterface* ui = luaGet<UserInterface*>(L, 2);
+  game->setUserInterface(*ui);
+  return 0;
+}
+
+int _Game_getUserInterface(lua_State* L) {
+  Game* game = luaGet<Game*>(L, 1);
+  return publish(L, (game->getUserInterface()));
+}
+
 
 /*
  * Scene
@@ -184,8 +199,6 @@ int _Scene_setBackground(lua_State* L) {
 int _Image_create(lua_State* L) {
   std::string path = luaGet<std::string>(L, 1);
   Image* image = new Image(path);
-  //luaPushWrapper(L, (void*)image, "image");
-  //lua_pushlightuserdata(L, (void*)image);
   return publish(L, *image);
 }
 
@@ -201,6 +214,8 @@ void wrappings(Interpreter& i) {
   lua_register(L, "_Game_getViewport", &_Game_getViewport);
   lua_register(L, "_Game_goToScene", &_Game_goToScene);
   lua_register(L, "_Game_getResourceManager", &_Game_getResourceManager);
+  lua_register(L, "_Game_setUserInterface", &_Game_setUserInterface);
+  lua_register(L, "_Game_getUserInterface", &_Game_getUserInterface);
 
   lua_register(L, "_Viewport_setup", &_Viewport_setup);
 

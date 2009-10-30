@@ -27,16 +27,3 @@ template <> std::string luaGet<std::string>(lua_State* L, int N) {
   return std::string(s, len);
 }
 
-void luaPushWrapper(lua_State* L, void* data, const char* className) {
-  lua_getglobal(L, "_wrap_or_get");
-  lua_pushlightuserdata(L, data);
-  lua_pushstring(L, className);
-  lua_call(L, 2, 1);
-}
-
-Game* luaGetGame() {
-  lua_State* L = interpreter.L;
-  lua_getglobal(L, "Game");
-  return luaGet<Game*>(L, -1);
-}
-

@@ -8,8 +8,8 @@
 
 #include <SDL/SDL.h>
 
-class ResourceHandler;
-class ResourceManager;
+#include "classes.h"
+#include "registry.h"
 
 enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
 
@@ -75,12 +75,11 @@ class Resource {
  * filesystems into the same tree. (ResourceHandlers are the anologon to file
  * system drivers here)
  */
-class ResourceManager {
+class ResourceManager : public Registrable {
     std::map<std::string, ResourceHandler*> resourceHandlers;
-    //ResourceHandler* defaultHandler;
 
   public:
-    ResourceManager() { }
+    ResourceManager() : Registrable("ResourceManager") { }
     ~ResourceManager();
 
     /**

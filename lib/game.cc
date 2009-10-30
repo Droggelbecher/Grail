@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include "game.h"
 #include "utils.h"
+#include "mainloop.h"
 
 using std::cout;
 using std::cerr;
@@ -16,7 +17,7 @@ Game::Game() : Registrable("Game"), targetFPS(50.0), viewport(0), currentScene(0
 }
 
 void Game::run() {
-  bool exit = false;
+  /*
   uint32_t frameStart, frameEnd, frameDuration = 0;
   uint32_t statDuration = 0, statCycles = 0;
 
@@ -46,6 +47,7 @@ void Game::run() {
     }
 
   } // while
+  */
 } // Game::run()
 
 Game::~Game() {
@@ -64,7 +66,9 @@ void Game::runChapter(size_t chapter) {
   if(initChapter) {
     initChapter(chapter);
   }
-  run();
+  //run();
+  MainLoop loop;
+  loop.run();
 }
 
 Viewport& Game::getViewport() {
@@ -89,6 +93,9 @@ Registry& Game::getRegistry() {
   return registry;
 }
 
+void Game::setUserInterface(UserInterface& ui) { userInterface = &ui; }
+UserInterface& Game::getUserInterface() { return *userInterface; }
+
 void Game::renderEverything(uint32_t ticks) {
   if(viewport && currentScene) {
     viewport->renderScene(*currentScene, ticks);
@@ -97,4 +104,10 @@ void Game::renderEverything(uint32_t ticks) {
 
 void Game::handleEvent(const SDL_Event &event, uint32_t ticks) {
 }
+
+
+
+void Game::quit() {
+}
+
 

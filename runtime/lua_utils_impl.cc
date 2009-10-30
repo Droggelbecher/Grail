@@ -12,4 +12,5 @@ LUAGET(Animation*);
 LUAGET(Scene*);
 LUAGET(Game*);
 LUAGET(Viewport*);
+LUAGET(UserInterface*);
 

@@ -7,8 +7,8 @@
 #include <lua.hpp>
 
 #include "interpreter.h"
-#include "viewport.h"
-#include "utils.h"
+#include "lib/viewport.h"
+#include "lib/utils.h"
 #include "wrappings.h"
 #include "lib/game.h"
 
