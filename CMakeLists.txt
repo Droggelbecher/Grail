@@ -1,6 +1,7 @@
 # -Ddebug=1 for debug build
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+set(GRAIL_VERSION "0.1" CACHE STRING "Version")
 
 project(grail)
 
