@@ -11,6 +11,9 @@
 #include "lib/utils.h"
 #include "wrappings.h"
 #include "lib/game.h"
+#include "lib/resource_manager.h"
+
+#include "lib/unittest.h"
 
 using std::cin;
 using std::cout;
@@ -22,6 +25,8 @@ using std::list;
 Interpreter interpreter;
 
 int main(int argc, char** argv) {
+
+  Unittest::runAll();
 
   cout << "basedir:" << dirName(argv[0]) << endl;
 

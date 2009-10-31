@@ -1,6 +1,7 @@
 
 #include "user_interface.h"
 
-void UserInterface::handleEvent(Event& event, uint32_t frameDuration) {
+EventState UserInterface::handleEvent(Event& event, uint32_t frameDuration) {
+  return EVENT_STATE_UNHANDLED;
 }
 

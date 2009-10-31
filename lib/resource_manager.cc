@@ -1,15 +1,29 @@
 
 #include <cassert>
+#include <sstream>
+using std::ostringstream;
 #include <string>
-#include <map>
-#include <iostream>
 using std::string;
+#include <map>
 using std::map;
+#include <iostream>
 using std::cerr;
 using std::endl;
 
 #include "resource_manager.h"
 #include "utils.h"
+#include "game.h"
+#include "viewport.h"
+
+
+Resource::Resource(string path, ResourceMode mode) : path(path) {
+  rw = Game::getInstance().getResourceManager().getRW(path, mode);
+}
+
+Resource::~Resource() {
+  SDL_RWclose(rw);
+}
+
 
 ResourceManager::~ResourceManager() {
   map<string, ResourceHandler*>::const_iterator iter;
@@ -20,10 +34,28 @@ ResourceManager::~ResourceManager() {
   resourceHandlers.clear();
 }
 
+string ResourceManager::substituteVariables(string path) {
+  size_t p = 0;
+  ostringstream ss;
+
+  while(true) {
+    p = path.find("$res");
+    if(p == string::npos) {
+      break;
+    }
+
+    ss.clear();
+    ss << Game::getInstance().getViewport().getPhysicalWidth() << "x"
+      << Game::getInstance().getViewport().getPhysicalHeight();
+    path.replace(p, 4, ss.str());
+  }
+  return path;
+}
+
 void ResourceManager::mount(ResourceHandler* handler, string path) {
   assert(isAbsolute(path));
   resourceHandlers[normalizePath(path)] = handler;
-};
+}
 
 ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
   map<string, ResourceHandler*>::const_iterator iter;
@@ -41,7 +73,7 @@ ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
 }
 
 SDL_RWops* ResourceManager::getRW(string path, ResourceMode mode) {
-  path = normalizePath(path);
+  path = normalizePath(substituteVariables(path));
 
   string mountpoint;
   ResourceHandler* handler = findHandler(path, mountpoint);
@@ -70,6 +102,12 @@ SDL_RWops* DirectoryResourceHandler::getRW(string path, ResourceMode mode) {
   modestring[0] = mode;
   modestring[1] = '\0';
 
-  return SDL_RWFromFile(fullpath.c_str(), modestring);
+  SDL_RWops* r = SDL_RWFromFile(fullpath.c_str(), modestring);
+  if(!r) {
+    throw Exception(
+        string("Could not load '") + path + string("' (-> ") + fullpath + string(")")
+        );
+  }
+  return r;
 }
 

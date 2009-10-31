@@ -22,8 +22,12 @@ class Image : public Animation {
     Image(std::string path) : Animation("Image"), surface(*(new Surface(path))) {
     }
 
-    void renderAt(SDL_Surface* target, uint32_t ticks, InternalPosition p) const {
-      SDL_Rect t = conv<InternalPosition, SDL_Rect>(p);
+    VirtualSize getSize() {
+      return conv<PhysicalSize, VirtualSize>(surface.getSize());
+    }
+
+    void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+      SDL_Rect t = conv<VirtualPosition, SDL_Rect>(p);
       surface.blit(NULL, target, &t);
     }
 };

@@ -1,12 +1,16 @@
 
 #include <iostream>
+#include <algorithm>
 #include <SDL/SDL.h>
 #include "mainloop.h"
 #include "game.h"
 #include "utils.h"
+#include "user_interface.h"
+#include "scene.h"
 
 using std::cerr;
 using std::endl;
+using std::max;
 
 void MainLoop::run() {
   Game &controller = Game::getInstance();
@@ -46,8 +50,19 @@ void MainLoop::run() {
 void MainLoop::exit() { exit_ = true; }
 
 void MainLoop::handleEvent(Event& event, uint32_t frameDuration) {
+  Game &controller = Game::getInstance();
+
   if(event.type == SDL_QUIT) {
     exit();
   }
+
+  if(controller.getUserInterface().handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
+    return;
+  }
+
+  if(controller.getCurrentScene().handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
+    return;
+  }
+
 }
 

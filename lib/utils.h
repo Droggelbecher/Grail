@@ -4,11 +4,13 @@
 
 #include <string>
 #include <list>
+#include <exception>
 
-class Exception {
+class Exception : public std::exception {
   std::string _what;
   public:
-    Exception(std::string what) : _what(what) { }
+    Exception(std::string what) throw() : _what(what) { }
+    virtual ~Exception() throw() { }
     virtual const char* what() const throw() { return _what.c_str(); }
 };
 
@@ -55,13 +57,6 @@ std::string normalizePath(std::string path);
  * path2
  */
 bool isParentOrEqualPath(std::string path1, std::string path2);
-
-/**
- * Return the higher of the given values
- */
-template <typename T>
-T max(T a, T b) { return a >= b ? a : b; }
-
 
 #endif // UTILS_H
 

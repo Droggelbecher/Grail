@@ -1,6 +1,7 @@
 
 #include <SDL/SDL_video.h>
 
+#include "utils.h"
 #include "viewport.h"
 #include "scene.h"
 
@@ -16,8 +17,23 @@ void Viewport::setup(uint32_t w, uint32_t h, bool fullscreen) {
   assert(screen != NULL);
 }
 
+VirtualSize::X Viewport::getVirtualWidth() { return 4000; }
+VirtualSize::Y Viewport::getVirtualHeight() { return 3000; }
+
+PhysicalSize::X Viewport::getPhysicalWidth() {
+  if(!screen)
+    throw Exception("getWidth() called before setup()");
+
+  return screen->w;
+}
+PhysicalSize::Y Viewport::getPhysicalHeight() {
+  if(!screen)
+    throw Exception("getWidth() called before setup()");
+  return screen->h;
+}
+
 void Viewport::renderScene(const Scene& scene, uint32_t ticks) {
-  scene.renderAt(screen, ticks, InternalPosition(0, 0));
+  scene.renderAt(screen, ticks, VirtualPosition(0, 0));
   SDL_Flip(screen);
 }
 

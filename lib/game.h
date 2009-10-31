@@ -5,13 +5,10 @@
 #include <iostream>
 
 #include <SDL/SDL.h>
-#include "viewport.h"
-#include "scene.h"
-#include "resource_manager.h"
+#include "classes.h"
 #include "registry.h"
-#include "user_interface.h"
 
-class Game;
+enum EventState { EVENT_STATE_HANDLED, EVENT_STATE_UNHANDLED };
 
 struct Event {
   enum Type {
@@ -38,7 +35,6 @@ class Game : public Registrable {
     UserInterface* userInterface;
 
     Game();
-    void run();
 
   public:
     ~Game();

@@ -23,21 +23,14 @@ class Resource {
 
   private:
     // forbid copying
-    /*Resource(const Resource& other) {
-      rw = other.rw;
-      path = other.path;
-    }*/
-    Resource& operator=(const Resource& other) {
-      rw = other.rw;
-      path = other.path;
-      return *this;
-    }
+    Resource(const Resource& other) { }
+    Resource& operator=(const Resource& other) { return *this; }
 
   public:
     std::string path;
 
-    Resource(SDL_RWops* rw, std::string path = "") : rw(rw), path(path) { }
-    ~Resource() { SDL_RWclose(rw); }
+    Resource(std::string path, ResourceMode mode);
+    ~Resource();
 
     /**
      * Get rwops pointer. DONT delete the returned pointer, we'll do it in our
@@ -47,6 +40,10 @@ class Resource {
       return rw;
     }
 
+    /**
+     * Copy all data to a newly created buffer.
+     * Size of that buffer will be written to the size argument.
+     */
     const char* createBuffer(size_t &size) {
       assert(rw);
 
@@ -82,12 +79,21 @@ class ResourceManager : public Registrable {
     ResourceManager() : Registrable("ResourceManager") { }
     ~ResourceManager();
 
+
+    /**
+     * Example:
+     * /media/$res/foo.png -> /media/800x600/foo.png
+     *
+     * Supported variables:
+     * $res    ->  Physical screen resolution in format "800x600"
+     */
+    std::string substituteVariables(std::string path);
+
     /**
      * Register given resource handler under given name.
      * Takes ownership of the given handler. (Ie you should not delete it
      * after calling this method)
      */
-    //void registerHandler(std::string name, ResourceHandler* handler);
     void mount(ResourceHandler* handler, std::string path);
 
     /**
@@ -98,10 +104,6 @@ class ResourceManager : public Registrable {
      * Caller is responsible for freeing/closing the returned RWops
      */
     SDL_RWops* getRW(std::string path, ResourceMode mode);
-
-    /**
-     */
-    Resource get(std::string path, ResourceMode mode) { return Resource(getRW(path, mode), path); }
 };
 
 /**

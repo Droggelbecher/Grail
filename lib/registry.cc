@@ -1,5 +1,6 @@
 
 #include "registry.h"
+#include "utils.h"
 
 using std::string;
 
@@ -23,7 +24,10 @@ void Registry::registerObject(string name, RegistrableInfo info) {
 } // registerObject
 
 Registrable& Registry::get(string name) {
-  return *(registrables[name].registrable);
+  Registrable* r = registrables[name].registrable;
+  if(!r)
+    throw Exception(string("Could not find object named '") + name + string("' in registry."));
+  return *r;
 }
 
 

@@ -17,6 +17,7 @@ class Scene;
 class SceneEntity;
 class Surface;
 class UserInterface;
+class UserInterfaceElement;
 class Viewport;
 
 #endif // LIB_CLASSES_H

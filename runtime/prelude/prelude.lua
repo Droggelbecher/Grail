@@ -65,6 +65,8 @@ makewrapper("Viewport", {
 makewrapper("Scene", {
   setBackground = _Scene_setBackground,
 })
+makewrapper("Actor", {
+})
 
 -- Global preconstructed objects
 
