@@ -9,16 +9,26 @@ GAME:registerChapter(0, function(n)
   -- around in a lua variable. Here we use get() instead for demonstration
   -- purposes
 
-  chapter("Image", "bg_grey_fading", "/media/$res/grey_fading.jpg")
+  Image.chapter("bg_grey_fading", "/media/$res/grey_fading.jpg")
   start_scene = chapter("Scene", "start")
 
   get("start"):setBackground(get("bg_grey_fading"))
   -- Same as:
   -- start_scene:setBackground(get("coke"))
 
-  chapter("Image", "img_coke", "/media/$res/coke.jpg")
+
+  guy = Actor.chapter("guy")
+  coke = Actor.chapter("img_coke", "/media/$res/coke.jpg")
+
+  guy:addAnimation("default", coke)
+  guy:setMode("default")
+  guy:setPosition(200, 200)
+
+  start_scene:addActor(guy)
 
   GAME:goToScene(get("start"))
+
+  table.foreach(_debug_registryNames(), print)
 
 end)
 

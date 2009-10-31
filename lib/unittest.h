@@ -43,7 +43,7 @@ template<typename T> std::string toString(T t) {
 
 #define TEST(GROUP, TEST) class __unittest__ ## GROUP ## __ ## TEST : public Unittest { \
   public: \
-  __unittest__ ## GROUP ## __ ## TEST () : Unittest("GROUP", "TEST") { }; \
+  __unittest__ ## GROUP ## __ ## TEST () : Unittest(#GROUP, #TEST) { }; \
   void run(TestResult& result); \
   }  unittest ## GROUP ## TEST ## Instance; \
   void __unittest__ ## GROUP ## __ ## TEST :: run(Unittest::TestResult& result)

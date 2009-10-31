@@ -10,6 +10,11 @@ local function makewrapper(classname, tbl)
   if tbl == nil then tbl = {} end
   tbl.__index = tbl
   _wrappers[classname] = tbl
+
+  -- Somewhat "prettier" creation: Image:chapter(...)
+  tbl.chapter = function(...) return chapter(classname, ...) end
+  tbl.application = function(...) return application(classname, ...) end
+  _G[classname] = tbl
 end
 
 local function wrap(classname, ptr)
@@ -64,8 +69,12 @@ makewrapper("Viewport", {
 })
 makewrapper("Scene", {
   setBackground = _Scene_setBackground,
+  addActor = _Scene_addActor
 })
 makewrapper("Actor", {
+  addAnimation = _Actor_addAnimation,
+  setMode = _Actor_setMode,
+  setPosition = _Actor_setPosition,
 })
 
 -- Global preconstructed objects

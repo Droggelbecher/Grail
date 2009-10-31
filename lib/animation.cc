@@ -6,10 +6,10 @@ void Animation::setAlignment(double x, double y) {
   alignmentY = y;
 }
 
-InternalPosition Animation::getUpperLeftCorner(InternalPosition p) {
-  return InternalPosition(
-      p.x - alignmentX * getWidth(),
-      p.y - alignmentY * getHeight()
+VirtualPosition Animation::getUpperLeftCorner(VirtualPosition p) const {
+  return VirtualPosition(
+      p.getX() - alignmentX * getSize().getX(),
+      p.getY() - alignmentY * getSize().getY()
       );
 }
 

@@ -19,27 +19,20 @@ using std::list;
 
 class Scene : public Registrable {
     const Animation* background;
-    list<Actor*> entities;
-
-    struct CompareByY {
-      bool operator()(Actor* a, Actor* b) const {
-        return a->position.y() < b->position.y();
-      }
-    };
+    list<Actor*> actors;
 
   public:
     Scene() : Registrable("Scene"), background(NULL) { }
-    ~Scene() {
-      delete background;
+    virtual ~Scene() {
     }
 
     void setBackground(const Animation& background) {
       this->background = &background;
     }
 
-    void addEntity(Actor& entity) {
-      entities.push_back(&entity);
-      inplace_merge(entities.begin(), entities.end(), entities.end(), CompareByY());
+    void addActor(Actor& entity) {
+      actors.push_back(&entity);
+      inplace_merge(actors.begin(), actors.end(), actors.end(), Actor::CompareByY());
     }
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
@@ -47,10 +40,15 @@ class Scene : public Registrable {
       if(background != NULL) {
         background->renderAt(target, ticks, p);
       }
+
+      list<Actor*>::const_iterator iter;
+      for(iter = actors.begin(); iter != actors.end(); iter++) {
+        (*iter)->renderAt(target, ticks, p);
+      }
+
     } // renderAt
 
     EventState handleEvent(Event& event, uint32_t ticks) {
-      cerr << "scene::handleEvent" << endl;
       return EVENT_STATE_UNHANDLED;
     }
 };

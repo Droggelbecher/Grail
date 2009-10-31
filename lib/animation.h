@@ -15,14 +15,15 @@ class Animation : public Registrable {
     Animation(std::string classname) : Registrable(classname), alignmentX(0.5), alignmentY(1.0) { }
     virtual ~Animation() { }
 
-    virtual uint32_t getWidth() { return 0; }
-    virtual uint32_t getHeight() { return 0; }
-
     virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const = 0;
     void setAlignment(double x, double y);
 
+    //virtual VirtualPosition::X getWidth() const = 0;
+    //virtual VirtualPosition::Y getHeight() const = 0;
+    virtual VirtualSize getSize() const = 0;
+
   protected:
-    VirtualPosition getUpperLeftCorner(VirtualPosition p);
+    VirtualPosition getUpperLeftCorner(VirtualPosition p) const;
 
 };
 

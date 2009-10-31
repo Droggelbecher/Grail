@@ -8,5 +8,6 @@ template class Vector2d<int32_t, 1>;
 
 CONV(PhysicalPosition, VirtualPosition);
 CONV(VirtualPosition, PhysicalPosition);
-CONV(VirtualPosition, SDL_Rect);
+CONV(PhysicalPosition, SDL_Rect);
+
 

@@ -33,6 +33,11 @@ class Vector2d {
     X x() { return _x; }
     Y y() { return _y; }
 
+    X getX() const { return _x; }
+    Y getY() const { return _y; }
+    void setX(X x) { _x = x; }
+    void setY(Y y) { _y = y; }
+
     Vector2d<T, N> operator+(Vector2d<T, N> other);
     
     /**
@@ -55,7 +60,7 @@ typedef PhysicalPosition PhysicalSize;
 
 template <typename A, typename B> B conv(A a);
 
-template <> SDL_Rect conv<VirtualPosition, SDL_Rect>(VirtualPosition p);
+template <> SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p);
 template <> VirtualPosition conv<PhysicalPosition, VirtualPosition>(PhysicalPosition p);
 template <> PhysicalPosition conv<VirtualPosition, PhysicalPosition>(VirtualPosition p);
 

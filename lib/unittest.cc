@@ -31,10 +31,10 @@ void Unittest::runAll() {
       cerr << "  Test \"" << (*test_iter)->name << "\"" << endl;
       (*test_iter)->run(result);
       if(result.failed) {
-        cerr << "[!] " << result.failed << " of " << (result.failed + result.passed) << " failed!" << endl;
+        cerr << "  [!] " << result.failed << " of " << (result.failed + result.passed) << " failed!" << endl;
       }
       else {
-        cerr << "All " << result.passed << " checks passed." << endl;
+        cerr << "  All " << result.passed << " checks passed." << endl;
       }
     } // for test
   } // for group

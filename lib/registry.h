@@ -3,6 +3,7 @@
 #define REGISTRY_H
 
 #include <string>
+#include <list>
 #include <map>
 
 class Registrable {
@@ -10,6 +11,14 @@ class Registrable {
     std::string classname;
     //Registrable() { }
     Registrable(std::string cn) : classname(cn) { }
+    virtual ~Registrable() { }
+
+    /**
+     * Needs to have at least one virtual method, otherwise
+     * derived objects cant be casted to this and back
+     * (german visual c++ 2008 page 290 bottom)
+     */
+    virtual void dummy() { }
 };
 
 class Registry {
@@ -38,6 +47,20 @@ class Registry {
     void registerApplication(Registrable&, std::string name);
 
     Registrable& get(std::string name);
+
+    /**
+     * Return registered names.
+     * This method has a horribly dump implementation performance-wise. Use
+     * only for debugging.
+     */
+    std::list<std::string> getRegisteredNames() {
+      std::map<std::string, RegistrableInfo>::const_iterator iter;
+      std::list<std::string> r;
+      for(iter = registrables.begin(); iter != registrables.end(); iter++) {
+        r.push_back(iter->first);
+      }
+      return r;
+    }
 };
 
 #endif // REGISTRY_H

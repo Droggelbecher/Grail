@@ -19,10 +19,10 @@ uint8_t Vector2d<T, N>::nearestDirection(uint8_t directions) {
 }
 
 template <typename A, typename B>
-B conv(A a) { }
+B conv(A a) {  }
 
 template <>
-SDL_Rect conv<VirtualPosition, SDL_Rect>(VirtualPosition p) {
+SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p) {
   SDL_Rect r;
   r.x = p.x();
   r.y = p.y();

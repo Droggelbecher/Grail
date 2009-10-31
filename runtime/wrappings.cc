@@ -43,6 +43,8 @@ int _get(lua_State* L) {
 
 /**
  * create(classname, scope, name, ...) -> (clsname, ptr)
+ *
+ * Object factory for lua
  */
 int _create(lua_State* L) {
   size_t n = lua_gettop(L);
@@ -75,6 +77,7 @@ int _create(lua_State* L) {
   // name
   else if(classname == "Scene") { obj = new Scene(); }
   else if(classname == "UserInterface") { obj = new UserInterface(); }
+  else if(classname == "Actor") { obj = new Actor(); }
 
   else {
     throw Exception(string("Don't know how to construct a \"") + classname + string("\" object."));
@@ -93,6 +96,27 @@ int _create(lua_State* L) {
   publish(L, *obj);
   return 2;
 }
+
+/*
+ * Debug functions
+ */
+
+int _debug_registryNames(lua_State* L) {
+  Registry &reg = Game::getInstance().getRegistry();
+  list<string> names = reg.getRegisteredNames();
+  lua_newtable(L);
+  int tbl = lua_gettop(L);
+  list<string>::const_iterator iter;
+
+  int i;
+  for(i = 1, iter = names.begin(); iter != names.end(); iter++, i++) {
+    lua_pushstring(L, iter->c_str());
+    lua_rawseti(L, tbl, i);
+  }
+  return 1;
+}
+
+
 
 /*
  * Viewport
@@ -180,11 +204,6 @@ int _Game_getUserInterface(lua_State* L) {
 /*
  * Scene
  */
-int _Scene_create(lua_State* L) {
-  Scene* scene = new Scene();
-  return publish(L, *scene);
-}
-
 int _Scene_setBackground(lua_State* L) {
   Scene* scene = luaGet<Scene*>(L, 1);
   const Animation& animation = (const Animation&)(*luaGet<Animation*>(L, 2));
@@ -192,19 +211,44 @@ int _Scene_setBackground(lua_State* L) {
   return 0;
 }
 
-/*
- * Image
- */
-
-int _Image_create(lua_State* L) {
-  std::string path = luaGet<std::string>(L, 1);
-  Image* image = new Image(path);
-  return publish(L, *image);
+int _Scene_addActor(lua_State* L) {
+  Scene* scene = luaGet<Scene*>(L, 1);
+  Actor* actor = luaGet<Actor*>(L, 2);
+  scene->addActor(*actor);
+  return 0;
 }
 
+/*
+ * Actor
+ */
+int _Actor_addAnimation(lua_State* L) {
+  Actor* actor = luaGet<Actor*>(L, 1);
+  string mode = luaGet<string>(L, 2);
+  Animation* animation = luaGet<Animation*>(L, 3);
+  actor->addAnimation(mode, *animation);
+  return 0;
+}
+
+int _Actor_setMode(lua_State* L) {
+  Actor* actor = luaGet<Actor*>(L, 1);
+  string mode = luaGet<string>(L, 2);
+  actor->setMode(mode);
+  return 0;
+}
+
+int _Actor_setPosition(lua_State* L) {
+  Actor* actor = luaGet<Actor*>(L, 1);
+  VirtualPosition p;
+  p.setX(luaGet<lua_Integer>(L, 2));
+  p.setY(luaGet<lua_Integer>(L, 3));
+  actor->setPosition(p);
+  return 0;
+}
 
 void wrappings(Interpreter& i) {
   lua_State* L = interpreter.L;
+
+  lua_register(L, "_debug_registryNames", &_debug_registryNames);
 
   lua_register(L, "_create", &_create);
   lua_register(L, "_get", &_get);
@@ -220,6 +264,11 @@ void wrappings(Interpreter& i) {
   lua_register(L, "_Viewport_setup", &_Viewport_setup);
 
   lua_register(L, "_Scene_setBackground", &_Scene_setBackground);
+  lua_register(L, "_Scene_addActor", &_Scene_addActor);
+
+  lua_register(L, "_Actor_addAnimation", &_Actor_addAnimation);
+  lua_register(L, "_Actor_setMode", &_Actor_setMode);
+  lua_register(L, "_Actor_setPosition", &_Actor_setPosition);
 
 }
 

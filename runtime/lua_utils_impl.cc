@@ -9,6 +9,7 @@
 #define LUAGET(T) template T luaGet< T >(lua_State*, int);
 
 LUAGET(Animation*);
+LUAGET(Actor*);
 LUAGET(Scene*);
 LUAGET(Game*);
 LUAGET(Viewport*);

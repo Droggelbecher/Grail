@@ -5,6 +5,7 @@ include_directories(.. ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${LUA_INCLUDE_
 add_executable(grail_runtime
   interpreter.cc
   lua_utils_impl.cc
+  ../lib/vector2d_impl.cc
   main.cc
   wrappings.cc
 )
