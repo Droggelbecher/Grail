@@ -22,6 +22,10 @@ class Registrable {
 };
 
 class Registry {
+  #ifdef DEBUG
+  public:
+  #endif
+
     struct RegistrableInfo {
       Registrable* registrable;
       enum Scope { SCOPE_CHAPTER, SCOPE_APPLICATION };
@@ -53,14 +57,15 @@ class Registry {
      * This method has a horribly dump implementation performance-wise. Use
      * only for debugging.
      */
-    std::list<std::string> getRegisteredNames() {
+    /*std::list<std::string> getRegisteredNames() {
       std::map<std::string, RegistrableInfo>::const_iterator iter;
       std::list<std::string> r;
       for(iter = registrables.begin(); iter != registrables.end(); iter++) {
         r.push_back(iter->first);
       }
       return r;
-    }
+    }*/
+
 };
 
 #endif // REGISTRY_H

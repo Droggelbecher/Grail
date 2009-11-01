@@ -10,7 +10,6 @@ using std::map;
 std::map<std::string, std::list<Unittest*> > Unittest::tests;
 
 Unittest::Unittest(string group, string name) : group(group), name(name), out(cerr) {
-  cerr << "NEW UNIT TEST" << endl;
   if(!tests.count(group)) {
     tests[group] = list<Unittest*>();
   }

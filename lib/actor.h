@@ -16,6 +16,11 @@ class Actor : public Registrable {
     std::string mode;
 
     VirtualPosition position;
+    double alignmentX, alignmentY;
+
+  protected:
+    VirtualPosition getUpperLeftCorner() const;
+
   public:
 
     struct CompareByY {
@@ -25,19 +30,19 @@ class Actor : public Registrable {
     };
 
 
-    Actor() : Registrable("Actor"), animation(0) { }
+    Actor() : Registrable("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0) { }
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
-      std::cerr << "rendering actor" << std::endl;
       if(animation) {
-        std::cerr << "rendering at " << p.getX() << " " << p.getY() << std::endl;
-        animation->renderAt(target, ticks, p + position);
+        animation->renderAt(target, ticks, getUpperLeftCorner() + p);
       }
     }
 
     void addAnimation(std::string mode, Animation& animation) {
       animationModes[mode] = &animation;
     }
+
+    void setAlignment(double x, double y);
 
     void setMode(std::string mode) {
       this->mode = mode;
@@ -47,7 +52,7 @@ class Actor : public Registrable {
     }
 
     void setPosition(VirtualPosition position) {
-      position = position;
+      this->position = position;
     }
 };
 

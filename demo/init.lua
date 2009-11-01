@@ -18,17 +18,19 @@ GAME:registerChapter(0, function(n)
 
 
   guy = Actor.chapter("guy")
-  coke = Actor.chapter("img_coke", "/media/$res/coke.jpg")
+  coke = Image.chapter("img_coke", "/media/$res/coke.jpg")
+
+  table.foreach(getmetatable(coke), print)
 
   guy:addAnimation("default", coke)
   guy:setMode("default")
-  guy:setPosition(200, 200)
+  guy:setPosition(2000, 2000)
 
   start_scene:addActor(guy)
 
   GAME:goToScene(get("start"))
 
-  table.foreach(_debug_registryNames(), print)
+  table.foreach(_debug_dumpRegistry(), print)
 
 end)
 

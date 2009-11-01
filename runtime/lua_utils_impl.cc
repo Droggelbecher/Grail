@@ -5,6 +5,7 @@
 #include "lib/game.h"
 #include "lib/scene.h"
 #include "lib/viewport.h"
+#include "lib/user_interface.h"
 
 #define LUAGET(T) template T luaGet< T >(lua_State*, int);
 

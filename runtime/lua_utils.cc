@@ -13,7 +13,8 @@ T luaGet(lua_State* L, int n) {
   lua_getfield(L, n, "_ptr");
   int top = lua_gettop(L);
   assert(lua_isuserdata(L, top));
-  T r = (T)(Registrable*)lua_touserdata(L, top);
+  T r = dynamic_cast<T>((Registrable*)lua_touserdata(L, top));
+  assert(r);
   lua_pop(L, 1);
   return r;
 }

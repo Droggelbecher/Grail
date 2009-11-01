@@ -26,14 +26,10 @@ class Image : public Animation {
       return conv<PhysicalSize, VirtualSize>(surface.getSize());
     }
 
-    /*
-    VirtualPosition::X getWidth() { return getSize().getX(); }
-    VitualPosition::Y getHeight() { return getSize().getX(); }
-    */
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
       SDL_Rect t = conv<PhysicalPosition, SDL_Rect>(
-          conv<VirtualPosition, PhysicalPosition>(getUpperLeftCorner(p))
+          conv<VirtualPosition, PhysicalPosition>(p)
           );
       surface.blit(NULL, target, &t);
     }

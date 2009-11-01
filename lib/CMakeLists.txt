@@ -1,5 +1,6 @@
 
 set(GRAIL_FILES
+  actor.cc
   animation.cc
   game.cc
   mainloop.cc

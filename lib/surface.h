@@ -50,7 +50,7 @@ class Surface {
 
     void blit(const SDL_Rect* from, SDL_Surface* target, SDL_Rect* to) const {
       assert(sdlSurface == backup);
-      SDL_BlitSurface(sdlSurface, NULL, target, NULL);
+      SDL_BlitSurface(sdlSurface, NULL, target, to);
     }
 };
 

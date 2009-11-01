@@ -1,4 +1,6 @@
 
+#include <map>
+
 #include "wrappings.h"
 
 #include "lib/game.h"
@@ -13,6 +15,7 @@
 #include "lua_utils.h"
 
 using std::string;
+using std::map;
 
 
 /**
@@ -37,8 +40,7 @@ int publish(lua_State* L, Registrable& obj) {
 int _get(lua_State* L) {
   string name = luaGet<string>(L, 1);
   Registrable& obj = Game::getInstance().getRegistry().get(name);
-  publish(L, obj);
-  return 2;
+  return publish(L, obj);
 }
 
 /**
@@ -66,6 +68,11 @@ int _create(lua_State* L) {
       path = luaGet<string>(L, 4);
     }
     obj = new Image(path);
+
+    ((Image*)obj)->getSize();
+    ((Animation*)obj)->getSize();
+    ((Image*)(void*)obj)->getSize();
+    ((Animation*)(void*)obj)->getSize();
   }
 
   // name
@@ -100,22 +107,22 @@ int _create(lua_State* L) {
 /*
  * Debug functions
  */
-
-int _debug_registryNames(lua_State* L) {
+#ifdef DEBUG
+int _debug_dumpRegistry(lua_State* L) {
   Registry &reg = Game::getInstance().getRegistry();
-  list<string> names = reg.getRegisteredNames();
+  map<string, Registry::RegistrableInfo> names = reg.registrables;
   lua_newtable(L);
   int tbl = lua_gettop(L);
-  list<string>::const_iterator iter;
+  map<string, Registry::RegistrableInfo>::const_iterator iter;
 
   int i;
   for(i = 1, iter = names.begin(); iter != names.end(); iter++, i++) {
-    lua_pushstring(L, iter->c_str());
-    lua_rawseti(L, tbl, i);
+    lua_pushlightuserdata(L, iter->second.registrable);
+    lua_setfield(L, tbl, iter->first.c_str());
   }
   return 1;
 }
-
+#endif // DEBUG
 
 
 /*
@@ -225,6 +232,7 @@ int _Actor_addAnimation(lua_State* L) {
   Actor* actor = luaGet<Actor*>(L, 1);
   string mode = luaGet<string>(L, 2);
   Animation* animation = luaGet<Animation*>(L, 3);
+  animation->getSize();
   actor->addAnimation(mode, *animation);
   return 0;
 }
@@ -248,7 +256,9 @@ int _Actor_setPosition(lua_State* L) {
 void wrappings(Interpreter& i) {
   lua_State* L = interpreter.L;
 
-  lua_register(L, "_debug_registryNames", &_debug_registryNames);
+  #ifdef DEBUG
+  lua_register(L, "_debug_dumpRegistry", &_debug_dumpRegistry);
+  #endif 
 
   lua_register(L, "_create", &_create);
   lua_register(L, "_get", &_get);
