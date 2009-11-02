@@ -20,8 +20,6 @@ GAME:registerChapter(0, function(n)
   guy = Actor.chapter("guy")
   coke = Image.chapter("img_coke", "/media/$res/coke.jpg")
 
-  table.foreach(getmetatable(coke), print)
-
   guy:addAnimation("default", coke)
   guy:setMode("default")
   guy:setPosition(2000, 2000)
@@ -30,6 +28,7 @@ GAME:registerChapter(0, function(n)
 
   GAME:goToScene(get("start"))
 
+  print("Registry contents:")
   table.foreach(_debug_dumpRegistry(), print)
 
 end)

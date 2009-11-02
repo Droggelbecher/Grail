@@ -33,6 +33,17 @@ int publish(lua_State* L, Registrable& obj) {
   return 2;
 }
 
+int publish(lua_State* L, string classname, void* obj) {
+  BEGIN_LUA_STACK_ASSERTION();
+
+  lua_pushstring(L, classname.c_str());
+  lua_pushlightuserdata(L, obj);
+
+  END_LUA_STACK_ASSERTION(2);
+
+  return 2;
+}
+
 /**
  * Get named object from registry,
  * returns classname and ptr on lua stack
@@ -76,15 +87,17 @@ int _create(lua_State* L) {
   }
 
   // name
+  else if(classname == "Scene") { obj = new Scene(); }
+  else if(classname == "UserInterface") { obj = new UserInterface(); }
+  else if(classname == "Actor") { obj = new Actor(); }
+
+  // name
+  /*
   else if(classname == "Game") {
     obj = &(Game::getInstance());
     ((Game*)obj)->initChapter = &Game_initChapter;
   }
-
-  // name
-  else if(classname == "Scene") { obj = new Scene(); }
-  else if(classname == "UserInterface") { obj = new UserInterface(); }
-  else if(classname == "Actor") { obj = new Actor(); }
+  */
 
   else {
     throw Exception(string("Don't know how to construct a \"") + classname + string("\" object."));
@@ -164,7 +177,7 @@ int _Game_instance(lua_State* L) {
   Game *obj = &(Game::getInstance());
   obj->initChapter = &Game_initChapter;
   assert(obj != NULL);
-  return publish(L, *obj);
+  return publish(L, "Game", (void*)obj);
 };
 
 
@@ -279,7 +292,6 @@ void wrappings(Interpreter& i) {
   lua_register(L, "_Actor_addAnimation", &_Actor_addAnimation);
   lua_register(L, "_Actor_setMode", &_Actor_setMode);
   lua_register(L, "_Actor_setPosition", &_Actor_setPosition);
-
 }
 
 

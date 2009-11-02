@@ -79,7 +79,8 @@ makewrapper("Actor", {
 
 -- Global preconstructed objects
 
-GAME = application("Game", "GAME")
+local game_name, game_ptr = _Game_instance()
+GAME = wrap(game_name, game_ptr)
 
 print("[*] Loaded lua prelude")
 

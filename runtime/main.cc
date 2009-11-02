@@ -48,6 +48,8 @@ int main(int argc, char** argv) {
     wrappings(interpreter);
     interpreter.loadPrelude(dirName(argv[0]) + pathDelimiter + "prelude");
     interpreter.loadDirectory("/");
+
+    delete &(Game::getInstance());
   }
   else {
     cerr << "Please specify path to a game to run" << endl;

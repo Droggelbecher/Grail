@@ -19,6 +19,18 @@ T luaGet(lua_State* L, int n) {
   return r;
 }
 
+template <>
+Game* luaGet(lua_State* L, int n) {
+  assert(lua_istable(L, n));
+  lua_getfield(L, n, "_ptr");
+  int top = lua_gettop(L);
+  assert(lua_isuserdata(L, top));
+  Game* r = (Game*)lua_touserdata(L, top);
+  assert(r);
+  lua_pop(L, 1);
+  return r;
+}
+
 template <> lua_Number luaGet<lua_Number>(lua_State* L, int N) { return lua_tonumber(L, N); };
 template <> lua_Integer luaGet<lua_Integer>(lua_State* L, int N) { return lua_tointeger(L, N); };
 template <> bool luaGet<bool>(lua_State* L, int N) { return lua_toboolean(L, N); };

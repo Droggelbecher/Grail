@@ -7,22 +7,9 @@
 #include <SDL/SDL.h>
 #include "classes.h"
 #include "registry.h"
+#include "event.h"
 
-enum EventState { EVENT_STATE_HANDLED, EVENT_STATE_UNHANDLED };
-
-struct Event {
-  enum Type {
-    EVT_BLUBB = SDL_NUMEVENTS + 100,
-  };
-  int type;
-  const SDL_Event& sdl;
-
-  Event(SDL_Event& sdl) : sdl(sdl) {
-    type = sdl.type;
-  }
-};
-
-class Game : public Registrable {
+class Game /*: public Registrable */ {
 
     static Game* _instance;
 

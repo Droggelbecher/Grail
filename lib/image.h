@@ -22,6 +22,10 @@ class Image : public Animation {
     Image(std::string path) : Animation("Image"), surface(*(new Surface(path))) {
     }
 
+    ~Image() {
+      delete &surface;
+    }
+
     VirtualSize getSize() const {
       return conv<PhysicalSize, VirtualSize>(surface.getSize());
     }

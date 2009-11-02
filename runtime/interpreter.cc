@@ -23,6 +23,10 @@ Interpreter::Interpreter() {
   luaL_openlibs(L);
 }
 
+Interpreter::~Interpreter() {
+  lua_close(L);
+}
+
 void Interpreter::loadDirectory(string dir) {
   //Resource r = getResource(dir + pathDelimiter + "init.lua", MODE_READ);
   Resource r(dir + pathDelimiter + "init.lua", MODE_READ);
@@ -32,6 +36,7 @@ void Interpreter::loadDirectory(string dir) {
   luaL_loadbuffer(L, buffer, size, r.path.c_str());
   int error = lua_pcall(L, 0, LUA_MULTRET, 0);
 
+  delete[] buffer;
   if(error) {
     throw lua_exception(L);
   }

@@ -28,7 +28,7 @@ void MainLoop::run() {
     // Handle events until frame end
     SDL_Event sdlEvent;
     while(SDL_PollEvent(&sdlEvent) != 0) {
-      Event event(sdlEvent);
+      SDLEvent event(sdlEvent);
       handleEvent(event, frameDuration);
     }
     SDL_Delay(max(0, (int32_t)frameEnd - (int32_t)SDL_GetTicks()));

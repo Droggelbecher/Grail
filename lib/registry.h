@@ -25,10 +25,10 @@ class Registry {
   #ifdef DEBUG
   public:
   #endif
+    enum Scope { SCOPE_CHAPTER, SCOPE_APPLICATION, SCOPE_ALL };
 
     struct RegistrableInfo {
       Registrable* registrable;
-      enum Scope { SCOPE_CHAPTER, SCOPE_APPLICATION };
       Scope scope;
 
       RegistrableInfo() : registrable(0), scope(SCOPE_APPLICATION) { }
@@ -47,25 +47,14 @@ class Registry {
         RegistryException(std::string what) : what(what) { }
     };
 
+    ~Registry();
+
     void registerChapter(Registrable&, std::string name);
     void registerApplication(Registrable&, std::string name);
 
     Registrable& get(std::string name);
 
-    /**
-     * Return registered names.
-     * This method has a horribly dump implementation performance-wise. Use
-     * only for debugging.
-     */
-    /*std::list<std::string> getRegisteredNames() {
-      std::map<std::string, RegistrableInfo>::const_iterator iter;
-      std::list<std::string> r;
-      for(iter = registrables.begin(); iter != registrables.end(); iter++) {
-        r.push_back(iter->first);
-      }
-      return r;
-    }*/
-
+    void clearData(Scope scope);
 };
 
 #endif // REGISTRY_H

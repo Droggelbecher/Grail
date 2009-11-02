@@ -3,13 +3,19 @@
 #include "utils.h"
 
 using std::string;
+using std::map;
+using std::list;
+
+Registry::~Registry() {
+  clearData(SCOPE_ALL);
+}
 
 void Registry::registerChapter(Registrable& registrable, string name) {
-  registerObject(name, RegistrableInfo(registrable, RegistrableInfo::SCOPE_CHAPTER));
+  registerObject(name, RegistrableInfo(registrable, SCOPE_CHAPTER));
 }
 
 void Registry::registerApplication(Registrable& registrable, string name) {
-  registerObject(name, RegistrableInfo(registrable, RegistrableInfo::SCOPE_APPLICATION));
+  registerObject(name, RegistrableInfo(registrable, SCOPE_APPLICATION));
 }
 
 void Registry::registerObject(string name, RegistrableInfo info) {
@@ -30,4 +36,18 @@ Registrable& Registry::get(string name) {
   return *r;
 }
 
+void Registry::clearData(Scope scope) {
+  map<string, RegistrableInfo>::iterator iter;
+  list<string> l;
+  for(iter=registrables.begin(); iter != registrables.end(); iter++) {
+    if(iter->second.scope == scope || scope == SCOPE_ALL) {
+      delete iter->second.registrable;
+      l.push_back(iter->first);
+    }
+  }
+  list<string>::iterator li;
+  for(li=l.begin(); li!=l.end(); li++) {
+    registrables.erase(*li);
+  }
+}
 
