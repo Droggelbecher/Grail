@@ -1,11 +1,14 @@
 
 set(GRAIL_FILES
   actor.cc
+  area.cc
   animation.cc
+  event.cc
   game.cc
   mainloop.cc
   registry.cc
   resource_manager.cc
+  scene.cc
   shortcuts.cc
   unittest.cc
   user_interface.cc

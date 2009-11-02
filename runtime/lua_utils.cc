@@ -5,6 +5,9 @@
 #include "interpreter.h"
 #include "lib/registry.h"
 
+//#include "lib/scene.h"
+
+
 extern Interpreter interpreter;
 
 template <typename T>

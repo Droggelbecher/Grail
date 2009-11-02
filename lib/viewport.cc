@@ -5,7 +5,7 @@
 #include "viewport.h"
 #include "scene.h"
 
-Viewport::Viewport() : Registrable("Viewport"), screen(NULL) {
+Viewport::Viewport() : Registrable("Viewport"), screen(NULL), virtualSize(VirtualSize(4000, 3000)) {
 }
 
 Viewport::Viewport(uint32_t w, uint32_t h, bool fullscreen) : Registrable("Viewport"), screen(NULL) {
@@ -17,8 +17,7 @@ void Viewport::setup(uint32_t w, uint32_t h, bool fullscreen) {
   assert(screen != NULL);
 }
 
-VirtualSize::X Viewport::getVirtualWidth() { return 4000; }
-VirtualSize::Y Viewport::getVirtualHeight() { return 3000; }
+VirtualSize Viewport::getVirtualSize() { return virtualSize; }
 
 PhysicalSize::X Viewport::getPhysicalWidth() {
   if(!screen)

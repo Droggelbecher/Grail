@@ -9,6 +9,7 @@
 
 class Viewport : public Registrable {
     SDL_Surface* screen;
+    VirtualSize virtualSize;
 
   public:
 
@@ -16,8 +17,10 @@ class Viewport : public Registrable {
     Viewport(uint32_t w, uint32_t h, bool fullscreen = false);
     void setup(uint32_t w, uint32_t h, bool fullscreen = false);
 
+    VirtualSize getVirtualSize();
     VirtualSize::X getVirtualWidth();
     VirtualSize::Y getVirtualHeight();
+
     PhysicalSize::X getPhysicalWidth();
     PhysicalSize::Y getPhysicalHeight();
 

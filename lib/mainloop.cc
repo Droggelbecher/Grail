@@ -28,8 +28,8 @@ void MainLoop::run() {
     // Handle events until frame end
     SDL_Event sdlEvent;
     while(SDL_PollEvent(&sdlEvent) != 0) {
-      SDLEvent event(sdlEvent);
-      handleEvent(event, frameDuration);
+      handleEvent(sdlEvent, frameDuration);
+      freeUserEventData(sdlEvent);
     }
     SDL_Delay(max(0, (int32_t)frameEnd - (int32_t)SDL_GetTicks()));
 
@@ -49,11 +49,21 @@ void MainLoop::run() {
 
 void MainLoop::exit() { exit_ = true; }
 
-void MainLoop::handleEvent(Event& event, uint32_t frameDuration) {
+void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
   Game &controller = Game::getInstance();
 
   if(event.type == SDL_QUIT) {
     exit();
+  }
+
+  else if(event.type == SDL_USEREVENT) {
+    Event* evt = (Event*)event.user.data1;
+    if(dynamic_cast<ActorClickEvent*>(evt)) {
+      cerr << "Click on actor!" << endl;
+    }
+    else if(dynamic_cast<SceneClickEvent*>(evt)) {
+      cerr << "Scene click!" << endl;
+    }
   }
 
   if(controller.getUserInterface().handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {

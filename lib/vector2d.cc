@@ -7,25 +7,30 @@
 #include "viewport.h"
 
 template <typename T, int N>
-Vector2d<T, N> Vector2d<T, N>::operator+(Vector2d<T, N> other) {
+Vector2d<T, N> Vector2d<T, N>::operator+(Vector2d<T, N> other) const {
   return Vector2d<T, N>(_x + other._x, _y + other._y);
 }
 
 template <typename T, int N>
-uint8_t Vector2d<T, N>::nearestDirection(uint8_t directions) {
-  double alpha = atan2(x(), y());
+Vector2d<T, N> Vector2d<T, N>::operator-(Vector2d<T, N> other) const {
+  return Vector2d<T, N>(_x - other._x, _y - other._y);
+}
+
+template <typename T, int N>
+uint8_t Vector2d<T, N>::nearestDirection(uint8_t directions) const {
+  double alpha = atan2(_x, _y);
   alpha += M_PI - (M_PI / (double)directions);
   return (uint8_t)floor(alpha * directions / (2.0 * M_PI));
 }
 
 template <typename A, typename B>
-B conv(A a) {  }
+B conv(A a) { assert(false); }
 
 template <>
 SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p) {
   SDL_Rect r;
-  r.x = p.x();
-  r.y = p.y();
+  r.x = p.getX();
+  r.y = p.getY();
   return r;
 }
 
@@ -34,8 +39,8 @@ VirtualPosition conv<PhysicalPosition, VirtualPosition>(PhysicalPosition p) {
   Viewport& vp = Game::getInstance().getViewport();
 
   return VirtualPosition(
-      p.x() * vp.getVirtualWidth() / (double)vp.getPhysicalWidth(),
-      p.y() * vp.getVirtualHeight() / (double)vp.getPhysicalHeight()
+      p.getX() * vp.getVirtualSize().getX() / (double)vp.getPhysicalWidth(),
+      p.getY() * vp.getVirtualSize().getY() / (double)vp.getPhysicalHeight()
       );
 }
 
@@ -44,9 +49,22 @@ PhysicalPosition conv<VirtualPosition, PhysicalPosition>(VirtualPosition p) {
   Viewport& vp = Game::getInstance().getViewport();
 
   return PhysicalPosition(
-      p.x() * vp.getPhysicalWidth() / (double)vp.getVirtualWidth(),
-      p.y() * vp.getPhysicalHeight() / (double)vp.getVirtualHeight()
+      p.getX() * vp.getPhysicalWidth() / (double)vp.getVirtualSize().getX(),
+      p.getY() * vp.getPhysicalHeight() / (double)vp.getVirtualSize().getY()
       );
 }
 
+template <>
+VirtualPosition conv<SDL_MouseButtonEvent&, VirtualPosition>(SDL_MouseButtonEvent& p) {
+  return conv<PhysicalPosition, VirtualPosition>(
+      PhysicalPosition(p.x, p.y)
+  );
+}
+
+template <>
+VirtualPosition conv<SDL_MouseMotionEvent&, VirtualPosition>(SDL_MouseMotionEvent& p) {
+  return conv<PhysicalPosition, VirtualPosition>(
+      PhysicalPosition(p.x, p.y)
+  );
+}
 

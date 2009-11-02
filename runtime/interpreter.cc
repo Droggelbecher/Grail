@@ -28,7 +28,6 @@ Interpreter::~Interpreter() {
 }
 
 void Interpreter::loadDirectory(string dir) {
-  //Resource r = getResource(dir + pathDelimiter + "init.lua", MODE_READ);
   Resource r(dir + pathDelimiter + "init.lua", MODE_READ);
 
   size_t size;

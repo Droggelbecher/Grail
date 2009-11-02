@@ -1,0 +1,23 @@
+
+#ifndef RECT_H
+#define RECT_H
+
+#include "area.h"
+
+class Rect : public Area {
+    VirtualPosition topLeft;
+    VirtualSize size;
+
+  public:
+    Rect(VirtualPosition topLeft, VirtualSize size) : topLeft(topLeft), size(size) { }
+
+    bool hasPoint(VirtualPosition p) const {
+      return p.getX() >= topLeft.getX() &&
+        p.getX() < (topLeft + size).getX() &&
+        p.getY() >= topLeft.getY() &&
+        p.getY() < (topLeft + size).getY();
+    }
+};
+
+#endif // RECT_H
+

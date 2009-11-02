@@ -2,6 +2,7 @@
 #ifndef MAINLOOP_H
 #define MAINLOOP_H
 
+#include <SDL/SDL.h>
 #include "game.h"
 
 class MainLoop {
@@ -15,7 +16,7 @@ class MainLoop {
     virtual void run();
     virtual void exit();
 
-    virtual void handleEvent(Event& event, uint32_t frameDuration);
+    virtual void handleEvent(SDL_Event& event, uint32_t frameDuration);
 };
 
 #endif // MAINLOOP_H

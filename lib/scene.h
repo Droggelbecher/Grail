@@ -16,15 +16,16 @@ using std::list;
 #include "registry.h"
 #include "animation.h"
 #include "actor.h"
+#include "area.h"
 
 class Scene : public Registrable {
     const Animation* background;
     list<Actor*> actors;
+    Area *area;
 
   public:
-    Scene() : Registrable("Scene"), background(NULL) { }
-    virtual ~Scene() {
-    }
+    Scene();
+    virtual ~Scene();
 
     void setBackground(const Animation& background) {
       this->background = &background;
@@ -48,7 +49,26 @@ class Scene : public Registrable {
 
     } // renderAt
 
-    EventState handleEvent(Event& event, uint32_t ticks) {
+    EventState handleEvent(SDL_Event& event, uint32_t ticks) {
+      if(event.type == SDL_MOUSEBUTTONDOWN) {
+        VirtualPosition pos = conv<SDL_MouseButtonEvent&, VirtualPosition>(event.button);
+
+        if(area->hasPoint(pos)) {
+          list<Actor*>::const_iterator iter;
+          bool event_sent = false;
+          for(iter = actors.begin(); iter != actors.end(); iter++) {
+            if((*iter)->hasPoint(pos)) {
+              (new ActorClickEvent(**iter, pos))->push();
+              event_sent = true;
+              break;
+            }
+          } // for
+          if(!event_sent) {
+            (new SceneClickEvent(pos))->push();
+          }
+        } // if area has point
+      } // if mouse button down
+
       return EVENT_STATE_UNHANDLED;
     }
 };

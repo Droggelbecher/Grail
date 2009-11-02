@@ -9,14 +9,21 @@
 #include "vector2d.h"
 #include "animation.h"
 #include "registry.h"
+#include "area.h"
 
-class Actor : public Registrable {
+
+
+#include <iostream>
+using namespace std;
+
+class Actor : public Registrable, public Area {
     Animation *animation;
     std::map<std::string, Animation*> animationModes;
     std::string mode;
 
     VirtualPosition position;
     double alignmentX, alignmentY;
+    Area* area;
 
   protected:
     VirtualPosition getUpperLeftCorner() const;
@@ -30,7 +37,19 @@ class Actor : public Registrable {
     };
 
 
-    Actor() : Registrable("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0) { }
+    Actor() : Registrable("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0), area(0) { }
+
+    bool hasPoint(VirtualPosition p) const {
+      if(area) {
+        return area->hasPoint(p - getUpperLeftCorner());
+      }
+      else if(animation) {
+        return animation->hasPoint(p - getUpperLeftCorner());
+      }
+      else {
+        return false;
+      }
+    }
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
       if(animation) {

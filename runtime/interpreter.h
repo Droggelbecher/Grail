@@ -23,9 +23,10 @@ class Interpreter {
     lua_State *L;
 
     Interpreter();
+    ~Interpreter();
+
     void loadDirectory(std::string dir);
     void loadPrelude(std::string dir);
-
 };
 
 #endif // INTERPRETER_H

@@ -38,14 +38,15 @@ class Vector2d {
     void setX(X x) { _x = x; }
     void setY(Y y) { _y = y; }
 
-    Vector2d<T, N> operator+(Vector2d<T, N> other);
+    Vector2d<T, N> operator+(Vector2d<T, N> other) const;
+    Vector2d<T, N> operator-(Vector2d<T, N> other) const;
     
     /**
      * Partition the unit circle into $directions equal pie slices,
      * return the number of the slice this vector (when drawn from the circles
      * center) lies in.
      */
-    uint8_t nearestDirection(uint8_t directions);
+    uint8_t nearestDirection(uint8_t directions) const;
 };
 
 typedef Vector2d<int32_t, 0> VirtualPosition;
@@ -56,6 +57,8 @@ typedef PhysicalPosition PhysicalSize;
 
 /*
  * conv
+ * Handy ultra-specialized template function to convert various formats /
+ * representations of screen positions into another.
  */
 
 template <typename A, typename B> B conv(A a);
@@ -63,6 +66,9 @@ template <typename A, typename B> B conv(A a);
 template <> SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p);
 template <> VirtualPosition conv<PhysicalPosition, VirtualPosition>(PhysicalPosition p);
 template <> PhysicalPosition conv<VirtualPosition, PhysicalPosition>(VirtualPosition p);
+
+template <> VirtualPosition conv<SDL_MouseButtonEvent&, VirtualPosition>(SDL_MouseButtonEvent& p);
+template <> VirtualPosition conv<SDL_MouseMotionEvent&, VirtualPosition>(SDL_MouseMotionEvent& p);
 
 #endif // VECTOR2D_H
 

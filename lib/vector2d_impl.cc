@@ -9,5 +9,7 @@ template class Vector2d<int32_t, 1>;
 CONV(PhysicalPosition, VirtualPosition);
 CONV(VirtualPosition, PhysicalPosition);
 CONV(PhysicalPosition, SDL_Rect);
+CONV(SDL_MouseButtonEvent&, VirtualPosition);
+CONV(SDL_MouseMotionEvent&, VirtualPosition);
 
 
