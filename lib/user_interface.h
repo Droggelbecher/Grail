@@ -11,7 +11,7 @@
 class UserInterface : public Registrable {
   public:
     UserInterface() : Registrable("UserInterface") { }
-    EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
+    virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
 };
 
 #endif // USER_INTERFACE_H

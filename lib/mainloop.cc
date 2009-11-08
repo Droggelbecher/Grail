@@ -67,6 +67,7 @@ void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
   }
 
   if(controller.getUserInterface().handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
+    //cerr << "UI HANDLED EVENT!" << endl;
     return;
   }
 

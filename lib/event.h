@@ -8,7 +8,7 @@
 
 enum EventState { EVENT_STATE_HANDLED, EVENT_STATE_UNHANDLED };
 
-enum EventType { EVT_SCENE_CLICK, EVT_ACTOR_CLICK };
+enum EventType { EVT_SCENE_CLICK = 100, EVT_ACTOR_CLICK };
 
 struct Event {
   virtual ~Event() { }
@@ -48,11 +48,31 @@ struct SceneClickEvent : public Event {
 
 struct ActorClickEvent : public Event {
   int getCode() const { return EVT_ACTOR_CLICK; }
-  Actor& actor;
   VirtualPosition position;
+  Actor& actor;
 
-  ActorClickEvent(Actor& actor, VirtualPosition position) : actor(actor), position(position) { }
+  ActorClickEvent(Actor& actor, VirtualPosition position) : position(position),actor(actor) { }
 };
+
+// ----
+
+struct OmniEvent {
+  private:
+    SDL_Event& evt;
+
+  public:
+  int getType() const;
+  //void setType(int code);
+
+  VirtualPosition getPosition() const;
+  //void setPosition(VirtualPosition position);
+
+  Actor* getActor();
+  //void setActor(Actor& actor);
+
+  OmniEvent(SDL_Event& evt);
+};
+
 
 #endif // EVENT_H
 

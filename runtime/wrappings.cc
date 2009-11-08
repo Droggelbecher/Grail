@@ -23,25 +23,12 @@ using std::map;
  * simply 'return' obj as clsname and ptr on the lua stack
  */
 int publish(lua_State* L, Registrable& obj) {
-  BEGIN_LUA_STACK_ASSERTION();
+  L_STACK(L);
 
-  lua_pushstring(L, obj.classname.c_str());
-  lua_pushlightuserdata(L, (void*)(&obj));
+  interpreter.pushWrapper(obj);
 
-  END_LUA_STACK_ASSERTION(2);
-
-  return 2;
-}
-
-int publish(lua_State* L, string classname, void* obj) {
-  BEGIN_LUA_STACK_ASSERTION();
-
-  lua_pushstring(L, classname.c_str());
-  lua_pushlightuserdata(L, obj);
-
-  END_LUA_STACK_ASSERTION(2);
-
-  return 2;
+  L_RETURN(L, 1);
+  return 1;
 }
 
 /**
@@ -52,6 +39,14 @@ int _get(lua_State* L) {
   string name = luaGet<string>(L, 1);
   Registrable& obj = Game::getInstance().getRegistry().get(name);
   return publish(L, obj);
+}
+
+/**
+ */
+int _wrap(lua_State* L) {
+  assert(lua_isuserdata(L, 1));
+  interpreter.pushWrapper(*((Registrable*)lua_touserdata(L, 1)));
+  return 1;
 }
 
 /**
@@ -104,7 +99,7 @@ int _create(lua_State* L) {
   }
 
   assert(obj);
-  obj->classname = classname;
+  obj->className = classname;
 
   if(scope == 0) {
     Game::getInstance().getRegistry().registerApplication(*obj, name);
@@ -113,8 +108,7 @@ int _create(lua_State* L) {
     Game::getInstance().getRegistry().registerChapter(*obj, name);
   }
 
-  publish(L, *obj);
-  return 2;
+  return publish(L, *obj);
 }
 
 /*
@@ -162,22 +156,22 @@ int _Viewport_setup(lua_State* L) {
 void Game_initChapter(size_t n) {
   lua_State* L = interpreter.L;
 
-  lua_getglobal(L, "GAME");
-  int t = lua_gettop(L);
-  lua_getfield(L, t, "_chapter_ctors");
+  interpreter.pushWrapper(Game::getInstance());
+  size_t t = lua_gettop(L);
 
+  lua_getfield(L, t, "_chapter_ctors");
   lua_rawgeti(L, t+1, n); // function to call (chapter ctor for n)
   lua_pushinteger(L, n);
   int r = lua_pcall(L, 1, 0, 0);
   if(r)
-    throw lua_exception(L);
+    throw LuaException(L);
 }
 
 int _Game_instance(lua_State* L) {
   Game *obj = &(Game::getInstance());
   obj->initChapter = &Game_initChapter;
   assert(obj != NULL);
-  return publish(L, "Game", (void*)obj);
+  return publish(L, *obj);
 };
 
 
@@ -266,32 +260,46 @@ int _Actor_setPosition(lua_State* L) {
   return 0;
 }
 
-void wrappings(Interpreter& i) {
-  lua_State* L = interpreter.L;
+inline void function(std::string name, lua_CFunction fn) {
+  interpreter.registerFunction(name, fn);
+}
+inline void method(std::string baseName, std::string name, lua_CFunction fn) {
+  interpreter.registerMethod(baseName, name, fn);
+}
+inline void base(std::string baseName) {
+  interpreter.registerBase(baseName);
+}
 
+// #define METHOD(C, N) method(#C, #N, &_ ## C ## _ ## N )
+
+void wrappings(Interpreter& i) {
   #ifdef DEBUG
-  lua_register(L, "_debug_dumpRegistry", &_debug_dumpRegistry);
+  function("DBG_dumpRegistry", &_debug_dumpRegistry);
   #endif 
 
-  lua_register(L, "_create", &_create);
-  lua_register(L, "_get", &_get);
+  function("create", &_create);
+  function("get", &_get);
+  function("wrap", &_wrap);
 
-  lua_register(L, "_Game_instance", &_Game_instance);
-  lua_register(L, "_Game_runChapter", &_Game_runChapter);
-  lua_register(L, "_Game_getViewport", &_Game_getViewport);
-  lua_register(L, "_Game_goToScene", &_Game_goToScene);
-  lua_register(L, "_Game_getResourceManager", &_Game_getResourceManager);
-  lua_register(L, "_Game_setUserInterface", &_Game_setUserInterface);
-  lua_register(L, "_Game_getUserInterface", &_Game_getUserInterface);
+  method("Game", "instance", &_Game_instance);
+  method("Game", "runChapter", &_Game_runChapter);
+  method("Game", "getViewport", &_Game_getViewport);
+  method("Game", "goToScene", &_Game_goToScene);
+  method("Game", "getResourceManager", &_Game_getResourceManager);
+  method("Game", "setUserInterface", &_Game_setUserInterface);
+  method("Game", "getUserInterface", &_Game_getUserInterface);
 
-  lua_register(L, "_Viewport_setup", &_Viewport_setup);
+  method("Viewport", "setup", &_Viewport_setup);
 
-  lua_register(L, "_Scene_setBackground", &_Scene_setBackground);
-  lua_register(L, "_Scene_addActor", &_Scene_addActor);
+  method("Scene", "setBackground", &_Scene_setBackground);
+  method("Scene", "addActor", &_Scene_addActor);
 
-  lua_register(L, "_Actor_addAnimation", &_Actor_addAnimation);
-  lua_register(L, "_Actor_setMode", &_Actor_setMode);
-  lua_register(L, "_Actor_setPosition", &_Actor_setPosition);
+  method("Actor", "addAnimation", &_Actor_addAnimation);
+  method("Actor", "setMode", &_Actor_setMode);
+  method("Actor", "setPosition", &_Actor_setPosition);
+
+  base("Image");
+
 }
 
 

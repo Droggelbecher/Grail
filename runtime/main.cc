@@ -12,6 +12,7 @@
 #include "wrappings.h"
 #include "lib/game.h"
 #include "lib/resource_manager.h"
+#include "lua_user_interface.h"
 
 #include "lib/unittest.h"
 
@@ -40,16 +41,24 @@ int main(int argc, char** argv) {
   }
 
   if(optind < argc) {
-    Game::getInstance().getResourceManager().mount(
-        new DirectoryResourceHandler(argv[optind]),
-        "/"
+    Game& g = Game::getInstance();
+    
+    g.getResourceManager().mount(
+        new DirectoryResourceHandler(argv[optind]), "/"
         );
 
+    g.getResourceManager().mount(
+        new DirectoryResourceHandler(dirName(argv[0]) + pathDelimiter + "prelude"),
+        "/prelude"
+        );
+
+    g.setUserInterface(*(new LuaUserInterface()));
+
     wrappings(interpreter);
-    interpreter.loadPrelude(dirName(argv[0]) + pathDelimiter + "prelude");
+    interpreter.loadPrelude("/prelude");
     interpreter.loadDirectory("/");
 
-    delete &(Game::getInstance());
+    delete &g;
   }
   else {
     cerr << "Please specify path to a game to run" << endl;

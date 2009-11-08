@@ -9,7 +9,11 @@
 #include "registry.h"
 #include "event.h"
 
-class Game /*: public Registrable */ {
+/**
+ * WARNING: Game is a "Registrable" so it can be easily wrapped in lua but you
+ * should NEVER put a game object into the registry.
+ */
+class Game : public Registrable {
 
     static Game* _instance;
 

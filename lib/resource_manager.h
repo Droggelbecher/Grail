@@ -118,6 +118,7 @@ class ResourceHandler {
     virtual ~ResourceHandler() { }
 
     virtual SDL_RWops* getRW(std::string path, ResourceMode mode) = 0;
+    virtual bool fileExists(std::string path) = 0;
 };
 
 /**
@@ -130,6 +131,7 @@ class DirectoryResourceHandler : public ResourceHandler {
     DirectoryResourceHandler(std::string dir);
 
     SDL_RWops* getRW(std::string path, ResourceMode mode);
+    bool fileExists(std::string path);
 };
 
 #endif // RESOURCE_MANAGER_H

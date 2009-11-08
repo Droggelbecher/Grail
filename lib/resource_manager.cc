@@ -64,8 +64,9 @@ ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
   path = normalizePath(path);
 
   for(iter = resourceHandlers.begin(); iter != resourceHandlers.end(); iter++) {
-    if(isParentOrEqualPath(iter->first, path)) {
-      mountpoint = iter->first;
+    mountpoint = normalizePath(iter->first);
+    sub = path.substr(mountpoint.length());
+    if(isParentOrEqualPath(iter->first, path) && iter->second->fileExists(sub)) {
       return iter->second;
     }
   }
@@ -110,4 +111,10 @@ SDL_RWops* DirectoryResourceHandler::getRW(string path, ResourceMode mode) {
   }
   return r;
 }
+
+bool DirectoryResourceHandler::fileExists(string path) {
+  string fullpath = baseDirectory + pathDelimiter + path;
+  return exists(fullpath);
+}
+
 

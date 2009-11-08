@@ -6,6 +6,7 @@
 #include "mainloop.h"
 #include "viewport.h"
 #include "resource_manager.h"
+#include "user_interface.h"
 
 using std::cout;
 using std::cerr;
@@ -14,13 +15,14 @@ using std::endl;
 
 Game* Game::_instance = 0;
 
-Game::Game() : targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
+Game::Game() : Registrable("Game"), targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
   SDL_Init(SDL_INIT_EVERYTHING);
 }
 
 Game::~Game() {
   delete viewport;
   delete resourceManager;
+  delete userInterface;
   SDL_Quit();
 }
 
@@ -63,7 +65,10 @@ Registry& Game::getRegistry() {
 }
 
 void Game::setUserInterface(UserInterface& ui) { userInterface = &ui; }
-UserInterface& Game::getUserInterface() { return *userInterface; }
+UserInterface& Game::getUserInterface() {
+  assert(userInterface);
+  return *userInterface;
+}
 
 void Game::renderEverything(uint32_t ticks) {
   if(viewport && currentScene) {

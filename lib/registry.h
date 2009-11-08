@@ -8,9 +8,9 @@
 
 class Registrable {
   public:
-    std::string classname;
+    std::string className;
     //Registrable() { }
-    Registrable(std::string cn) : classname(cn) { }
+    Registrable(std::string cn) : className(cn) { }
     virtual ~Registrable() { }
 
     /**
@@ -52,9 +52,9 @@ class Registry {
     void registerChapter(Registrable&, std::string name);
     void registerApplication(Registrable&, std::string name);
 
-    Registrable& get(std::string name);
-
     void clearData(Scope scope);
+
+    virtual Registrable& get(std::string name);
 };
 
 #endif // REGISTRY_H
