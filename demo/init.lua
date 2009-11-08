@@ -33,7 +33,7 @@ end)
 
 GAME:getUserInterface().handleEvent = function(self, evt, duration)
   if evt.type == EVT_ACTOR_CLICK then
-    print("--- actor click!")
+    print("You clicked the actor with button " .. tostring(evt.button))
   end
   return EVENT_STATE_UNHANDLED
 end

@@ -227,8 +227,7 @@ void Interpreter::pushCopy(SDL_Event& obj) {
   pushCopy((lua_Integer)e.getType()); lua_setfield(L, -2, "type");
   pushCopy(e.getPosition()); lua_setfield(L, -2, "position");
   pushCopy(e.getActor()); lua_setfield(L, -2, "actor");
-
-  //pushCopy((lua_Integer)obj.user.code); lua_setfield(L, -2, "code");
+  pushCopy((lua_Integer)e.getButton()); lua_setfield(L, -2, "button");
 
   L_RETURN(L, 1);
 }

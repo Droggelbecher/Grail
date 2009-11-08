@@ -58,7 +58,7 @@ class Scene : public Registrable {
           bool event_sent = false;
           for(iter = actors.begin(); iter != actors.end(); iter++) {
             if((*iter)->hasPoint(pos)) {
-              (new ActorClickEvent(**iter, pos))->push();
+              (new ActorClickEvent(**iter, pos, event.button.button))->push();
               event_sent = true;
               break;
             }
