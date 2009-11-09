@@ -10,6 +10,7 @@ set(GRAIL_FILES
   resource_manager.cc
   scene.cc
   shortcuts.cc
+  sprite.cc
   unittest.cc
   user_interface.cc
   utils.cc

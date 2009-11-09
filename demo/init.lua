@@ -17,9 +17,11 @@ GAME:registerChapter(0, function(n)
   -- start_scene:setBackground(get("coke"))
 
   guy = Actor:chapter("guy")
-  coke = Image:chapter("img_coke", "/media/$res/coke.jpg")
+  --coke = Image:chapter("img_coke", "/media/$res/coke.jpg")
+  coke = StripeSprite:chapter("img_coke", "/media/$res/lineboy_r.png", 9)
 
-  dbg_print(guy)
+
+  dbg_print(getmetatable(coke))
 
   guy:addAnimation("default", coke)
   guy:setMode("default")

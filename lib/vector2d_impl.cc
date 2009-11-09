@@ -11,5 +11,6 @@ CONV(VirtualPosition, PhysicalPosition);
 CONV(PhysicalPosition, SDL_Rect);
 CONV(SDL_MouseButtonEvent&, VirtualPosition);
 CONV(SDL_MouseMotionEvent&, VirtualPosition);
+CONV(VirtualPosition, SDL_Rect);
 
 

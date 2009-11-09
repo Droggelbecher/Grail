@@ -23,6 +23,7 @@ void MainLoop::run() {
     frameEnd = frameStart + (uint32_t)(1000.0 / targetFPS);
 
     // Do something
+    controller.eachFrame(frameDuration);
     controller.renderEverything(frameDuration);
 
     // Handle events until frame end

@@ -55,6 +55,14 @@ PhysicalPosition conv<VirtualPosition, PhysicalPosition>(VirtualPosition p) {
 }
 
 template <>
+SDL_Rect conv<VirtualPosition, SDL_Rect>(VirtualPosition p) {
+  return conv<PhysicalPosition, SDL_Rect>(
+      conv<VirtualPosition, PhysicalPosition>(p)
+      );
+}
+
+
+template <>
 VirtualPosition conv<SDL_MouseButtonEvent&, VirtualPosition>(SDL_MouseButtonEvent& p) {
   return conv<PhysicalPosition, VirtualPosition>(
       PhysicalPosition(p.x, p.y)

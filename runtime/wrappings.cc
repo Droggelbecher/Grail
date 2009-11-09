@@ -11,6 +11,7 @@
 #include "lib/image.h"
 #include "lib/utils.h"
 #include "lib/user_interface.h"
+#include "lib/sprite.h"
 
 #include "lua_utils.h"
 
@@ -74,11 +75,14 @@ int _create(lua_State* L) {
       path = luaGet<string>(L, 4);
     }
     obj = new Image(path);
+  }
 
-    ((Image*)obj)->getSize();
-    ((Animation*)obj)->getSize();
-    ((Image*)(void*)obj)->getSize();
-    ((Animation*)(void*)obj)->getSize();
+  // name, path, frames
+  else if(classname == "StripeSprite") {
+    string path = luaGet<string>(L, 4);
+    lua_Integer frames = luaGet<lua_Integer>(L, 5);
+    cerr << "stripe sprite " << path << " " << frames << endl;
+    obj = new StripeSprite(path, frames);
   }
 
   // name
@@ -87,13 +91,6 @@ int _create(lua_State* L) {
   else if(classname == "Actor") { obj = new Actor(); }
 
   // name
-  /*
-  else if(classname == "Game") {
-    obj = &(Game::getInstance());
-    ((Game*)obj)->initChapter = &Game_initChapter;
-  }
-  */
-
   else {
     throw Exception(string("Don't know how to construct a \"") + classname + string("\" object."));
   }
@@ -299,6 +296,8 @@ void wrappings(Interpreter& i) {
   method("Actor", "setPosition", &_Actor_setPosition);
 
   base("Image");
+
+  base("StripeSprite");
 
 }
 

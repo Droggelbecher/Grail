@@ -36,6 +36,14 @@ class Scene : public Registrable {
       inplace_merge(actors.begin(), actors.end(), actors.end(), Actor::CompareByY());
     }
 
+    void eachFrame(uint32_t ticks) {
+      list<Actor*>::const_iterator iter;
+      for(iter = actors.begin(); iter != actors.end(); iter++) {
+        (*iter)->eachFrame(ticks);
+      }
+    }
+
+
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
       assert(target != NULL);
       if(background != NULL) {

@@ -64,6 +64,7 @@ typedef PhysicalPosition PhysicalSize;
 template <typename A, typename B> B conv(A a);
 
 template <> SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p);
+template <> SDL_Rect conv<VirtualPosition, SDL_Rect>(VirtualPosition p);
 template <> VirtualPosition conv<PhysicalPosition, VirtualPosition>(PhysicalPosition p);
 template <> PhysicalPosition conv<VirtualPosition, PhysicalPosition>(VirtualPosition p);
 

@@ -70,6 +70,12 @@ UserInterface& Game::getUserInterface() {
   return *userInterface;
 }
 
+void Game::eachFrame(uint32_t ticks) {
+  if(currentScene) {
+    currentScene->eachFrame(ticks);
+  }
+}
+
 void Game::renderEverything(uint32_t ticks) {
   if(viewport && currentScene) {
     viewport->renderScene(*currentScene, ticks);

@@ -36,7 +36,6 @@ class Actor : public Registrable, public Area {
       }
     };
 
-
     Actor() : Registrable("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0), area(0) { }
 
     bool hasPoint(VirtualPosition p) const {
@@ -48,6 +47,12 @@ class Actor : public Registrable, public Area {
       }
       else {
         return false;
+      }
+    }
+
+    void eachFrame(uint32_t ticks) {
+      if(animation) {
+        animation->eachFrame(ticks);
       }
     }
 

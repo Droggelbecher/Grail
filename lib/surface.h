@@ -11,6 +11,7 @@ using std::endl;
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+#include "vector2d.h"
 #include "shortcuts.h"
 
 class Surface {
@@ -48,9 +49,9 @@ class Surface {
       return PhysicalSize(sdlSurface->w, sdlSurface->h);
     }
 
-    void blit(const SDL_Rect* from, SDL_Surface* target, SDL_Rect* to) const {
+    void blit(SDL_Rect* from, SDL_Surface* target, SDL_Rect* to) const {
       assert(sdlSurface == backup);
-      SDL_BlitSurface(sdlSurface, NULL, target, to);
+      SDL_BlitSurface(sdlSurface, from, target, to);
     }
 };
 

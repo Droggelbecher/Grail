@@ -43,6 +43,7 @@ class Game : public Registrable {
     void setUserInterface(UserInterface& ui);
     UserInterface& getUserInterface();
 
+    void eachFrame(uint32_t ticks);
     void renderEverything(uint32_t ticks);
     void handleEvent(const SDL_Event &event, uint32_t ticks);
 
