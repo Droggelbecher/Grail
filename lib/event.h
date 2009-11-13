@@ -71,21 +71,15 @@ struct ActorClickEvent : public Event {
 
 struct OmniEvent {
   private:
-    SDL_Event& evt;
+    const SDL_Event& evt;
 
   public:
-  int getType() const;
-  //void setType(int code);
+    OmniEvent(const SDL_Event& evt);
 
-  VirtualPosition getPosition() const;
-  //void setPosition(VirtualPosition position);
-
-  Actor* getActor() const;
-  //void setActor(Actor& actor);
-
-  uint8_t getButton() const;
-
-  OmniEvent(SDL_Event& evt);
+    int getType() const;
+    VirtualPosition getPosition() const;
+    Actor* getActor() const;
+    uint8_t getButton() const;
 };
 
 

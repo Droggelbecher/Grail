@@ -18,7 +18,7 @@ get = _GRAIL.get
 
 -- Extensions for GAME
 
-GAME = _GRAIL.wrapperBases.Game.instance()
+GAME = _GRAIL.wrapperBases.Game.getInstance()
 
 GAME._chapter_ctors = {}
 function GAME:registerChapter(n, fn)

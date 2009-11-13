@@ -10,7 +10,7 @@ void freeUserEventData(SDL_Event& evt) {
 }
 
 
-OmniEvent::OmniEvent(SDL_Event& evt) : evt(evt) {
+OmniEvent::OmniEvent(const SDL_Event& evt) : evt(evt) {
 }
 
 int OmniEvent::getType() const {

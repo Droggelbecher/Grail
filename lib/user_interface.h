@@ -8,9 +8,9 @@
 #include "game.h"
 #include "registry.h"
 
-class UserInterface : public Registrable {
+class UserInterface : public Object {
   public:
-    UserInterface() : Registrable("UserInterface") { }
+    UserInterface() : Object("UserInterface") { }
     virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
 };
 

@@ -9,10 +9,10 @@
 #include "registry.h"
 #include "area.h"
 
-class Animation : public Registrable, public Area {
+class Animation : public Object, public Area {
 
   public:
-    Animation(std::string classname) : Registrable(classname) { }
+    Animation(std::string classname) : Object(classname) { }
     virtual ~Animation() { }
 
     virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const = 0;

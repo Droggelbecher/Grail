@@ -1,0 +1,34 @@
+/* vim: set ft=cpp: */
+
+class Actor {
+  void addAnimation(string, Animation&)
+  void setMode(string)
+  void setPosition(VirtualPosition)
+  void walkStraight(VirtualPosition)
+}
+
+class Game {
+  void runChapter(lua_Integer)
+  Viewport& getViewport()
+  void goToScene(Scene&)
+  ResourceManager& getResourceManager()
+  void setUserInterface(UserInterface&)
+  UserInterface& getUserInterface()
+  /* static Game& getInstance() */
+}
+
+class Viewport {
+  void setup(lua_Number, lua_Number, bool)
+}
+
+class Scene {
+  void setBackground(Animation&)
+  void addActor(Actor&)
+}
+
+class Image {
+}
+
+class StripeSprite {
+}
+

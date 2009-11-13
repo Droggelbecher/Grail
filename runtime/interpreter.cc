@@ -125,7 +125,7 @@ void Interpreter::pushWrapperBase(std::string className) {
   L_RETURN(L, 1);
 }
 
-void Interpreter::pushWrapper(Registrable& r) {
+void Interpreter::pushWrapper(Object& r) {
   L_STACK(L);
 
   // Lets see if there is a wrapper for r already
@@ -188,11 +188,13 @@ void Interpreter::pushWrapper(Registrable& r) {
   L_RETURN(L, 1);
 }
 
+/*
+
 
 template <typename T>
 void Interpreter::pushCopy(T* obj) {
   if(obj) {
-    pushWrapper(*((Registrable*)obj));
+    pushWrapper(*((Object*)obj));
   }
   else {
     lua_pushnil(L);
@@ -231,6 +233,8 @@ void Interpreter::pushCopy(SDL_Event& obj) {
 
   L_RETURN(L, 1);
 }
+
+*/
 
 void Interpreter::registerFunction(std::string name, lua_CFunction fn) {
   L_STACK(L);

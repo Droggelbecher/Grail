@@ -25,6 +25,9 @@ using std::list;
 
 Interpreter interpreter;
 
+void registerLuaWrappings();
+void registerHandcraftedWrappings();
+
 int main(int argc, char** argv) {
 
   Unittest::runAll();
@@ -42,7 +45,7 @@ int main(int argc, char** argv) {
 
   if(optind < argc) {
     Game& g = Game::getInstance();
-    
+
     g.getResourceManager().mount(
         new DirectoryResourceHandler(argv[optind]), "/"
         );
@@ -54,7 +57,9 @@ int main(int argc, char** argv) {
 
     g.setUserInterface(*(new LuaUserInterface()));
 
-    wrappings(interpreter);
+    registerLuaWrappings();
+    registerHandcraftedWrappings();
+
     interpreter.loadPrelude("/prelude");
     interpreter.loadDirectory("/");
 

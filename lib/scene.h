@@ -18,7 +18,7 @@ using std::list;
 #include "actor.h"
 #include "area.h"
 
-class Scene : public Registrable {
+class Scene : public Object {
     const Animation* background;
     list<Actor*> actors;
     Area *area;

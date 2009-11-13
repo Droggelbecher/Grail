@@ -6,12 +6,12 @@
 #include <list>
 #include <map>
 
-class Registrable {
+class Registrable__ {
   public:
     std::string className;
     //Registrable() { }
-    Registrable(std::string cn) : className(cn) { }
-    virtual ~Registrable() { }
+    Registrable__(std::string cn) : className(cn) { }
+    virtual ~Registrable__() { }
 
     /**
      * Needs to have at least one virtual method, otherwise
@@ -21,6 +21,19 @@ class Registrable {
     virtual void dummy() { }
 };
 
+class Object {
+  public:
+    std::string className;
+    bool registrable;
+
+    Object(std::string cn, bool r = true) : className(cn), registrable(r) { }
+    virtual ~Object() { }
+    virtual void dummy() { }
+
+    bool isRegistrable() { return registrable; }
+    std::string getClassName() { return className; }
+};
+
 class Registry {
   #ifdef DEBUG
   public:
@@ -28,12 +41,12 @@ class Registry {
     enum Scope { SCOPE_CHAPTER, SCOPE_APPLICATION, SCOPE_ALL };
 
     struct RegistrableInfo {
-      Registrable* registrable;
+      Object* registrable;
       Scope scope;
 
       RegistrableInfo() : registrable(0), scope(SCOPE_APPLICATION) { }
-      RegistrableInfo(Registrable* registrable, Scope scope) : registrable(registrable), scope(scope) { }
-      RegistrableInfo(Registrable& registrable, Scope scope) : registrable(&registrable), scope(scope) { }
+      RegistrableInfo(Object* registrable, Scope scope) : registrable(registrable), scope(scope) { }
+      RegistrableInfo(Object& registrable, Scope scope) : registrable(&registrable), scope(scope) { }
     };
 
     std::map<std::string, RegistrableInfo> registrables;
@@ -49,12 +62,12 @@ class Registry {
 
     ~Registry();
 
-    void registerChapter(Registrable&, std::string name);
-    void registerApplication(Registrable&, std::string name);
+    void registerChapter(Object&, std::string name);
+    void registerApplication(Object&, std::string name);
 
     void clearData(Scope scope);
 
-    virtual Registrable& get(std::string name);
+    virtual Object& get(std::string name);
 };
 
 #endif // REGISTRY_H

@@ -5,10 +5,10 @@
 #include "viewport.h"
 #include "scene.h"
 
-Viewport::Viewport() : Registrable("Viewport"), screen(NULL), virtualSize(VirtualSize(4000, 3000)) {
+Viewport::Viewport() : Object("Viewport", false), screen(NULL), virtualSize(VirtualSize(4000, 3000)) {
 }
 
-Viewport::Viewport(uint32_t w, uint32_t h, bool fullscreen) : Registrable("Viewport"), screen(NULL) {
+Viewport::Viewport(uint32_t w, uint32_t h, bool fullscreen) : Object("Viewport", false), screen(NULL) {
   setup(w, h, fullscreen);
 }
 

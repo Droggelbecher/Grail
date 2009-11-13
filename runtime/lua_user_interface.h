@@ -28,7 +28,8 @@ class LuaUserInterface : public UserInterface {
       interpreter.pushWrapper(*this);
 
       // other arguments
-      interpreter.pushCopy<SDL_Event&>(event);
+      //interpreter.pushCopy<SDL_Event&>(event);
+      luaPush<const SDL_Event&>(interpreter.L, event);
       lua_pushinteger(interpreter.L, frameDuration);
 
       lua_call(interpreter.L, 3, 1);

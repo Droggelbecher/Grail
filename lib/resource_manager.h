@@ -72,11 +72,11 @@ class Resource {
  * filesystems into the same tree. (ResourceHandlers are the anologon to file
  * system drivers here)
  */
-class ResourceManager : public Registrable {
+class ResourceManager : public Object {
     std::map<std::string, ResourceHandler*> resourceHandlers;
 
   public:
-    ResourceManager() : Registrable("ResourceManager") { }
+    ResourceManager() : Object("ResourceManager", false) { }
     ~ResourceManager();
 
 

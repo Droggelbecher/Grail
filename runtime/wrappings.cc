@@ -236,7 +236,6 @@ int _Actor_addAnimation(lua_State* L) {
   Actor* actor = luaGet<Actor*>(L, 1);
   string mode = luaGet<string>(L, 2);
   Animation* animation = luaGet<Animation*>(L, 3);
-  animation->getSize();
   actor->addAnimation(mode, *animation);
   return 0;
 }

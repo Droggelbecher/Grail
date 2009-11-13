@@ -13,7 +13,7 @@
  * WARNING: Game is a "Registrable" so it can be easily wrapped in lua but you
  * should NEVER put a game object into the registry.
  */
-class Game : public Registrable {
+class Game : public Object {
 
     static Game* _instance;
 

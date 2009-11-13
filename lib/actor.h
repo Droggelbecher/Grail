@@ -5,18 +5,19 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <list>
 
 #include "vector2d.h"
 #include "animation.h"
 #include "registry.h"
 #include "area.h"
 
-
-
 #include <iostream>
 using namespace std;
 
-class Actor : public Registrable, public Area {
+typedef std::list<VirtualPosition> Path;
+
+class Actor : public Object, public Area {
     Animation *animation;
     std::map<std::string, Animation*> animationModes;
     std::string mode;
@@ -24,6 +25,8 @@ class Actor : public Registrable, public Area {
     VirtualPosition position;
     double alignmentX, alignmentY;
     Area* area;
+
+    Path walkPath;
 
   protected:
     VirtualPosition getUpperLeftCorner() const;
@@ -36,7 +39,7 @@ class Actor : public Registrable, public Area {
       }
     };
 
-    Actor() : Registrable("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0), area(0) { }
+    Actor() : Object("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0), area(0) { }
 
     bool hasPoint(VirtualPosition p) const {
       if(area) {
@@ -78,7 +81,10 @@ class Actor : public Registrable, public Area {
     void setPosition(VirtualPosition position) {
       this->position = position;
     }
+
+    void walk(const Path& path);
+    void walkStraight(VirtualPosition p);
 };
 
-#endif // SCENE_ENTITY_H
+#endif // ACTOR_H
 

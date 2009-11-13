@@ -1,6 +1,7 @@
 
 #include "registry.h"
 #include "utils.h"
+#include <cassert>
 
 using std::string;
 using std::map;
@@ -10,11 +11,13 @@ Registry::~Registry() {
   clearData(SCOPE_ALL);
 }
 
-void Registry::registerChapter(Registrable& registrable, string name) {
+void Registry::registerChapter(Object& registrable, string name) {
+  assert(registrable.isRegistrable());
   registerObject(name, RegistrableInfo(registrable, SCOPE_CHAPTER));
 }
 
-void Registry::registerApplication(Registrable& registrable, string name) {
+void Registry::registerApplication(Object& registrable, string name) {
+  assert(registrable.isRegistrable());
   registerObject(name, RegistrableInfo(registrable, SCOPE_APPLICATION));
 }
 
@@ -29,8 +32,8 @@ void Registry::registerObject(string name, RegistrableInfo info) {
   registrables[name] = info;
 } // registerObject
 
-Registrable& Registry::get(string name) {
-  Registrable* r = registrables[name].registrable;
+Object& Registry::get(string name) {
+  Object* r = registrables[name].registrable;
   if(!r)
     throw Exception(string("Could not find object named '") + name + string("' in registry."));
   return *r;

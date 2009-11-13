@@ -1,5 +1,5 @@
 
-GAME:getViewport():setup(800, 600)
+GAME:getViewport():setup(800, 600, false)
 
 GAME:registerChapter(0, function(n)
   print("Welcome to chapter 0")
@@ -25,10 +25,11 @@ GAME:registerChapter(0, function(n)
 
   guy:addAnimation("default", coke)
   guy:setMode("default")
-  guy:setPosition(2000, 2000)
+  guy:setPosition({x = 2000, y = 2000})
 
   start_scene:addActor(guy)
 
+  print("XXXXXX")
   GAME:goToScene(get("start"))
 
 end)
@@ -40,7 +41,7 @@ GAME:getUserInterface().handleEvent = function(self, evt, duration)
   return EVENT_STATE_UNHANDLED
 end
 
-
+print("XXX")
 GAME:runChapter(0)
 
 

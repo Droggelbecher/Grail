@@ -7,7 +7,7 @@
 #include "scene.h"
 #include "registry.h"
 
-class Viewport : public Registrable {
+class Viewport : public Object {
     SDL_Surface* screen;
     VirtualSize virtualSize;
 

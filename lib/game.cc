@@ -15,7 +15,7 @@ using std::endl;
 
 Game* Game::_instance = 0;
 
-Game::Game() : Registrable("Game"), targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
+Game::Game() : Object("Game", false), targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
   SDL_Init(SDL_INIT_EVERYTHING);
 }
 
@@ -52,6 +52,7 @@ Scene& Game::getCurrentScene() const {
 }
 
 void Game::goToScene(Scene& scene) {
+  std::cerr << "GO TO SCENE" << endl;
   currentScene = &scene;
 }
 

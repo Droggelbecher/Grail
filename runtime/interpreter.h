@@ -36,13 +36,15 @@ class Interpreter {
     void loadPrelude(std::string dir);
 
     void pushWrapperBase(std::string className);
-    void pushWrapper(Registrable& r);
+    void pushWrapper(Object& r);
 
+    /*
     template <typename T>
     void pushCopy(T obj);
 
     template <typename T>
     void pushCopy(T* obj);
+    */
 
     void registerFunction(std::string name, lua_CFunction fn);
     void registerBase(std::string baseName);
