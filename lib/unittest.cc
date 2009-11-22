@@ -30,10 +30,10 @@ void Unittest::runAll() {
       cerr << "  Test \"" << (*test_iter)->name << "\"" << endl;
       (*test_iter)->run(result);
       if(result.failed) {
-        cerr << "  [!] " << result.failed << " of " << (result.failed + result.passed) << " failed!" << endl;
+        cerr << endl << "  \x1b[01;31m" << result.failed << " of " << (result.failed + result.passed) << " failed! :(\x1b[m" << endl << endl;
       }
       else {
-        cerr << "  All " << result.passed << " checks passed." << endl;
+        cerr << endl << "  \x1b[01;32mAll " << result.passed << " checks passed. :D\x1b[m" << endl << endl;
       }
     } // for test
   } // for group
@@ -42,7 +42,7 @@ void Unittest::runAll() {
 void Unittest::checkEqual(bool r, string v1, string s1, string s2, TestResult& result) {
   if(!r) {
     result.failed++;
-    out << "    Failure: \"" << s2 << "\" expected, but got \"" << v1 << "\" from \"" << s1 << "\"" << std::endl;
+    out << "    \x1b[00;31mFAIL:\x1b[m \"" << s2 << "\" expected, but got \"" << v1 << "\" from \"" << s1 << "\"" << std::endl;
   }
   else {
     result.passed++;

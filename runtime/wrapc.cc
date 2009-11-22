@@ -10,6 +10,7 @@ using std::istream;
 using std::deque;
 using std::string;
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::list;
 using std::ifstream;
@@ -131,12 +132,14 @@ class Parser {
       string name;
       list<string> parameters;
       bool isStatic;
+      bool isCtor;
 
       void clear() {
         returnType = "";
         name = "";
         parameters.clear();
         isStatic = false;
+        isCtor = false;
       }
     };
 
@@ -149,6 +152,7 @@ class Parser {
 
     virtual void onStartClass(string name) { }
     virtual void onDefineMethod(MethodDefinition info) { }
+    virtual void onDefineCtor(MethodDefinition info) { }
     virtual void onClassEnd() { }
 
     bool isSpecial(string token) {
@@ -156,28 +160,9 @@ class Parser {
     }
 
     void parseInitial(string token) {
-      //if(token == "/") { parseToken = &Parser::parseComment1; }
       if(token == "class") { parseToken = &Parser::parseClassName; }
       else { assert(false); }
     }
-
-    /*
-    void parseComment1(string token) {
-      assert(token == "*");
-      parseToken = &Parser::parseComment2;
-    }
-
-    void parseComment2(string token) {
-      if(token == "*") {
-        parseToken = &Parser::parseComment3;
-      }
-    }
-
-    void parseComment3(string token) {
-      if(token == "/") { parseToken = &Parser::parseInitial; }
-      else { parseToken = &Parser::parseComment2; }
-    }
-    */
 
     void parseClassName(string token) { 
       onStartClass(token);
@@ -197,6 +182,11 @@ class Parser {
       }
       else if(token == "static") {
         currentMethod.isStatic = true;
+      }
+      else if(token == "ctor") {
+        currentMethod.isCtor = true;
+        cerr << "ctor found" << endl;
+        parseToken = &Parser::parseParameterListBegin;
       }
       else {
         currentMethod.returnType = token;
@@ -221,7 +211,8 @@ class Parser {
 
     void parseParameter(string token) {
       if(token == ")") {
-        onDefineMethod(currentMethod);
+        if(currentMethod.isCtor) { onDefineCtor(currentMethod); }
+        else { onDefineMethod(currentMethod); }
         parseToken = &Parser::parseMethodReturnType;
         currentMethod.clear();
       }
@@ -236,7 +227,8 @@ class Parser {
         parseToken = &Parser::parseParameter;
       }
       else if(token == ")") {
-        onDefineMethod(currentMethod);
+        if(currentMethod.isCtor) { onDefineCtor(currentMethod); }
+        else { onDefineMethod(currentMethod); }
         parseToken = &Parser::parseMethodReturnType;
         currentMethod.clear();
       }
@@ -270,6 +262,38 @@ class LuaWrapperParser : public Parser {
       currentClass = name;
       methods[name] = new list<string>();
     }
+
+    void onDefineCtor(MethodDefinition info) {
+      methods[currentClass]->push_back("ctor");
+
+      // --> int _FooBar_ctor(lua_State* L) {
+      out << "int _" << currentClass << "_ctor(lua_State* L) {" << endl;
+
+      // -->   lua_Number p1 = luaGet<lua_Number>(L, 1);
+      // -->   string p2 = luaGet<string>(L, 2);
+      // ...
+      list<string>::const_iterator iter;
+      int i = 1;
+      for(iter = info.parameters.begin(); iter != info.parameters.end(); iter++, i++) {
+        out << "  " << *iter << " p" << i << " = luaGet<" << *iter << ">(L, " << i << ");" << endl;
+      }
+
+      // -->   Object* r = new FooBar(p1, p2, ...);
+      out << "  Object* r = new " << currentClass << "(";
+      i = 1; string comma = "";
+      for(iter = info.parameters.begin(); iter != info.parameters.end(); iter++, i++) {
+        out << comma << "p" << i;
+        comma = ", ";
+      }
+      out << ");" << endl;
+
+      // -->   luaPush<Object>(L, &r);
+      out << "  return luaPush<Object&>(L, *r);" << endl;
+
+      out << "}" << endl << endl;
+    }
+
+
 
     void onDefineMethod(MethodDefinition info) {
       bool hasThis = !info.isStatic;
@@ -307,13 +331,8 @@ class LuaWrapperParser : public Parser {
       }
       out << ");" << endl;
 
-      if(info.returnType == "void") {
-        out << "  return 0;" << endl;
-      }
-      else {
-        out << "  return luaPush<" << info.returnType << ">(L, ret);" << endl;
-        //out << "  return luaPush(L, ret);" << endl;
-      }
+      if(info.returnType == "void") { out << "  return 0;" << endl; }
+      else { out << "  return luaPush<" << info.returnType << ">(L, ret);" << endl; }
 
       out << "}" << endl << endl;
     }

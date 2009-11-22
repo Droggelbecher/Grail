@@ -8,8 +8,18 @@ doresource("/prelude/debug.lua")
 table.foreach(_GRAIL.wrapperBases, function(k, v)
   _G[k] = v
   v.classname = k
-  v.chapter = function(self, ...) return _GRAIL.create(self.classname, 0, ...) end
-  v.application = function(self, ...) return _GRAIL.create(self.classname, 1, ...) end
+  --v.chapter = function(self, ...) return _GRAIL.create(self.classname, 0, ...) end
+  --v.application = function(self, ...) return _GRAIL.create(self.classname, 1, ...) end
+  v.chapter = function(self, name, ...)
+    r = v.ctor(...)
+    _GRAIL.registerChapter(r, name)
+    return r
+  end
+  v.application = function(self, name, ...)
+    r = v.ctor(...)
+    _GRAIL.registerApplication(r, name)
+    return r
+  end
 end)
 
 -- Global functions

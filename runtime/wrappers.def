@@ -1,6 +1,7 @@
 /* vim: set ft=cpp: */
 
 class Actor {
+  ctor()
   void addAnimation(string, Animation&)
   void setMode(string)
   void setPosition(VirtualPosition)
@@ -14,21 +15,29 @@ class Game {
   ResourceManager& getResourceManager()
   void setUserInterface(UserInterface&)
   UserInterface& getUserInterface()
-  /* static Game& getInstance() */
 }
 
 class Viewport {
+  ctor()
   void setup(lua_Number, lua_Number, bool)
 }
 
 class Scene {
+  ctor()
   void setBackground(Animation&)
   void addActor(Actor&)
 }
 
 class Image {
+  ctor(string)
 }
 
 class StripeSprite {
+  ctor(string, lua_Integer)
 }
+
+class DirectionAnimation {
+  ctor(lua_Integer)
+}
+
 

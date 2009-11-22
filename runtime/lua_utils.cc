@@ -37,21 +37,6 @@ T& _LuaGet<T&>::get(lua_State* L, int n) {
   return *r;
 }
 
-/*
-template <>
-Game* _LuaGet<Game*>::get(lua_State* L, int n) {
-  assert(lua_istable(L, n));
-  lua_getfield(L, n, "_ptr");
-  int top = lua_gettop(L);
-  assert(lua_isuserdata(L, top));
-  Game* r = (Game*)lua_touserdata(L, top);
-  assert(r);
-  lua_pop(L, 1);
-  return r;
-}
-*/
-
-//template <> int _LuaGet<int>::get(lua_State* L, int N) { return lua_tonumber(L, N); };
 template <> lua_Number _LuaGet<lua_Number>::get(lua_State* L, int N) { return lua_tonumber(L, N); };
 template <> lua_Integer _LuaGet<lua_Integer>::get(lua_State* L, int N) { return lua_tointeger(L, N); };
 template <> bool _LuaGet<bool>::get(lua_State* L, int N) { return lua_toboolean(L, N); };

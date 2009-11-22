@@ -89,12 +89,6 @@ void Interpreter::loadDirectory(string dir) {
 
 void Interpreter::loadPrelude(string dir) {
   runLuaFromResource(dir + "/prelude.lua");
-  /*
-  int r = luaL_dofile(L, (dir + pathDelimiter + "prelude.lua").c_str());
-  if(r) {
-    throw LuaException(L);
-  }
-  */
 }
 
 void Interpreter::pushInternalTable() {
@@ -187,54 +181,6 @@ void Interpreter::pushWrapper(Object& r) {
 
   L_RETURN(L, 1);
 }
-
-/*
-
-
-template <typename T>
-void Interpreter::pushCopy(T* obj) {
-  if(obj) {
-    pushWrapper(*((Object*)obj));
-  }
-  else {
-    lua_pushnil(L);
-  }
-}
-
-template <typename T>
-void Interpreter::pushCopy(T obj) {
-  obj.__type_supported_by_interpreter_pushCopy();
-}
-
-template <>
-void Interpreter::pushCopy(lua_Integer obj) { lua_pushinteger(L, obj); }
-
-template <>
-void Interpreter::pushCopy(VirtualPosition p) {
-  L_STACK(L);
-  lua_newtable(L);
-  pushCopy((lua_Integer)p.getX()); lua_setfield(L, -2, "x");
-  pushCopy((lua_Integer)p.getY()); lua_setfield(L, -2, "y");
-  L_RETURN(L, 1);
-}
-
-
-template <>
-void Interpreter::pushCopy(SDL_Event& obj) {
-  L_STACK(L);
-
-  OmniEvent e(obj);
-
-  lua_newtable(L);
-  pushCopy((lua_Integer)e.getType()); lua_setfield(L, -2, "type");
-  pushCopy(e.getPosition()); lua_setfield(L, -2, "position");
-  pushCopy(e.getActor()); lua_setfield(L, -2, "actor");
-  pushCopy((lua_Integer)e.getButton()); lua_setfield(L, -2, "button");
-
-  L_RETURN(L, 1);
-}
-
-*/
 
 void Interpreter::registerFunction(std::string name, lua_CFunction fn) {
   L_STACK(L);

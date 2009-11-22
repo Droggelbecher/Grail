@@ -5,6 +5,12 @@
 #include <stdint.h>
 #include <SDL/SDL.h>
 
+template <typename T, int N> class Vector2d;
+
+
+template <typename T, int N> Vector2d<T, N> operator*(double scalar, Vector2d<T, N> v);
+template <typename T, int N> Vector2d<T, N> operator*(Vector2d<T, N> v, double scalar);
+template <typename T, int N> bool operator==(Vector2d<T, N> a, Vector2d<T, N> b);
 
 /**
  * A 2-element vector of type T.
@@ -30,9 +36,6 @@ class Vector2d {
     Vector2d<T, N>() : _x(0), _y(0) { }
     Vector2d<T, N>(T x, T y) : _x(x), _y(y) { }
 
-    X x() { return _x; }
-    Y y() { return _y; }
-
     X getX() const { return _x; }
     Y getY() const { return _y; }
     void setX(X x) { _x = x; }
@@ -40,13 +43,25 @@ class Vector2d {
 
     Vector2d<T, N> operator+(Vector2d<T, N> other) const;
     Vector2d<T, N> operator-(Vector2d<T, N> other) const;
+    Vector2d<T, N> operator/(double scalar) const;
+
+    friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
+    friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);
+    friend bool operator==<T, N>(Vector2d<T, N>, Vector2d<T, N>);
     
     /**
      * Partition the unit circle into $directions equal pie slices,
      * return the number of the slice this vector (when drawn from the circles
      * center) lies in.
+     *
+     * Slice 0 is centered around the vector pointing straight in positive y
+     * direction (on computer screens this is normally "down").
+     * A vector pointing in positive y direction ("down"), will have direction
+     * 0, other directions follow counter-clock-wise.
      */
-    uint8_t nearestDirection(uint8_t directions) const;
+    uint16_t nearestDirection(uint16_t directions) const;
+
+    double length() const;
 };
 
 typedef Vector2d<int32_t, 0> VirtualPosition;

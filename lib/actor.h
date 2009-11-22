@@ -25,6 +25,7 @@ class Actor : public Object, public Area {
     VirtualPosition position;
     double alignmentX, alignmentY;
     Area* area;
+    double speed; ///< Unit is virtual pixels / second
 
     Path walkPath;
 
@@ -39,7 +40,11 @@ class Actor : public Object, public Area {
       }
     };
 
-    Actor() : Object("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0), area(0) { }
+    Actor() :
+      Object("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0), area(0),
+      speed(1000.0)
+    {
+    }
 
     bool hasPoint(VirtualPosition p) const {
       if(area) {
@@ -57,6 +62,24 @@ class Actor : public Object, public Area {
       if(animation) {
         animation->eachFrame(ticks);
       }
+
+      if(!walkPath.empty()) {
+        VirtualPosition target = walkPath.front();
+        VirtualPosition diff = target - position;
+        if(diff.length() <= (speed * ticks / 1000.0)) {
+          position = target;
+        }
+        else {
+          double steplen = (speed * ticks / (1000.0 * diff.length()));
+          VirtualPosition step = diff * steplen;
+
+          position = position + step;
+        }
+
+        if(position == target) {
+          walkPath.pop_front();
+        }
+      } // if walkPath not empty
     }
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {

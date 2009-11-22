@@ -29,7 +29,6 @@ GAME:registerChapter(0, function(n)
 
   start_scene:addActor(guy)
 
-  print("XXXXXX")
   GAME:goToScene(get("start"))
 
 end)
@@ -37,11 +36,13 @@ end)
 GAME:getUserInterface().handleEvent = function(self, evt, duration)
   if evt.type == EVT_ACTOR_CLICK then
     print("You clicked the actor with button " .. tostring(evt.button))
+  elseif evt.type == EVT_SCENE_CLICK then
+    print("pos=", evt.position)
+    get("guy"):walkStraight(evt.position)
   end
   return EVENT_STATE_UNHANDLED
 end
 
-print("XXX")
 GAME:runChapter(0)
 
 

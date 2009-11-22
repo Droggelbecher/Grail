@@ -37,62 +37,20 @@ int _get(lua_State* L) {
   return luaPush<Object&>(L, obj);
 }
 
-/**
- * create(classname, scope, name, ...) -> (clsname, ptr)
- *
- * Object factory for lua
- */
-int _create(lua_State* L) {
-  size_t n = lua_gettop(L);
+int registerChapter(lua_State* L) {
+  Object* obj = luaGet<Object*>(L, 1);
+  string name = luaGet<string>(L, 2);
 
-  string classname = luaGet<string>(L, 1);
-  lua_Number scope = luaGet<lua_Number>(L, 2);
+  Game::getInstance().getRegistry().registerChapter(*obj, name);
+  return 0;
+}
 
-  string name = luaGet<string>(L, 3);
+int registerApplication(lua_State* L) {
+  Object* obj = luaGet<Object*>(L, 1);
+  string name = luaGet<string>(L, 2);
 
-  Object* obj = 0;
-
-  // --- Actual construction by class name ---
-  // The comments describe arguments to this function after scope
-
-  // path | path, name
-  if(classname == "Image") {
-    string path = name;
-    if(n >= 3) {
-      path = luaGet<string>(L, 4);
-    }
-    obj = new Image(path);
-  }
-
-  // name, path, frames
-  else if(classname == "StripeSprite") {
-    string path = luaGet<string>(L, 4);
-    lua_Integer frames = luaGet<lua_Integer>(L, 5);
-    cerr << "stripe sprite " << path << " " << frames << endl;
-    obj = new StripeSprite(path, frames);
-  }
-
-  // name
-  else if(classname == "Scene") { obj = new Scene(); }
-  else if(classname == "UserInterface") { obj = new UserInterface(); }
-  else if(classname == "Actor") { obj = new Actor(); }
-
-  // name
-  else {
-    throw Exception(string("Don't know how to construct a \"") + classname + string("\" object."));
-  }
-
-  assert(obj);
-  obj->className = classname;
-
-  if(scope == 0) {
-    Game::getInstance().getRegistry().registerApplication(*obj, name);
-  }
-  else {
-    Game::getInstance().getRegistry().registerChapter(*obj, name);
-  }
-
-  return luaPush<Object&>(L, *obj);
+  Game::getInstance().getRegistry().registerApplication(*obj, name);
+  return 0;
 }
 
 
@@ -130,8 +88,10 @@ inline void base(std::string baseName) {
 }
 
 void registerHandcraftedWrappings() {
-  function("create", &_create);
   function("get", &_get);
+
+  function("registerChapter", &registerChapter);
+  function("registerApplication", &registerApplication);
 
   method("Game", "getInstance", &_Game_instance);
 }

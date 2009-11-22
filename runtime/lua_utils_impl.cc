@@ -22,6 +22,7 @@ LUAGET(Game*);
 LUAGET(Scene*);
 LUAGET(UserInterface*);
 LUAGET(Viewport*);
+LUAGET(Object*);
 
 LUAGET(Actor&);
 LUAGET(Animation&);
@@ -29,6 +30,7 @@ LUAGET(Game&);
 LUAGET(Scene&);
 LUAGET(UserInterface&);
 LUAGET(Viewport&);
+LUAGET(Object&);
 
 
 LUAPUSH(const SDL_Event&);
