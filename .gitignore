@@ -7,7 +7,7 @@ Makefile
 CMakeCache.txt
 CMakeFiles
 runtime/grail_runtime
-lib/run_unirttests
+lib/run_unittests
 runtime/wrapc
 runtime/wrapper_definitions.cc
 valgrind.log

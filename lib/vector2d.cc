@@ -24,6 +24,11 @@ Vector2d<T, N> Vector2d<T, N>::operator/(double scalar) const {
   return Vector2d<T, N>((T)((double)_x / scalar), (T)((double)_y / scalar));
 }
 
+template <typename T, int N>
+Vector2d<T, N> Vector2d<T, N>::operator-() const {
+  return Vector2d<T, N>(-_x, -_y);
+}
+
 
 template <typename T, int N>
 uint16_t Vector2d<T, N>::nearestDirection(uint16_t directions) const {

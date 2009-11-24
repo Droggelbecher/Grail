@@ -101,9 +101,8 @@ class Actor : public Object, public Area {
       }
     }
 
-    void setPosition(VirtualPosition position) {
-      this->position = position;
-    }
+    void setPosition(VirtualPosition position) { this->position = position; }
+    VirtualPosition getPosition() { return position; }
 
     void walk(const Path& path);
     void walkStraight(VirtualPosition p);

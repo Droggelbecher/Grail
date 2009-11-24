@@ -20,6 +20,8 @@ GAME:registerChapter(0, function(n)
   --coke = Image:chapter("img_coke", "/media/$res/coke.jpg")
   coke = StripeSprite:chapter("img_coke", "/media/$res/lineboy_r.png", 9)
 
+  GAME:getViewport():keepCentering(guy)
+
 
   dbg_print(getmetatable(coke))
 

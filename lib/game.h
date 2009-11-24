@@ -43,7 +43,6 @@ class Game : public Object {
     void renderEverything(uint32_t ticks);
     void handleEvent(const SDL_Event &event, uint32_t ticks);
 
-
     void quit();
 };
 

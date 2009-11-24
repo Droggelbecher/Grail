@@ -44,6 +44,7 @@ class Vector2d {
     Vector2d<T, N> operator+(Vector2d<T, N> other) const;
     Vector2d<T, N> operator-(Vector2d<T, N> other) const;
     Vector2d<T, N> operator/(double scalar) const;
+    Vector2d<T, N> operator-() const;
 
     friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
     friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);

@@ -27,6 +27,11 @@ class Scene : public Object {
     Scene();
     virtual ~Scene();
 
+    VirtualSize getSize() {
+      if(background) { return background->getSize(); }
+      return VirtualSize(0, 0);
+    }
+
     void setBackground(const Animation& background) {
       this->background = &background;
     }

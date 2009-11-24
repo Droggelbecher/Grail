@@ -20,6 +20,8 @@ class Game {
 class Viewport {
   ctor()
   void setup(lua_Number, lua_Number, bool)
+  void setCameraPosition(VirtualPosition)
+  void keepCentering(Actor&)
 }
 
 class Scene {
