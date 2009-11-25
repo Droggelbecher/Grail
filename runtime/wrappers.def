@@ -40,6 +40,8 @@ class StripeSprite {
 
 class DirectionAnimation {
   ctor(lua_Integer)
+  void setDirection(lua_Integer)
+  void setAnimation(lua_Integer, Animation*)
 }
 
 

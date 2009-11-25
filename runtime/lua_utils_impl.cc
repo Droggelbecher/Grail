@@ -18,6 +18,7 @@ LUAGET(VirtualPosition);
 
 LUAGET(Actor*);
 LUAGET(Animation*);
+LUAGET(DirectionAnimation*);
 LUAGET(Game*);
 LUAGET(Scene*);
 LUAGET(UserInterface*);
@@ -26,12 +27,12 @@ LUAGET(Object*);
 
 LUAGET(Actor&);
 LUAGET(Animation&);
+LUAGET(DirectionAnimation&);
 LUAGET(Game&);
 LUAGET(Scene&);
 LUAGET(UserInterface&);
 LUAGET(Viewport&);
 LUAGET(Object&);
-
 
 LUAPUSH(const SDL_Event&);
 

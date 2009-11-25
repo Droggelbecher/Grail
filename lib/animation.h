@@ -24,6 +24,7 @@ class Animation : public Object, public Area {
     }
     virtual void eachFrame(uint32_t ticks) { }
     virtual void setDirection(uint16_t direction) { }
+    virtual void setDirection(VirtualPosition p) { }
 };
 
 class DirectionAnimation : public Animation {
@@ -43,6 +44,11 @@ class DirectionAnimation : public Animation {
       assert(direction < directions);
       currentDirection = direction;
     }
+
+    void setDirection(VirtualPosition p) {
+      setDirection(p.nearestDirection(directions));
+    }
+
     void setAnimation(uint16_t direction, Animation* animation);
 };
 

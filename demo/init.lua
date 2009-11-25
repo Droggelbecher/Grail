@@ -17,19 +17,21 @@ GAME:registerChapter(0, function(n)
   -- start_scene:setBackground(get("coke"))
 
   guy = Actor:chapter("guy")
-  --coke = Image:chapter("img_coke", "/media/$res/coke.jpg")
-  coke = StripeSprite:chapter("img_coke", "/media/$res/lineboy_r.png", 9)
+  lineboy_ud = Image:chapter("img_lineboy_ud", "/media/$res/lineboy_default.png")
+  lineboy_r = StripeSprite:chapter("img_lineboy_r", "/media/$res/lineboy_r.png", 9)
+  lineboy_l = StripeSprite:chapter("img_lineboy_l", "/media/$res/lineboy_l.png", 9)
+  lineboy_default = DirectionAnimation:chapter("", 4)
+  lineboy_default:setAnimation(0, lineboy_ud)
+  lineboy_default:setAnimation(1, lineboy_r)
+  lineboy_default:setAnimation(2, lineboy_ud)
+  lineboy_default:setAnimation(3, lineboy_l)
 
-  GAME:getViewport():keepCentering(guy)
-
-
-  dbg_print(getmetatable(coke))
-
-  guy:addAnimation("default", coke)
+  guy:addAnimation("default", lineboy_default)
   guy:setMode("default")
   guy:setPosition({x = 2000, y = 2000})
 
   start_scene:addActor(guy)
+  GAME:getViewport():keepCentering(guy)
 
   GAME:goToScene(get("start"))
 

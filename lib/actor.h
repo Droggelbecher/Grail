@@ -66,6 +66,11 @@ class Actor : public Object, public Area {
       if(!walkPath.empty()) {
         VirtualPosition target = walkPath.front();
         VirtualPosition diff = target - position;
+
+        if(animation) {
+          animation->setDirection(diff);
+        }
+
         if(diff.length() <= (speed * ticks / 1000.0)) {
           position = target;
         }

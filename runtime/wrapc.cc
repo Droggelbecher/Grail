@@ -185,7 +185,6 @@ class Parser {
       }
       else if(token == "ctor") {
         currentMethod.isCtor = true;
-        cerr << "ctor found" << endl;
         parseToken = &Parser::parseParameterListBegin;
       }
       else {
@@ -259,6 +258,7 @@ class LuaWrapperParser : public Parser {
     }
 
     void onStartClass(string name) {
+      cerr << "Wrapping class \"" << name << "\"..." << endl;
       currentClass = name;
       methods[name] = new list<string>();
     }
