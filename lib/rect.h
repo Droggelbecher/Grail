@@ -10,6 +10,7 @@ class Rect : public Area {
 
   public:
     Rect(VirtualPosition topLeft, VirtualSize size) : topLeft(topLeft), size(size) { }
+    Rect(VirtualSize size) : topLeft(VirtualPosition(0, 0)), size(size) { }
 
     bool hasPoint(VirtualPosition p) const {
       return p.getX() >= topLeft.getX() &&

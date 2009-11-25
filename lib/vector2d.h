@@ -2,15 +2,16 @@
 #ifndef VECTOR2D_H
 #define VECTOR2D_H
 
+#include <iostream>
 #include <stdint.h>
 #include <SDL/SDL.h>
 
 template <typename T, int N> class Vector2d;
 
-
 template <typename T, int N> Vector2d<T, N> operator*(double scalar, Vector2d<T, N> v);
 template <typename T, int N> Vector2d<T, N> operator*(Vector2d<T, N> v, double scalar);
 template <typename T, int N> bool operator==(Vector2d<T, N> a, Vector2d<T, N> b);
+template <typename T, int N> std::ostream& operator<<(std::ostream&, Vector2d<T, N>);
 
 /**
  * A 2-element vector of type T.

@@ -64,6 +64,11 @@ bool operator==(Vector2d<T, N> a, Vector2d<T, N> b) {
   return a._x == b._x && a._y == b._y;
 }
 
+template <typename T, int N>
+std::ostream& operator<<(std::ostream& os, Vector2d<T, N> v) {
+  os << "<" << v.getX() << " " << v.getY() << ">";
+  return os;
+}
 
 
 template <typename A, typename B>

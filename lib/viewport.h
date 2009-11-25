@@ -35,6 +35,7 @@ class Viewport : public Object {
     PhysicalSize::X getPhysicalWidth() const;
     PhysicalSize::Y getPhysicalHeight() const;
 
+    VirtualPosition getCameraPosition() { return cameraPosition; }
     void setCameraPosition(VirtualPosition position);
     void renderScene(const Scene& scene, uint32_t ticks);
 

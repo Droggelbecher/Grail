@@ -7,6 +7,7 @@ template class Vector2d<int32_t, 1>;
 template VirtualPosition operator*(double, VirtualPosition);
 template VirtualPosition operator*(VirtualPosition, double);
 template bool operator==(VirtualPosition, VirtualPosition);
+template std::ostream& operator<<(std::ostream&, VirtualPosition);
 
 #define CONV(A, B) template B conv< A , B >( A );
 
