@@ -14,6 +14,7 @@
 class Scene : public Object {
     const Animation* background;
     std::list<Actor*> actors;
+    bool _actorsMoved;
 
   public:
     Scene();
@@ -27,6 +28,8 @@ class Scene : public Object {
       actors.push_back(&entity);
       std::inplace_merge(actors.begin(), actors.end(), actors.end(), Actor::CompareByY());
     }
+
+    void actorsMoved() { _actorsMoved = true; }
 
     void eachFrame(uint32_t ticks);
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;

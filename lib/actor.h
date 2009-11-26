@@ -7,6 +7,7 @@
 #include <iostream>
 #include <list>
 
+#include "classes.h"
 #include "vector2d.h"
 #include "animation.h"
 #include "registry.h"
@@ -41,7 +42,7 @@ class Actor : public Object, public Area {
     };
 
     Actor() :
-      Object("Actor"), animation(0), alignmentX(0.5), alignmentY(1.0), area(0),
+      Object("Actor"), animation(0), mode("default"), alignmentX(0.5), alignmentY(1.0), area(0),
       speed(1000.0)
     {
     }
@@ -58,34 +59,7 @@ class Actor : public Object, public Area {
       }
     }
 
-    void eachFrame(uint32_t ticks) {
-      if(animation) {
-        animation->eachFrame(ticks);
-      }
-
-      if(!walkPath.empty()) {
-        VirtualPosition target = walkPath.front();
-        VirtualPosition diff = target - position;
-
-        if(animation) {
-          animation->setDirection(diff);
-        }
-
-        if(diff.length() <= (speed * ticks / 1000.0)) {
-          position = target;
-        }
-        else {
-          double steplen = (speed * ticks / (1000.0 * diff.length()));
-          VirtualPosition step = diff * steplen;
-
-          position = position + step;
-        }
-
-        if(position == target) {
-          walkPath.pop_front();
-        }
-      } // if walkPath not empty
-    }
+    void eachFrame(uint32_t ticks);
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
       if(animation) {
@@ -95,6 +69,9 @@ class Actor : public Object, public Area {
 
     void addAnimation(std::string mode, Animation& animation) {
       animationModes[mode] = &animation;
+      if(animationModes.count(mode)) {
+        this->animation = animationModes[mode];
+      }
     }
 
     void setAlignment(double x, double y);

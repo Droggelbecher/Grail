@@ -1,9 +1,4 @@
 
-#include "scene.h"
-
-#include "viewport.h"
-#include "rect.h"
-
 #include <cassert>
 #include <list>
 using std::list;
@@ -11,7 +6,13 @@ using std::list;
 using std::cerr;
 using std::endl;
 
-Scene::Scene() : Object("Scene"), background(0) {
+#include "scene.h"
+
+#include "viewport.h"
+#include "rect.h"
+#include "actor.h"
+
+Scene::Scene() : Object("Scene"), background(0), _actorsMoved(false) {
 }
 
 Scene::~Scene() {
@@ -23,6 +24,11 @@ VirtualSize Scene::getSize() const {
 }
 
 void Scene::eachFrame(uint32_t ticks) {
+  if(_actorsMoved) {
+    actors.sort(Actor::CompareByY());
+    _actorsMoved = false;
+  }
+
   list<Actor*>::const_iterator iter;
   for(iter = actors.begin(); iter != actors.end(); iter++) {
     (*iter)->eachFrame(ticks);

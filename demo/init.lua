@@ -1,8 +1,6 @@
 
 GAME:getViewport():setup(800, 600, false)
 
-
-
 GAME:registerChapter(0, function(n)
   print("Welcome to chapter 0")
 
@@ -10,6 +8,8 @@ GAME:registerChapter(0, function(n)
   start = Scene:chapter()
 
   start:setBackground(bg)
+
+  -- Lineboy
 
   guy = Actor:chapterNamed("guy")
 
@@ -23,11 +23,18 @@ GAME:registerChapter(0, function(n)
   lineboy_default:setAnimation(3, lineboy_l)
 
   guy:addAnimation("default", lineboy_default)
-  guy:setMode("default")
   guy:setPosition(p(2000, 2000))
 
-  start:addActor(guy)
   GAME:getViewport():keepCentering(guy)
+
+  -- Coke
+
+  coke = Actor:chapterNamed("coke")
+  coke:addAnimation("default", Image:chapter("/media/$res/coke.jpg"))
+  coke:setPosition(p(3000, 3000))
+
+  start:addActor(guy)
+  start:addActor(coke)
 
   GAME:goToScene(start)
 end)
