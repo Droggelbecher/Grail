@@ -22,14 +22,18 @@ void Registry::registerApplication(Object& registrable, string name) {
 }
 
 void Registry::registerObject(string name, RegistrableInfo info) {
-  if(registrables.count(name)) {
-    throw RegistryException(
-        string("Could not register object '") + name +
-        string("' because an object with the same name already exists.")
-    );
+  if(name == "") {
+    nameless.push_back(info);
   }
-
-  registrables[name] = info;
+  else {
+    if(registrables.count(name)) {
+      throw RegistryException(
+          string("Could not register object '") + name +
+          string("' because an object with the same name already exists.")
+      );
+    }
+    registrables[name] = info;
+  }
 } // registerObject
 
 Object& Registry::get(string name) {
@@ -52,5 +56,16 @@ void Registry::clearData(Scope scope) {
   for(li=l.begin(); li!=l.end(); li++) {
     registrables.erase(*li);
   }
-}
+
+  list<RegistrableInfo>::iterator nameless_iter;
+  for(nameless_iter = nameless.begin(); nameless_iter != nameless.end(); ) {
+    if(nameless_iter->scope == scope || scope == SCOPE_ALL) {
+      delete nameless_iter->registrable;
+      nameless_iter = nameless.erase(nameless_iter);
+    }
+    else {
+      nameless_iter++;
+    }
+  } // for
+} // clearData
 

@@ -6,21 +6,6 @@
 #include <list>
 #include <map>
 
-class Registrable__ {
-  public:
-    std::string className;
-    //Registrable() { }
-    Registrable__(std::string cn) : className(cn) { }
-    virtual ~Registrable__() { }
-
-    /**
-     * Needs to have at least one virtual method, otherwise
-     * derived objects cant be casted to this and back
-     * (german visual c++ 2008 page 290 bottom)
-     */
-    virtual void dummy() { }
-};
-
 class Object {
   public:
     std::string className;
@@ -50,14 +35,17 @@ class Registry {
     };
 
     std::map<std::string, RegistrableInfo> registrables;
+    std::list<RegistrableInfo> nameless;
 
     void registerObject(std::string name, RegistrableInfo info);
 
   public:
-    class RegistryException {
+    class RegistryException : public std::exception {
+        std::string _what;
       public:
-        std::string what;
-        RegistryException(std::string what) : what(what) { }
+        RegistryException(std::string what) : _what(what) { }
+        ~RegistryException() throw() { }
+        const char* what() const throw() { return _what.c_str(); }
     };
 
     ~Registry();

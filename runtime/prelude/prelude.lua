@@ -8,14 +8,22 @@ doresource("/prelude/debug.lua")
 table.foreach(_GRAIL.wrapperBases, function(k, v)
   _G[k] = v
   v.classname = k
-  --v.chapter = function(self, ...) return _GRAIL.create(self.classname, 0, ...) end
-  --v.application = function(self, ...) return _GRAIL.create(self.classname, 1, ...) end
-  v.chapter = function(self, name, ...)
+  v.chapter = function(self, ...)
+    r = v.ctor(...)
+    _GRAIL.registerChapter(r, '')
+    return r
+  end
+  v.application = function(self, ...)
+    r = v.ctor(...)
+    _GRAIL.registerApplication(r, '')
+    return r
+  end
+  v.chapterNamed = function(self, name, ...)
     r = v.ctor(...)
     _GRAIL.registerChapter(r, name)
     return r
   end
-  v.application = function(self, name, ...)
+  v.applicationNamed = function(self, name, ...)
     r = v.ctor(...)
     _GRAIL.registerApplication(r, name)
     return r
@@ -34,4 +42,10 @@ GAME._chapter_ctors = {}
 function GAME:registerChapter(n, fn)
   self._chapter_ctors[n] = fn
 end
+
+
+function p(x, y)
+  return {x = x, y = y}
+end
+
 
