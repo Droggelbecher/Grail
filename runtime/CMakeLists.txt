@@ -20,7 +20,7 @@ add_executable(grail_runtime
   handcrafted_wrappers.cc
 )
 
-set(LIBS grail ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBARY} ${LUA_LIBRARIES})
+set(LIBS grail ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY} ${LUA_LIBRARIES})
 
 target_link_libraries(grail_runtime ${LIBS})
 
