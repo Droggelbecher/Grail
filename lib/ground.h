@@ -31,14 +31,39 @@ class Ground : public Object {
       public:
         Waypoint* cheapestParent;
 
+        /**
+         */
         Waypoint(VirtualPosition position) : position(position), costSum(0) { }
 
+        /**
+         */
         VirtualPosition getPosition() const { return position; }
         bool operator==(const Waypoint& other) const { return position == other.position; }
         bool operator!=(const Waypoint& other) const { return position != other.position; }
+
+        /**
+         * create a link this->other
+         */
         void link(Waypoint& other) { neighbours.push_back(&other); }
+
+        /**
+         * create a bi directional link this<->other
+         */
+        void linkBidirectional(Waypoint& other) {
+          link(other);
+          other.link(*this);
+        }
+
+        /**
+         */
         void setCostSum(double s) { costSum = s; }
+
+        /**
+         */
         double getCostSum() { return costSum; }
+
+        /**
+         */
         double costTo(Waypoint* other) {
           return (position - other->position).length();
         }
@@ -82,6 +107,9 @@ class Ground : public Object {
      */
     Waypoint& addWaypoint(VirtualPosition p);
 
+    /// ditto.
+    Waypoint& addWaypoint(Waypoint& wp);
+
     /**
      * Remove a waypoint.
      */
@@ -91,11 +119,6 @@ class Ground : public Object {
      * ditto.
      */
     //void removeWaypoint(Waypoint& n);
-
-    /**
-     * Create a bidirectional link between two nodes.
-     */
-    void connect(Waypoint& a, Waypoint& b);
 
     /**
      * Returns true if point target can be reached in a direct line from source,

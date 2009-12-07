@@ -1,6 +1,7 @@
 
 #include <cassert>
 #include <string>
+#include <sstream>
 
 #include "lib/actor.h"
 #include "lib/animation.h"
@@ -8,6 +9,7 @@
 #include "lib/classes.h"
 #include "lib/event.h"
 #include "lib/game.h"
+#include "lib/ground.h"
 #include "lib/image.h"
 #include "lib/mainloop.h"
 #include "lib/rect.h"
@@ -18,14 +20,17 @@
 #include "lib/sprite.h"
 #include "lib/surface.h"
 #include "lib/unittest.h"
-#include "lib/user_interface_element.h"
 #include "lib/user_interface.h"
+#include "lib/user_interface_element.h"
 #include "lib/utils.h"
 #include "lib/vector2d.h"
 #include "lib/viewport.h"
 
 #include "lua_utils.h"
 #include "interpreter.h"
+
+using std::istringstream;
+using std::string;
 
 /**
  * Get named object from registry,
@@ -53,44 +58,76 @@ int registerApplication(lua_State* L) {
   return 0;
 }
 
-// XXX
-
-/*
-void _pushSceneElement(map<string, string> parameters) {
+int _pushSceneElement(lua_State* L, map<string, string>& parameters) {
   if(parameters["type"] == "Ground") {
     Ground* g = new Ground;
-    g.nodes = [VirtualPosition(x) for x in parametrs["nodes"].split(";")]
+    SplitIterator nodeIter = SplitIterator(parameters["nodes"], ";"),
+                  edgeIter = SplitIterator(parameters["edges"], ";");
+
+    vector<Ground::Waypoint*> nodes;
+    for(; nodeIter != nodeIter.end(); nodeIter++) {
+      pair<string, string> xy = split2(*nodeIter);
+      Ground::Waypoint *wp = new Ground::Waypoint(
+          VirtualPosition(fromString<VirtualPosition::X>(xy.first), fromString<VirtualPosition::Y>(xy.second))
+      );
+      nodes.push_back(wp);
+      g->addWaypoint(*wp);
+    }
+
+    for(; edgeIter != edgeIter.end(); edgeIter++) {
+      pair<string, string> ab = split2(*edgeIter);
+      size_t a = fromString<size_t>(ab.first);
+      size_t b = fromString<size_t>(ab.second);
+      assert(a < nodes.size());
+      assert(b < nodes.size());
+      nodes[a]->linkBidirectional(*nodes[b]);
+    }
+
+    return luaPush<Ground&>(L, *g);
   }
-  else if( ... ) {
-    ...
-  }
+
+  return 0;
 }
 
 int loadSceneDefinition(lua_State* L) {
   string res = luaGet<string>(L, 1);
-  Resource f(res, MODE_READ);
-  // TODO: Read from char* line by line
 
-  for(...) {
-    line = line.strip();
-    if(line.size() && line[0] == '[') {
-      if [element ...] {
-        ... -> name
+  Resource f(res, MODE_READ);
+  istringstream s(string(f.getData(), f.getDataSize()));
+  char linebuffer[2048]; // lines can be quite long
+  map<string, string> parameters;
+  bool ignore_block = false;
+
+  lua_newtable(L);
+
+  while(!s.eof()) {
+    s.getline(linebuffer, 2048-1);
+    string line = string(linebuffer);
+    if(line.length() == 0) continue; // ignore empty lines
+
+    if(startsWith(line, "[element ")) {
+      if(_pushSceneElement(L, parameters)) {
+        lua_setfield(L, -2, parameters["name"].c_str());
       }
-      else if [scene] {
-        ignore
-      }
-      else if [scene background] {
-        "background" -> name
-      }
+
+      parameters.clear();
+      ignore_block = false;
+      parameters["name"] = line.substr(9, line.length() - 1);
     }
-    else {
-      if type = ... {
-        ... -> type
-      }
+    else if(line == "[scene]") {
+      // ignore [scene] blocks
+      ignore_block = true;
+    }
+    else if(line == "[scene background]") {
+    }
+    else if(!ignore_block) {
+      pair<string, string> kv = split2(line, "=");
+      parameters[strip(kv.first)] = strip(kv.second);
+    }
   }
+
+  return 1;
 } // loadSceneDefinition
-*/
 
 void Game_initChapter(size_t n) {
   lua_State* L = interpreter.L;

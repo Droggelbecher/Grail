@@ -6,6 +6,7 @@
 #include "lib/scene.h"
 #include "lib/viewport.h"
 #include "lib/user_interface.h"
+#include "lib/ground.h"
 
 #define LUAGET(T) template T luaGet< T >(lua_State*, int);
 #define LUAPUSH(T) template int luaPush< T >(lua_State*, T);
@@ -44,4 +45,5 @@ LUAPUSH(Scene&);
 LUAPUSH(UserInterface&);
 LUAPUSH(Viewport&);
 LUAPUSH(ResourceManager&);
+LUAPUSH(Ground&);
 

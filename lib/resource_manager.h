@@ -20,25 +20,13 @@ enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
  */
 class Resource {
     SDL_RWops* rw;
+    const char* buffer;
+    size_t bufferSize;
 
   private:
     // forbid copying
     Resource(const Resource& other) { }
     Resource& operator=(const Resource& other) { return *this; }
-
-  public:
-    std::string path;
-
-    Resource(std::string path, ResourceMode mode);
-    ~Resource();
-
-    /**
-     * Get rwops pointer. DONT delete the returned pointer, we'll do it in our
-     * d'tor.
-     */
-    SDL_RWops* getRW() {
-      return rw;
-    }
 
     /**
      * Copy all data to a newly created buffer.
@@ -58,6 +46,36 @@ class Resource {
       }
       return buffer;
     }
+
+
+  public:
+    std::string path;
+
+    Resource(std::string path, ResourceMode mode);
+    ~Resource();
+
+    /**
+     * Get rwops pointer. DONT delete the returned pointer, we'll do it in our
+     * d'tor.
+     */
+    SDL_RWops* getRW() {
+      return rw;
+    }
+
+    const char* getData() {
+      if(!buffer) {
+        buffer = createBuffer(bufferSize);
+      }
+      return buffer;
+    }
+
+    size_t getDataSize() {
+      if(!buffer) {
+        buffer = createBuffer(bufferSize);
+      }
+      return bufferSize;
+    }
+
 
     friend class ResourceManager;
     friend Resource getResource(std::string, ResourceMode);

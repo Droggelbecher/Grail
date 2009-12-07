@@ -28,13 +28,13 @@ void Ground::addWalls(const Polygon& polygon) {
 
 Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
   Waypoint *wp = new Waypoint(p);
-  waypoints.push_back(wp);
+  addWaypoint(*wp);
   return *wp;
 }
 
-void Ground::connect(Waypoint& a, Waypoint& b) {
-  a.link(b);
-  b.link(a);
+Ground::Waypoint& Ground::addWaypoint(Waypoint& wp) {
+  waypoints.push_back(&wp);
+  return wp;
 }
 
 bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {

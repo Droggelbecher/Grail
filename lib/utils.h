@@ -5,6 +5,8 @@
 #include <string>
 #include <list>
 #include <exception>
+#include <cassert>
+#include <iostream>
 
 class Exception : public std::exception {
   std::string _what;
@@ -16,13 +18,103 @@ class Exception : public std::exception {
 
 
 //
-// File(name) handling
+// String stuff
 //
+
+/**
+ * Strip white spaces on the left side
+ */
+std::string lstrip(std::string s);
+
+/**
+ * Strip white spaces on the right side
+ */
+std::string rstrip(std::string s);
+
+
+/**
+ * Strip white spaces on both sides
+ */
+std::string strip(std::string s);
+
+
+std::pair<std::string, std::string> split2(std::string s, std::string delimiter = "=");
+
+class SplitIterator;
+
+std::ostream& operator<<(std::ostream&, SplitIterator&);
+
+class SplitIterator : public std::iterator<std::input_iterator_tag, int> {
+    std::string s;
+    std::string delimiter;
+    size_t pos;
+
+  public:
+    SplitIterator(std::string s, std::string delimiter, size_t pos=0) : s(s), delimiter(delimiter), pos(pos) {
+    }
+    SplitIterator(const SplitIterator& other) : s(other.s), delimiter(other.delimiter), pos(other.pos) {
+    }
+
+    static SplitIterator end(std::string s, std::string delimiter)  {
+      return SplitIterator(s, delimiter, std::string::npos);
+    }
+
+    SplitIterator end() {
+      return SplitIterator(s, delimiter, std::string::npos);
+    }
+
+    SplitIterator& operator++() {
+      pos = s.find(delimiter, pos);
+      if(pos != std::string::npos) pos++;
+      return *this;
+    }
+
+    SplitIterator& operator++(int) {
+      SplitIterator& r(*this);
+      pos = s.find(delimiter, pos);
+      if(pos != std::string::npos) pos++;
+      return r;
+    }
+
+    bool operator==(const SplitIterator& other) {
+      return s == other.s && delimiter == other.delimiter && pos == other.pos;
+    }
+
+    bool operator!=(const SplitIterator& other) {
+      return !(*this == other);
+    }
+
+    std::string operator*() const {
+      assert(pos != std::string::npos);
+      size_t p = s.find(delimiter, pos);
+      if(p == std::string::npos) {
+        p = s.length();
+      }
+      return s.substr(pos, p-pos);
+    }
+
+    friend std::ostream& operator<<(std::ostream&, SplitIterator&);
+}; // class SplitIterator
+
+
 
 /**
  * Return true iff s starts with prefix
  */
 bool startsWith(std::string s, std::string prefix);
+
+template <typename T>
+T fromString(std::string s) {
+  std::istringstream ss(s);
+  T r;
+  ss >> r;
+  return r;
+}
+
+
+//
+// File(name) handling
+//
 
 #ifdef WIN32
   const char pathDelimiter = '\\';

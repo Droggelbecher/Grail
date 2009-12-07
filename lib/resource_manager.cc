@@ -16,12 +16,13 @@ using std::endl;
 #include "viewport.h"
 
 
-Resource::Resource(string path, ResourceMode mode) : path(path) {
+Resource::Resource(string path, ResourceMode mode) : buffer(0), bufferSize(0), path(path) {
   rw = Game::getInstance().getResourceManager().getRW(path, mode);
 }
 
 Resource::~Resource() {
   SDL_RWclose(rw);
+  delete[] buffer;
 }
 
 
