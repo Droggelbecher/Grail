@@ -58,7 +58,7 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
       VirtualPosition cam = Game::getInstance().getViewport().getCameraPosition();
 
       for(iter = actors.begin(); iter != actors.end(); iter++) {
-        if((*iter)->hasPoint(pos)) {
+        if((*iter)->hasPoint(pos + cam)) {
           (new ActorClickEvent(**iter, pos + cam, event.button.button))->push();
           event_sent = true;
           break;
