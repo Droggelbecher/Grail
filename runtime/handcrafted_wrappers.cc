@@ -53,6 +53,44 @@ int registerApplication(lua_State* L) {
   return 0;
 }
 
+// XXX
+
+/*
+void _pushSceneElement(map<string, string> parameters) {
+  if(parameters["type"] == "Ground") {
+    Ground* g = new Ground;
+    g.nodes = [VirtualPosition(x) for x in parametrs["nodes"].split(";")]
+  }
+  else if( ... ) {
+    ...
+  }
+}
+
+int loadSceneDefinition(lua_State* L) {
+  string res = luaGet<string>(L, 1);
+  Resource f(res, MODE_READ);
+  // TODO: Read from char* line by line
+
+  for(...) {
+    line = line.strip();
+    if(line.size() && line[0] == '[') {
+      if [element ...] {
+        ... -> name
+      }
+      else if [scene] {
+        ignore
+      }
+      else if [scene background] {
+        "background" -> name
+      }
+    }
+    else {
+      if type = ... {
+        ... -> type
+      }
+  }
+} // loadSceneDefinition
+*/
 
 void Game_initChapter(size_t n) {
   lua_State* L = interpreter.L;
@@ -92,6 +130,7 @@ void registerHandcraftedWrappings() {
 
   function("registerChapter", &registerChapter);
   function("registerApplication", &registerApplication);
+  //function("loadSceneDefinition", &loadSceneDefinition);
 
   method("Game", "getInstance", &_Game_instance);
 }

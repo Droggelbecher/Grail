@@ -5,7 +5,10 @@ set(GRAIL_FILES
   animation.cc
   event.cc
   game.cc
+  ground.cc
+  line.cc
   mainloop.cc
+  polygon.cc
   registry.cc
   resource_manager.cc
   scene.cc

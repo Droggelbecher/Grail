@@ -11,6 +11,7 @@ template <typename T, int N> class Vector2d;
 template <typename T, int N> Vector2d<T, N> operator*(double scalar, Vector2d<T, N> v);
 template <typename T, int N> Vector2d<T, N> operator*(Vector2d<T, N> v, double scalar);
 template <typename T, int N> bool operator==(Vector2d<T, N> a, Vector2d<T, N> b);
+template <typename T, int N> bool operator!=(Vector2d<T, N> a, Vector2d<T, N> b);
 template <typename T, int N> std::ostream& operator<<(std::ostream&, Vector2d<T, N>);
 
 /**
@@ -50,6 +51,7 @@ class Vector2d {
     friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
     friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);
     friend bool operator==<T, N>(Vector2d<T, N>, Vector2d<T, N>);
+    friend bool operator!=<T, N>(Vector2d<T, N>, Vector2d<T, N>);
     
     /**
      * Partition the unit circle into $directions equal pie slices,

@@ -60,9 +60,10 @@ Vector2d<T, N> operator*(Vector2d<T, N> v, double scalar) {
 }
 
 template <typename T, int N>
-bool operator==(Vector2d<T, N> a, Vector2d<T, N> b) {
-  return a._x == b._x && a._y == b._y;
-}
+bool operator==(Vector2d<T, N> a, Vector2d<T, N> b) { return a._x == b._x && a._y == b._y; }
+
+template <typename T, int N>
+bool operator!=(Vector2d<T, N> a, Vector2d<T, N> b) { return a._x != b._x || a._y != b._y; }
 
 template <typename T, int N>
 std::ostream& operator<<(std::ostream& os, Vector2d<T, N> v) {

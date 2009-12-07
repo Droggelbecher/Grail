@@ -19,6 +19,7 @@ class LuaException : public std::exception {
 class Interpreter {
     static int l_panic(lua_State* L);
     static const std::string internalTableName;
+
     static int l_doresource(lua_State* L);
 
     void pushInternalTable();
@@ -37,14 +38,6 @@ class Interpreter {
 
     void pushWrapperBase(std::string className);
     void pushWrapper(Object& r);
-
-    /*
-    template <typename T>
-    void pushCopy(T obj);
-
-    template <typename T>
-    void pushCopy(T* obj);
-    */
 
     void registerFunction(std::string name, lua_CFunction fn);
     void registerBase(std::string baseName);
