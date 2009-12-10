@@ -246,8 +246,13 @@ class LuaWrapperParser : public Parser {
     string currentClass;
 
     map<string, list<string>* > methods;
+    map<string, string> typealias;
 
-    LuaWrapperParser(ostream& out) : out(out) { }
+    LuaWrapperParser(ostream& out) : out(out) {
+      typealias["int"] = "lua_Integer";
+      typealias["bool"] = "lua_Integer";
+      typealias["double"] = "lua_Number";
+    }
     ~LuaWrapperParser() {
       map<string, list<string>* >::iterator map_iter;
 
@@ -275,7 +280,7 @@ class LuaWrapperParser : public Parser {
       list<string>::const_iterator iter;
       int i = 1;
       for(iter = info.parameters.begin(); iter != info.parameters.end(); iter++, i++) {
-        out << "  " << *iter << " p" << i << " = luaGet<" << *iter << ">(L, " << i << ");" << endl;
+        out << "  " << *iter << " p" << i << " = luaGet<" << dealias(*iter) << ">(L, " << i << ");" << endl;
       }
 
       // -->   Object* r = new FooBar(p1, p2, ...);
@@ -294,6 +299,12 @@ class LuaWrapperParser : public Parser {
     }
 
 
+    string dealias(string s) {
+      if(typealias.count(s)) {
+        return typealias[s];
+      }
+      return s;
+    }
 
     void onDefineMethod(MethodDefinition info) {
       bool hasThis = !info.isStatic;
@@ -309,7 +320,7 @@ class LuaWrapperParser : public Parser {
       list<string>::const_iterator iter;
       int i = 2;
       for(iter = info.parameters.begin(); iter != info.parameters.end(); iter++, i++) {
-        out << "  " << *iter << " p" << i << " = luaGet<" << *iter << ">(L, " << i << ");" << endl;
+        out << "  " << dealias(*iter) << " p" << i << " = luaGet<" << dealias(*iter) << ">(L, " << i << ");" << endl;
       }
 
       string base;
@@ -320,7 +331,7 @@ class LuaWrapperParser : public Parser {
         out << "  " << base << info.name << "(";
       }
       else {
-        out << "  " << info.returnType << " ret = " << base << info.name << "(";
+        out << "  " << dealias(info.returnType) << " ret = " << base << info.name << "(";
       }
 
       i = 2;
@@ -332,7 +343,7 @@ class LuaWrapperParser : public Parser {
       out << ");" << endl;
 
       if(info.returnType == "void") { out << "  return 0;" << endl; }
-      else { out << "  return luaPush<" << info.returnType << ">(L, ret);" << endl; }
+      else { out << "  return luaPush<" << dealias(info.returnType) << ">(L, ret);" << endl; }
 
       out << "}" << endl << endl;
     }
@@ -377,6 +388,7 @@ int main(int argc, char** argv) {
   out << "#include \"lib/classes.h\"" << endl;
   out << "#include \"lib/event.h\"" << endl;
   out << "#include \"lib/game.h\"" << endl;
+  out << "#include \"lib/ground.h\"" << endl;
   out << "#include \"lib/image.h\"" << endl;
   out << "#include \"lib/mainloop.h\"" << endl;
   out << "#include \"lib/rect.h\"" << endl;

@@ -17,25 +17,29 @@ LUAGET(bool);
 LUAGET(std::string);
 LUAGET(VirtualPosition);
 
-LUAGET(Actor*);
-LUAGET(Animation*);
-LUAGET(DirectionAnimation*);
-LUAGET(Game*);
-LUAGET(Scene*);
-LUAGET(UserInterface*);
-LUAGET(Viewport*);
-LUAGET(Object*);
-
 LUAGET(Actor&);
+LUAGET(Actor*);
 LUAGET(Animation&);
+LUAGET(Animation*);
 LUAGET(DirectionAnimation&);
+LUAGET(DirectionAnimation*);
 LUAGET(Game&);
-LUAGET(Scene&);
-LUAGET(UserInterface&);
-LUAGET(Viewport&);
+LUAGET(Game*);
+LUAGET(Ground&);
+LUAGET(Ground*);
 LUAGET(Object&);
+LUAGET(Object*);
+LUAGET(Polygon&);
+LUAGET(Polygon*);
+LUAGET(Scene&);
+LUAGET(Scene*);
+LUAGET(UserInterface&);
+LUAGET(UserInterface*);
+LUAGET(Viewport&);
+LUAGET(Viewport*);
 
 LUAPUSH(const SDL_Event&);
+LUAPUSH(lua_Integer);
 
 LUAPUSH(Actor&);
 LUAPUSH(Animation&);

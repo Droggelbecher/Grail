@@ -85,6 +85,10 @@ int _pushSceneElement(lua_State* L, map<string, string>& parameters) {
 
     return luaPush<Ground&>(L, *g);
   }
+  else if(parameters["type"] == "Image") {
+    SceneImage* img = new SceneImage(parameters["resource"]);
+
+  }
 
   return 0;
 }
@@ -112,7 +116,7 @@ int loadSceneDefinition(lua_State* L) {
 
       parameters.clear();
       ignore_block = false;
-      parameters["name"] = line.substr(9, line.length() - 1);
+      parameters["name"] = line.substr(9, line.length() - 10);
     }
     else if(line == "[scene]") {
       // ignore [scene] blocks
@@ -124,6 +128,10 @@ int loadSceneDefinition(lua_State* L) {
       pair<string, string> kv = split2(line, "=");
       parameters[strip(kv.first)] = strip(kv.second);
     }
+  }
+
+  if(_pushSceneElement(L, parameters)) {
+    lua_setfield(L, -2, parameters["name"].c_str());
   }
 
   return 1;
@@ -167,7 +175,7 @@ void registerHandcraftedWrappings() {
 
   function("registerChapter", &registerChapter);
   function("registerApplication", &registerApplication);
-  //function("loadSceneDefinition", &loadSceneDefinition);
+  function("loadSceneDefinition", &loadSceneDefinition);
 
   method("Game", "getInstance", &_Game_instance);
 }

@@ -1,6 +1,9 @@
 
 GAME:getViewport():setup(800, 600, false)
 
+s = _GRAIL.loadSceneDefinition("/media/test.scene")
+dbg_print(s)
+
 GAME:registerChapter(0, function(n)
   print("Welcome to chapter 0")
 

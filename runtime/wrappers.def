@@ -9,12 +9,19 @@ class Actor {
 }
 
 class Game {
-  void runChapter(lua_Integer)
+  void runChapter(int)
   Viewport& getViewport()
   void goToScene(Scene&)
   ResourceManager& getResourceManager()
   void setUserInterface(UserInterface&)
   UserInterface& getUserInterface()
+}
+
+class Ground {
+  ctor()
+  void addWall(VirtualPosition, VirtualPosition)
+  void addWalls(Polygon&)
+  bool directReachable(VirtualPosition, VirtualPosition)
 }
 
 class Viewport {
@@ -35,13 +42,13 @@ class Image {
 }
 
 class StripeSprite {
-  ctor(string, lua_Integer)
+  ctor(string, int)
 }
 
 class DirectionAnimation {
-  ctor(lua_Integer)
-  void setDirection(lua_Integer)
-  void setAnimation(lua_Integer, Animation*)
+  ctor(int)
+  void setDirection(int)
+  void setAnimation(int, Animation*)
 }
 
 
