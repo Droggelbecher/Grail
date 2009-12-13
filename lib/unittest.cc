@@ -1,4 +1,5 @@
 
+#include <iomanip>
 #include "unittest.h"
 
 using std::string;
@@ -6,6 +7,8 @@ using std::cerr;
 using std::endl;
 using std::list;
 using std::map;
+using std::setw;
+using std::left;
 
 std::map<std::string, std::list<Unittest*> > Unittest::tests;
 
@@ -24,16 +27,17 @@ void Unittest::runAll() {
 
   cerr << "Running unit tests." << endl;
   for(group_iter = tests.begin(); group_iter != tests.end(); group_iter++) {
-    cerr << "Test group \"" << group_iter->first << "\"" << endl;
+    //cerr << "\x1b[01;33mGroup \"" << group_iter->first << "\"\x1b[m" << endl;
+    cerr << "\x1b[01;33m" << group_iter->first << "\x1b[m" << endl;
     for(test_iter = group_iter->second.begin(); test_iter != group_iter->second.end(); test_iter++) {
       result.clear();
-      cerr << "  Test \"" << (*test_iter)->name << "\"" << endl;
+      cerr <<  "  Test \"" << left << setw(30) << ((*test_iter)->name +"\"... ");
       (*test_iter)->run(result);
       if(result.failed) {
-        cerr << endl << "  \x1b[01;31m" << result.failed << " of " << (result.failed + result.passed) << " failed! :(\x1b[m" << endl << endl;
+        cerr << endl << "  \x1b[01;31m" << result.failed << " of " << (result.failed + result.passed) << " failed! :(\x1b[m" << endl;
       }
       else {
-        cerr << endl << "  \x1b[01;32mAll " << result.passed << " checks passed. :D\x1b[m" << endl << endl;
+        cerr << "  \x1b[01;32mAll " << result.passed << " checks passed. :D\x1b[m" << endl;
       }
     } // for test
   } // for group
@@ -42,7 +46,7 @@ void Unittest::runAll() {
 void Unittest::checkEqual(bool r, string v1, string s1, string s2, TestResult& result) {
   if(!r) {
     result.failed++;
-    out << "    \x1b[00;31mFAIL:\x1b[m \"" << s2 << "\" expected, but got \"" << v1 << "\" from \"" << s1 << "\"" << std::endl;
+    out << endl << "    \x1b[00;31mFAIL:\x1b[m \"" << s2 << "\" expected, but got \"" << v1 << "\" from \"" << s1 << "\"";
   }
   else {
     result.passed++;

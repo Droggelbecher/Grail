@@ -1,0 +1,68 @@
+[element plant]
+vertical-align = 1.0
+codegen-option = 0
+horizontal-align = 0.5
+position = 5745,2215
+resource = file:plant.png
+type = Image
+
+[element plantStand]
+position = 6295,2270
+type = Point
+codegen-option = 1
+
+[element walkableArea]
+nodes = 150,1695;3510,1695;4190,1255;4105,1685;7870,1670;7860,2500;140,2495
+type = Polygon
+codegen-option = 1
+
+[element plantArea]
+nodes = 5220,2160;5295,1950;6230,1960;6285,2170;6050,2225;5420,2230
+type = Polygon
+codegen-option = 1
+
+[element wallArea]
+nodes = 7925,60;4460,75;4415,1585;5225,1605;5225,775;6215,745;6285,1575;7900,1555
+type = Polygon
+codegen-option = 1
+
+[element room01door01]
+nodes = 4305,25;4285,1505;3600,1500;3605,25
+type = Polygon
+codegen-option = 1
+
+[scene]
+struct-member-name = atlantis
+struct-name = Atlantis
+imports = indiana_lib.all
+class-name = AtlantisScene
+base-classes = Scene
+generate-bg-code = 1
+module-name = room01_atlantis
+
+[element pictureStand]
+position = 1660,1845
+type = Point
+codegen-option = 1
+
+[element picture]
+nodes = 1180,445;2205,460;2205,1065;1165,1050
+type = Polygon
+codegen-option = 1
+
+[scene background]
+type = Image
+resource = file:room01.jpg
+codegen-option = 0
+
+[element startingPoint]
+position = 3975,1575
+type = Point
+codegen-option = 1
+
+[element ground]
+nodes = 3955,1795;5115,2335;5000,2095;5180,1850;5660,1800;6255,1815;6525,1960;6505,2290;6255,2410;5475,2410;5880,2420;4360,1900;3890,1625
+edges = 2,1;2,3;3,4;4,5;5,6;6,7;7,8;1,9;9,10;8,10;0,11;11,3;0,12
+type = Ground
+codegen-option = 1
+

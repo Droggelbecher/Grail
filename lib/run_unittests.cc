@@ -5,6 +5,7 @@
 
 #include "vector2d.h"
 #include "utils.h"
+#include "reference_counting.h"
 
 using std::make_pair;
 
@@ -42,7 +43,7 @@ TEST(Vector2d, nearestDirection) {
   CHECK_EQUAL((int)VirtualPosition(-10, -9).nearestDirection(4), 3);
 }
 
-TEST(utils, strip) {
+TEST(Utils, strip) {
   CHECK_EQUAL(lstrip(""), "");
   CHECK_EQUAL(lstrip("foobar"), "foobar");
   CHECK_EQUAL(lstrip("foo   bar   "), "foo   bar   ");
@@ -62,7 +63,7 @@ TEST(utils, strip) {
   CHECK_EQUAL(strip("       "), "");
 }
 
-TEST(utils, split) {
+TEST(Utils, split) {
   CHECK_EQUAL(split2("foo = bar", "=").first, "foo ");
   CHECK_EQUAL(split2("foo = bar", "=").second, " bar");
   CHECK_EQUAL(split2("foo bar", "=").first, "foo bar");
@@ -82,6 +83,24 @@ TEST(utils, split) {
   CHECK_EQUAL(*iter, "buff"); iter++;
   CHECK_EQUAL(iter, iter.end());
 }
+
+TEST(ReferenceCounting, reference_counting) {
+  {
+    Reference<ReferenceCountingTest> g;
+    CHECK_EQUAL(ReferenceCountingTest::instances, 0);
+
+    {
+      Reference<ReferenceCountingTest> f(new ReferenceCountingTest());
+      CHECK_EQUAL(ReferenceCountingTest::instances, 1);
+      g = f;
+    }
+    CHECK_EQUAL(ReferenceCountingTest::instances, 1);
+  }
+  CHECK_EQUAL(ReferenceCountingTest::instances, 0);
+}
+
+
+
 
 int main(int argc, char** argv) {
   Unittest::runAll();
