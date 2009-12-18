@@ -5,6 +5,7 @@
 #include <cstdlib>
 
 #include <lua.hpp>
+#include <getopt.h>
 
 #include "interpreter.h"
 #include "lib/viewport.h"
