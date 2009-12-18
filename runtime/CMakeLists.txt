@@ -18,6 +18,7 @@ add_executable(grail_runtime
   main.cc
   wrapper_definitions.cc
   handcrafted_wrappers.cc
+  reference_counting_lua.cc
 )
 
 set(LIBS grail ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY} ${LUA_LIBRARIES})

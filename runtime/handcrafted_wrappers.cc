@@ -85,10 +85,6 @@ int _pushSceneElement(lua_State* L, map<string, string>& parameters) {
 
     return luaPush<Ground&>(L, *g);
   }
-  else if(parameters["type"] == "Image") {
-    SceneImage* img = new SceneImage(parameters["resource"]);
-
-  }
 
   return 0;
 }

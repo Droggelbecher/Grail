@@ -3,6 +3,7 @@
 #define REFERENCE_COUNTING_H
 
 #include <stdint.h>
+#include <lua.hpp>
 
 class ReferenceCounted {
     uint32_t referenceCount;
@@ -29,6 +30,7 @@ class Reference {
     virtual ~Reference();
 
     void reference(T* t);
+    ReferenceCounted* getTarget();
 
     T& operator*();
     T* operator->();
@@ -40,7 +42,6 @@ struct ReferenceCountingTest : public ReferenceCounted {
   ReferenceCountingTest() { instances++; }
   ~ReferenceCountingTest() { instances--; }
 };
-
 
 
 #endif // REFERENCE_COUNTING_H
