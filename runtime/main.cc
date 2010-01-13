@@ -6,6 +6,7 @@
 
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
+#include <getopt.h>
 
 #include "interpreter.h"
 #include "lib/viewport.h"
@@ -14,7 +15,6 @@
 #include "lib/game.h"
 #include "lib/resource_manager.h"
 #include "lua_user_interface.h"
-#include "lua_game.h"
 
 #include "lib/unittest.h"
 #include "lua_bindings.h"
