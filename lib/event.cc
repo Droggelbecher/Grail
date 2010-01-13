@@ -9,61 +9,101 @@ void freeUserEventData(SDL_Event& evt) {
   }
 }
 
-
-OmniEvent::OmniEvent(const SDL_Event& evt) : evt(evt) {
+Event::Event() {
 }
 
-int OmniEvent::getType() const {
-  if(evt.type == SDL_USEREVENT) { return evt.user.code; }
-  return evt.type;
-}
-
-VirtualPosition OmniEvent::getPosition() const {
-  switch(getType()) {
-    case SDL_MOUSEMOTION:
-      return conv<PhysicalPosition, VirtualPosition>(
-          PhysicalPosition(evt.motion.x, evt.motion.y)
-          );
-      break;
-    case SDL_MOUSEBUTTONDOWN:
-    case SDL_MOUSEBUTTONUP:
-      return conv<PhysicalPosition, VirtualPosition>(
-          PhysicalPosition(evt.button.x, evt.button.y)
-          );
-      break;
-    default:
-      if(getType() >= _EVT_GRAIL_START) {
-        return ((Event*)evt.user.data1)->getPosition();
-      }
-      else {
-        return VirtualPosition(0, 0);
-      }
-      break;
+Event::Event(const SDL_Event& evt) {
+  type = evt.type;
+  if(evt.type == SDL_USEREVENT) {
+    //type = evt.user.code;
+    //userEvent = (UserEvent*)evt.user.data1;
+    //getData(*((UserEvent*)evt.user.data1));
   }
+  else {
+    switch(evt.type) {
+      case SDL_MOUSEMOTION:
+        position = conv<PhysicalPosition, VirtualPosition>(
+            PhysicalPosition(evt.motion.x, evt.motion.y)
+            );
+        buttonState = evt.motion.state;
+        break;
+
+      case SDL_MOUSEBUTTONUP:
+      case SDL_MOUSEBUTTONDOWN:
+        position = conv<PhysicalPosition, VirtualPosition>(
+            PhysicalPosition(evt.button.x, evt.button.y)
+            );
+        button = evt.button.button;
+        buttonState = evt.button.state;
+        break;
+
+      case SDL_KEYDOWN:
+      case SDL_KEYUP:
+        keysym = evt.key.keysym;
+        break;
+    } // switch
+  } // else
 }
 
-Actor* OmniEvent::getActor() const {
-  if(getType() >= _EVT_GRAIL_START) {
-    return ((Event*)evt.user.data1)->getActor();
+Event* Event::actorClick(Actor* a, VirtualPosition p, uint8_t b) {
+  Event* e = new Event();
+  e->type = EVT_ACTOR_CLICK;
+  e->actor = a;
+  e->position = p;
+  e->button = b;
+  return e;
+}
+
+SDL_Event Event::toSDL() const {
+  SDL_Event evt;
+  if(type >= _EVT_GRAIL_START) {
+    Event* copy = new Event();
+    *copy = *this;
+    evt.type = SDL_USEREVENT;
+    evt.user.data1 = (void*)copy;
   }
-  return 0;
+  else {
+    PhysicalPosition pos;
+    evt.type = type;
+    switch(type) {
+      case SDL_MOUSEMOTION:
+        pos = conv<VirtualPosition, PhysicalPosition>(position);
+        evt.motion.x = pos.getX();
+        evt.motion.y = pos.getY();
+        evt.motion.state = buttonState;
+        break;
+
+      case SDL_MOUSEBUTTONUP:
+      case SDL_MOUSEBUTTONDOWN:
+        pos = conv<VirtualPosition, PhysicalPosition>(position);
+        evt.button.x = pos.getX();
+        evt.button.y = pos.getY();
+        evt.button.state = buttonState;
+        evt.button.button = button;
+        break;
+
+      case SDL_KEYDOWN:
+      case SDL_KEYUP:
+        evt.key.keysym = keysym;
+        break;
+    } // switch
+  } // else
+
+  return evt;
+} // toSDL()
+
+void Event::push() const {
+  SDL_Event evt = toSDL();
+  SDL_PushEvent(&evt);
 }
 
-uint8_t OmniEvent::getButton() const {
-  switch(getType()) {
-    case SDL_MOUSEBUTTONDOWN:
-    case SDL_MOUSEBUTTONUP:
-      return evt.button.button;
-      break;
+int Event::getType() const { return type; }
+Actor* Event::getActor() const { return actor; }
+uint8_t Event::getButton() const { return button; }
+VirtualPosition Event::getPosition() const { return position; }
+uint8_t Event::getButtonState() const { return buttonState; }
+SDL_keysym Event::getKeysym() const { return keysym; }
 
-    default:
-      if(getType() >= _EVT_GRAIL_START) {
-        return ((Event*)evt.user.data1)->getButton();
-      }
-      break;
-  }
-  return 0;
-}
 
 
 

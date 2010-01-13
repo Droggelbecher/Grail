@@ -7,6 +7,7 @@
 #include <exception>
 #include <cassert>
 #include <iostream>
+#include <sstream>
 
 class Exception : public std::exception {
   std::string _what;
@@ -15,7 +16,6 @@ class Exception : public std::exception {
     virtual ~Exception() throw() { }
     virtual const char* what() const throw() { return _what.c_str(); }
 };
-
 
 //
 // String stuff
@@ -111,6 +111,12 @@ T fromString(std::string s) {
   return r;
 }
 
+template <typename T>
+std::string toString(T o) {
+  std::ostringstream ss;
+  ss << o;
+  return ss.str();
+}
 
 //
 // File(name) handling

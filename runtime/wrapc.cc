@@ -24,7 +24,7 @@ class Tokenizer {
     enum CommentState { CODE, SLASH, SLASHSTAR, SLASHSTARSTAR, END };
 
   public:
-    Tokenizer(istream& stream) : stream(stream), singles("{}()*;,") {
+    Tokenizer(istream& stream) : stream(stream), singles("{}()*;,[]") {
     }
 
     bool isWhiteSpace(char c) {
@@ -151,6 +151,7 @@ class Parser {
     }
 
     virtual void onStartClass(string name) { }
+    virtual void onRealClassName(string name) { }
     virtual void onDefineMethod(MethodDefinition info) { }
     virtual void onDefineCtor(MethodDefinition info) { }
     virtual void onClassEnd() { }
@@ -169,10 +170,24 @@ class Parser {
       parseToken = &Parser::parseClassStart;
     }
 
+    void parseRealClassName(string token) {
+      onRealClassName(token);
+      parseToken = &Parser::parseRealClassNameEnd;
+    }
+
+    void parseRealClassNameEnd(string token) {
+      assert(token == "]");
+      parseToken = &Parser::parseClassStart;
+    }
+
     void parseClassStart(string token) {
-      assert(token == "{");
-      parseToken = &Parser::parseMethodReturnType;
-      currentMethod.clear();
+      if(token == "{") {
+        parseToken = &Parser::parseMethodReturnType;
+        currentMethod.clear();
+      }
+      else if(token == "[") {
+        parseToken = &Parser::parseRealClassName;
+      }
     }
 
     void parseMethodReturnType(string token) {
@@ -244,6 +259,7 @@ class LuaWrapperParser : public Parser {
   public:
     ostream& out;
     string currentClass;
+    string realClassName;
 
     map<string, list<string>* > methods;
     map<string, string> typealias;
@@ -265,7 +281,12 @@ class LuaWrapperParser : public Parser {
     void onStartClass(string name) {
       cerr << "Wrapping class \"" << name << "\"..." << endl;
       currentClass = name;
+      realClassName = name;
       methods[name] = new list<string>();
+    }
+
+    void onRealClassName(string name) {
+      realClassName = name;
     }
 
     void onDefineCtor(MethodDefinition info) {
@@ -284,7 +305,7 @@ class LuaWrapperParser : public Parser {
       }
 
       // -->   Object* r = new FooBar(p1, p2, ...);
-      out << "  Object* r = new " << currentClass << "(";
+      out << "  " << realClassName << " *r = new " << realClassName << "(";
       i = 1; string comma = "";
       for(iter = info.parameters.begin(); iter != info.parameters.end(); iter++, i++) {
         out << comma << "p" << i;
@@ -292,8 +313,8 @@ class LuaWrapperParser : public Parser {
       }
       out << ");" << endl;
 
-      // -->   luaPush<Object>(L, &r);
-      out << "  return luaPush<Object&>(L, *r);" << endl;
+      out << "  luaPush<" << realClassName << "*>(L, r);" << endl;
+      out << "  return 1;" << endl;
 
       out << "}" << endl << endl;
     }
@@ -314,7 +335,7 @@ class LuaWrapperParser : public Parser {
       out << "int _" << currentClass << "_" << info.name << "(lua_State* L) {" << endl;
       out << "  assert(lua_gettop(L) == " << info.parameters.size() + hasThis << ");" << endl;
       if(hasThis) {
-        out << "  " << currentClass << "* obj = luaGet<" << currentClass << "*>(L, 1);" << endl;
+        out << "  " << realClassName << "* obj = luaGet<" << realClassName << "*>(L, 1);" << endl;
       }
 
       list<string>::const_iterator iter;
@@ -325,7 +346,7 @@ class LuaWrapperParser : public Parser {
 
       string base;
       if(hasThis) { base = "obj->"; }
-      else { base = currentClass + "::"; }
+      else { base = realClassName + "::"; }
 
       if(info.returnType == "void") {
         out << "  " << base << info.name << "(";
@@ -381,7 +402,10 @@ int main(int argc, char** argv) {
   out << "\n//\n// /!\\ WARNING: This is generated code. Changes to it will be lost.\n//\n" << endl;
 
   out << "#include <cassert>" << endl;
-  out << "#include <string>" << endl << endl;
+  out << "#include <string>" << endl;
+  out << "#include <SDL/SDL.h>" << endl;
+  out << endl;
+  out << "#include \"interpreter.h\"" << endl;
   out << "#include \"lib/actor.h\"" << endl;
   out << "#include \"lib/animation.h\"" << endl;
   out << "#include \"lib/area.h\"" << endl;
@@ -392,22 +416,25 @@ int main(int argc, char** argv) {
   out << "#include \"lib/image.h\"" << endl;
   out << "#include \"lib/mainloop.h\"" << endl;
   out << "#include \"lib/rect.h\"" << endl;
-  out << "#include \"lib/registry.h\"" << endl;
   out << "#include \"lib/resource_manager.h\"" << endl;
   out << "#include \"lib/scene.h\"" << endl;
   out << "#include \"lib/shortcuts.h\"" << endl;
   out << "#include \"lib/sprite.h\"" << endl;
   out << "#include \"lib/surface.h\"" << endl;
   out << "#include \"lib/unittest.h\"" << endl;
-  out << "#include \"lib/user_interface_element.h\"" << endl;
   out << "#include \"lib/user_interface.h\"" << endl;
+  out << "#include \"lib/user_interface_element.h\"" << endl;
   out << "#include \"lib/utils.h\"" << endl;
   out << "#include \"lib/vector2d.h\"" << endl;
   out << "#include \"lib/viewport.h\"" << endl << endl;
+  out << "#include \"lua_game.h\"" << endl;
+  out << "#include \"lua_user_interface.h\"" << endl;
   out << "#include \"lua_utils.h\"" << endl;
-  out << "#include \"interpreter.h\"" << endl << endl;
+  out << "#include \"reference_counting_lua.h\"" << endl;
+  out << endl;
 
-  out << "using std::string;" << endl << endl;
+  out << "using std::string;" << endl;
+  out << endl;
 
 
   while(t.parseToken()) {

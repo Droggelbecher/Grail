@@ -10,7 +10,6 @@ set(GRAIL_FILES
   mainloop.cc
   polygon.cc
   reference_counting.cc
-  registry.cc
   resource_manager.cc
   scene.cc
   shortcuts.cc

@@ -5,13 +5,15 @@
 #include "viewport.h"
 #include "scene.h"
 
-Viewport::Viewport() : Object("Viewport", false), screen(NULL),
+const std::string Viewport::className = "Viewport";
+
+Viewport::Viewport() : screen(0),
   virtualSize(VirtualSize(4000, 3000)), cameraMode(CAMERA_CENTER),
   cameraLimit(LIMIT_SCENE), cameraPosition(VirtualPosition(0, 0)),
   cameraTarget(0) {
 }
 
-Viewport::Viewport(uint32_t w, uint32_t h, bool fullscreen) : Object("Viewport", false), screen(NULL) {
+Viewport::Viewport(uint32_t w, uint32_t h, bool fullscreen) : screen(0) {
   setup(w, h, fullscreen);
 }
 

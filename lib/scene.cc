@@ -12,7 +12,9 @@ using std::endl;
 #include "rect.h"
 #include "actor.h"
 
-Scene::Scene() : Object("Scene"), background(0), _actorsMoved(false) {
+const std::string Scene::className = "Scene";
+
+Scene::Scene() : background(0), _actorsMoved(false) {
 }
 
 Scene::~Scene() {
@@ -59,13 +61,15 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
 
       for(iter = actors.begin(); iter != actors.end(); iter++) {
         if((*iter)->hasPoint(pos + cam)) {
-          (new ActorClickEvent(**iter, pos + cam, event.button.button))->push();
+          Event::actorClick(*iter, pos + cam, event.button.button)->push();
+
+          //(new ActorClickEvent(**iter, pos + cam, event.button.button))->push();
           event_sent = true;
           break;
         }
       } // for
       if(!event_sent) {
-        (new SceneClickEvent(pos + cam))->push();
+        //(new SceneClickEvent(pos + cam))->push();
       }
     } // if area has point
   } // if mouse button down

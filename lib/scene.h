@@ -3,20 +3,23 @@
 #define SCENE_H
 
 #include <algorithm>
+#include <string>
 
 #include "classes.h"
 #include "game.h"
 #include "vector2d.h"
-#include "registry.h"
 #include "animation.h"
 #include "actor.h"
+#include "reference_counting.h"
 
-class Scene : public Object {
+class Scene : public ReferenceCounted {
     const Animation* background;
     std::list<Actor*> actors;
     bool _actorsMoved;
 
   public:
+    static const std::string className;
+
     Scene();
     virtual ~Scene();
 

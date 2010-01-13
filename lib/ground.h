@@ -2,10 +2,10 @@
 #ifndef GROUND_H
 #define GROUND_H
 
+#include <string>
 #include <list>
 using std::list;
 
-#include "registry.h"
 #include "vector2d.h"
 #include "polygon.h"
 #include "actor.h" // ->Path
@@ -14,8 +14,10 @@ using std::list;
 /**
  * The "ground" of a scene. This defines, from where you can go where and how.
  */
-class Ground : public Object {
+class Ground {
   public:
+    static const std::string className;
+
     struct Waypoint {
       public:
         typedef list<Waypoint*>::iterator NeighbourIterator;

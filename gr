@@ -1,0 +1,6 @@
+#!/bin/sh
+
+EXPR=$1
+
+grep --color=always -nH $EXPR `find -name '*.cc' -or -name '*.h'`
+

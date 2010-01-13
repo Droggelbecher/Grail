@@ -1,0 +1,11 @@
+#!/bin/sh
+
+LOC_LIB=$(cat $(find lib/ -name '*.cc' -or -name '*.h')|wc -l)
+LOC_RT=$(cat $(find runtime/ -name '*.cc' -or -name '*.h')|wc -l)
+LOC_LUA=$(cat $(find -name '*.lua')|wc -l)
+
+echo library c++ code: $LOC_LIB
+echo runtime c++ code: $LOC_RT
+echo overall lua code: $LOC_LUA
+echo sum: $(($LOC_LIB + $LOC_RT + $LOC_LUA)) raw lines
+

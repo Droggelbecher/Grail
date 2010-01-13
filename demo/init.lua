@@ -1,25 +1,24 @@
 
 GAME:getViewport():setup(800, 600, false)
+--s = _GRAIL.loadSceneDefinition("/media/test.scene")
 
-s = _GRAIL.loadSceneDefinition("/media/test.scene")
-dbg_print(s)
-
-GAME:registerChapter(0, function(n)
+GAME:registerChapterConstructor(0, function(n)
   print("Welcome to chapter 0")
-
-  bg = Image:chapterNamed("bg_grey_fading", "/media/$res/grey_fading.jpg")
-  start = Scene:chapter()
-
+  local bg = Image("/media/$res/grey_fading.jpg")
+  local start = Scene()
+  dbg_print(start)
   start:setBackground(bg)
 
   -- Lineboy
 
-  guy = Actor:chapterNamed("guy")
+  local guy = Actor()
 
-  lineboy_ud = Image:chapter("/media/$res/lineboy_default.png")
-  lineboy_r = StripeSprite:chapter("/media/$res/lineboy_r.png", 9)
-  lineboy_l = StripeSprite:chapter("/media/$res/lineboy_l.png", 9)
-  lineboy_default = DirectionAnimation:chapter(4)
+  local lineboy_ud = Image("/media/$res/lineboy_default.png")
+  local lineboy_r = StripeSprite("/media/$res/lineboy_r.png", 9)
+  local lineboy_l = StripeSprite("/media/$res/lineboy_l.png", 9)
+
+  local lineboy_default = DirectionAnimation(4)
+  dbg_print(lineboy_default)
   lineboy_default:setAnimation(0, lineboy_ud)
   lineboy_default:setAnimation(1, lineboy_r)
   lineboy_default:setAnimation(2, lineboy_ud)
@@ -27,22 +26,27 @@ GAME:registerChapter(0, function(n)
 
   guy:addAnimation("default", lineboy_default)
   guy:setPosition(p(2000, 2000))
-
   GAME:getViewport():keepCentering(guy)
 
   -- Coke
 
-  coke = Actor:chapterNamed("coke")
-  coke:addAnimation("default", Image:chapter("/media/$res/coke.jpg"))
+  local coke = Actor("coke")
+  coke:addAnimation("default", Image("/media/$res/coke.jpg"))
   coke:setPosition(p(3000, 3000))
 
   start:addActor(guy)
   start:addActor(coke)
 
   GAME:goToScene(start)
+
+  return {
+    coke = coke,
+    start = start
+  }
 end)
 
 GAME:getUserInterface().handleEvent = function(self, evt, duration)
+  print("handleEvent")
   if evt.type == EVT_ACTOR_CLICK then
     print("You clicked the actor with button " .. tostring(evt.button))
   elseif evt.type == EVT_SCENE_CLICK then
@@ -53,5 +57,4 @@ GAME:getUserInterface().handleEvent = function(self, evt, duration)
 end
 
 GAME:runChapter(0)
-
 

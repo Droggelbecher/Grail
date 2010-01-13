@@ -7,81 +7,39 @@
 #include "actor.h"
 
 enum EventState { EVENT_STATE_HANDLED, EVENT_STATE_UNHANDLED };
-
 enum EventType { _EVT_GRAIL_START = 100, EVT_SCENE_CLICK = 100, EVT_ACTOR_CLICK };
 
-struct Event {
-  virtual ~Event() { }
+class Event;
+class UserEvent;
 
-  /**
-   * Push a pointer to this event to the SDL event queue.
-   * Note that this should be really on the heap while doing so,
-   * else when polling the event back its memory might already been freed.
-   *
-   * Free it after polling with:
-   *
-   *  delete (Event*)(sdl_event.user.data1) after
-   *
-   * after making sure it is a SDL_USEREVENT.
-   */
-  void push() const {
-    SDL_Event evt;
-    evt.type = SDL_USEREVENT;
-    evt.user.code = getType();
-    evt.user.data1 = (Event*)this;
-    SDL_PushEvent(&evt);
-  }
-
-  static Event* fromSDL(const SDL_Event& evt);
-
-  virtual int getType() const = 0;
-  virtual Actor* getActor() const { return 0; }
-  virtual uint8_t getButton() const { return 0; }
-  virtual VirtualPosition getPosition() const { return VirtualPosition(0, 0); }
-
-};
-
-void freeUserEventData(SDL_Event& evt);
-
-
-struct SceneClickEvent : public Event {
-  VirtualPosition position;
-
-  SceneClickEvent(VirtualPosition position) : position(position) { }
-
-  int getType() const { return EVT_SCENE_CLICK; }
-  VirtualPosition getPosition() const { return position; }
-};
-
-struct ActorClickEvent : public Event {
-  VirtualPosition position;
-  Actor& actor;
-  uint8_t button;
-
-  ActorClickEvent(Actor& actor, VirtualPosition position, uint8_t button) :
-    position(position), actor(actor), button(button) { }
-
-  int getType() const { return EVT_ACTOR_CLICK; }
-  VirtualPosition getPosition() const { return position; }
-  Actor* getActor() const { return &actor; }
-  uint8_t getButton() const { return button; }
-};
-
-// ----
-
-struct OmniEvent {
+class Event {
   private:
-    const SDL_Event& evt;
+    uint8_t type;
+    VirtualPosition position;
+    uint8_t buttonState;
+    uint8_t button;
+    SDL_keysym keysym;
+    Actor* actor;
 
   public:
-    OmniEvent(const SDL_Event& evt);
+    Event();
+    Event(const SDL_Event& evt);
+
+    virtual ~Event() { }
+
+    SDL_Event toSDL() const;
+    void push() const;
 
     int getType() const;
-    VirtualPosition getPosition() const;
     Actor* getActor() const;
     uint8_t getButton() const;
-};
+    VirtualPosition getPosition() const;
+    uint8_t getButtonState() const;
+    SDL_keysym getKeysym() const;
 
+    static Event* actorClick(Actor* a, VirtualPosition, uint8_t button);
+
+};
 
 #endif // EVENT_H
 

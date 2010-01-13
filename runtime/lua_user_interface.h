@@ -12,20 +12,28 @@ class LuaUserInterface : public UserInterface {
   public:
     EventState handleEvent(SDL_Event& event, uint32_t frameDuration) {
       L_STACK(interpreter.L);
+      L_RETURN(interpreter.L, 0);
 
       // method
-      interpreter.pushWrapper(*this);
+      //interpreter.pushWrapper(*this);
+      luaPush<LuaUserInterface&>(interpreter.L, *this);
+      L_RETURN(interpreter.L, 1);
+
       lua_getfield(interpreter.L, -1, "handleEvent");
+      L_RETURN(interpreter.L, 2);
       lua_remove(interpreter.L, -2);
+      L_RETURN(interpreter.L, 1);
 
       if(lua_isnil(interpreter.L, -1)) {
-        lua_pop(interpreter.L, 2);
+        L_RETURN(interpreter.L, 1);
+        lua_pop(interpreter.L, 1);
         L_RETURN(interpreter.L, 0);
         return EVENT_STATE_UNHANDLED;
       }
 
       // this/self argument
-      interpreter.pushWrapper(*this);
+      //interpreter.pushWrapper(*this);
+      luaPush<LuaUserInterface&>(interpreter.L, *this);
 
       // other arguments
       //interpreter.pushCopy<SDL_Event&>(event);

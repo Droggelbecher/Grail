@@ -68,10 +68,10 @@ void Reference<T>::reference(T* t) {
 }
 
 template <typename T>
-T& Reference<T>::operator*() { return *target; }
+T& Reference<T>::operator*() const { return *target; }
 
 template <typename T>
-T* Reference<T>::operator->() { return target; }
+T* Reference<T>::operator->() const { return target; }
 
 int ReferenceCountingTest::instances = 0;
 

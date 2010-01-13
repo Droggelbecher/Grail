@@ -32,8 +32,9 @@ class Reference {
     void reference(T* t);
     ReferenceCounted* getTarget();
 
-    T& operator*();
-    T* operator->();
+    T& operator*() const;
+    T* operator->() const;
+    operator bool() const { return target ? true : false; }
 };
 
 struct ReferenceCountingTest : public ReferenceCounted {

@@ -7,13 +7,14 @@
 #include <cassert>
 
 #include "vector2d.h"
-#include "registry.h"
 #include "area.h"
 
-class Animation : public Object, public Area {
+class Animation : public Area {
 
   public:
-    Animation(std::string classname) : Object(classname) { }
+    static const std::string className;
+
+    Animation(std::string classname) { }
     virtual ~Animation() { }
 
     virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const = 0;
@@ -32,6 +33,8 @@ class DirectionAnimation : public Animation {
     uint16_t directions;
     Animation** animations;
   public:
+    static const std::string className;
+
     DirectionAnimation(uint16_t directions);
     ~DirectionAnimation();
 

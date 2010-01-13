@@ -15,7 +15,6 @@ using std::endl;
 #include "game.h"
 #include "viewport.h"
 
-
 Resource::Resource(string path, ResourceMode mode) : buffer(0), bufferSize(0), path(path) {
   rw = Game::getInstance().getResourceManager().getRW(path, mode);
 }
@@ -25,6 +24,8 @@ Resource::~Resource() {
   delete[] buffer;
 }
 
+
+const std::string ResourceManager::className = "ResourceManager";
 
 ResourceManager::~ResourceManager() {
   map<string, ResourceHandler*>::const_iterator iter;

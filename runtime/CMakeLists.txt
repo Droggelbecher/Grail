@@ -15,10 +15,11 @@ add_executable(grail_runtime
   interpreter.cc
   lua_utils_impl.cc
   ../lib/vector2d_impl.cc
+  ../lib/reference_counting_impl.cc
   main.cc
   wrapper_definitions.cc
   handcrafted_wrappers.cc
-  reference_counting_lua.cc
+  lua_game.cc
 )
 
 set(LIBS grail ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY} ${LUA_LIBRARIES})

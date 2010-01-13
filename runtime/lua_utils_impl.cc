@@ -1,4 +1,6 @@
 
+#include <string>
+
 #include "lua_utils.cc"
 
 #include "lib/animation.h"
@@ -7,9 +9,14 @@
 #include "lib/viewport.h"
 #include "lib/user_interface.h"
 #include "lib/ground.h"
+#include "lib/sprite.h"
+#include "runtime/lua_user_interface.h"
+#include "runtime/lua_game.h"
 
 #define LUAGET(T) template T luaGet< T >(lua_State*, int);
 #define LUAPUSH(T) template int luaPush< T >(lua_State*, T);
+#define PUSHREF(T) template int luaPushReference< T >(lua_State*, T*, std::string);
+#define PUSH(T) LUAPUSH(T*); LUAPUSH(T&); PUSHREF(T)
 
 LUAGET(lua_Number);
 LUAGET(lua_Integer);
@@ -21,33 +28,41 @@ LUAGET(Actor&);
 LUAGET(Actor*);
 LUAGET(Animation&);
 LUAGET(Animation*);
+LUAGET(Chunk*);
 LUAGET(DirectionAnimation&);
 LUAGET(DirectionAnimation*);
 LUAGET(Game&);
 LUAGET(Game*);
+LUAGET(LuaGame&);
+LUAGET(LuaGame*);
 LUAGET(Ground&);
 LUAGET(Ground*);
-LUAGET(Object&);
-LUAGET(Object*);
 LUAGET(Polygon&);
 LUAGET(Polygon*);
 LUAGET(Scene&);
 LUAGET(Scene*);
+LUAGET(SDL_Event&);
 LUAGET(UserInterface&);
 LUAGET(UserInterface*);
+LUAGET(LuaUserInterface&);
+LUAGET(LuaUserInterface*);
 LUAGET(Viewport&);
 LUAGET(Viewport*);
 
 LUAPUSH(const SDL_Event&);
 LUAPUSH(lua_Integer);
 
-LUAPUSH(Actor&);
-LUAPUSH(Animation&);
-LUAPUSH(Game&);
-LUAPUSH(Object&);
-LUAPUSH(Scene&);
-LUAPUSH(UserInterface&);
-LUAPUSH(Viewport&);
-LUAPUSH(ResourceManager&);
-LUAPUSH(Ground&);
+PUSH(Actor);
+PUSH(Animation);
+PUSH(DirectionAnimation);
+PUSH(Game);
+PUSH(LuaGame);
+PUSH(Ground);
+PUSH(Image);
+PUSH(LuaUserInterface);
+PUSH(ResourceManager);
+PUSH(Scene);
+PUSH(StripeSprite);
+PUSH(UserInterface);
+PUSH(Viewport);
 

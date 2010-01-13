@@ -3,13 +3,15 @@
 #define GAME_H
 
 #include <iostream>
+#include <string>
 
 #include <SDL/SDL.h>
 #include "classes.h"
-#include "registry.h"
 #include "event.h"
+#include "reference_counting.h"
 
-class Game : public Object {
+class Game : public ReferenceCounted {
+  protected:
 
     static Game* _instance;
 
@@ -18,24 +20,24 @@ class Game : public Object {
     Viewport* viewport;
     Scene* currentScene;
     ResourceManager* resourceManager;
-    Registry registry;
     UserInterface* userInterface;
 
     Game();
 
   public:
+    static const std::string className;
+
     ~Game();
 
     static Game& getInstance();
 
-    void (*initChapter)(size_t);
+    virtual void initChapter(size_t) { };
     void runChapter(size_t chapter);
 
     Viewport& getViewport();
     Scene& getCurrentScene() const;
     void goToScene(Scene& scene);
     ResourceManager& getResourceManager();
-    Registry& getRegistry();
     void setUserInterface(UserInterface& ui);
     UserInterface& getUserInterface();
 

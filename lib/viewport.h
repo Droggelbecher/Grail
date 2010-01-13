@@ -2,12 +2,14 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
+#include <string>
+
 #include <SDL/SDL.h>
 
 #include "scene.h"
-#include "registry.h"
+#include "reference_counting.h"
 
-class Viewport : public Object {
+class Viewport : public ReferenceCounted {
     SDL_Surface* screen;
     VirtualSize virtualSize;
 
@@ -25,6 +27,7 @@ class Viewport : public Object {
     Actor* cameraTarget;
 
   public:
+    static const std::string className;
 
     Viewport();
     Viewport(uint32_t w, uint32_t h, bool fullscreen = false);

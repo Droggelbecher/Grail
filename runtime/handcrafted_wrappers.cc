@@ -13,7 +13,6 @@
 #include "lib/image.h"
 #include "lib/mainloop.h"
 #include "lib/rect.h"
-#include "lib/registry.h"
 #include "lib/resource_manager.h"
 #include "lib/scene.h"
 #include "lib/shortcuts.h"
@@ -27,36 +26,11 @@
 #include "lib/viewport.h"
 
 #include "lua_utils.h"
+#include "lua_game.h"
 #include "interpreter.h"
 
 using std::istringstream;
 using std::string;
-
-/**
- * Get named object from registry,
- * returns classname and ptr on lua stack
- */
-int _get(lua_State* L) {
-  string name = luaGet<string>(L, 1);
-  Object& obj = Game::getInstance().getRegistry().get(name);
-  return luaPush<Object&>(L, obj);
-}
-
-int registerChapter(lua_State* L) {
-  Object* obj = luaGet<Object*>(L, 1);
-  string name = luaGet<string>(L, 2);
-
-  Game::getInstance().getRegistry().registerChapter(*obj, name);
-  return 0;
-}
-
-int registerApplication(lua_State* L) {
-  Object* obj = luaGet<Object*>(L, 1);
-  string name = luaGet<string>(L, 2);
-
-  Game::getInstance().getRegistry().registerApplication(*obj, name);
-  return 0;
-}
 
 int _pushSceneElement(lua_State* L, map<string, string>& parameters) {
   if(parameters["type"] == "Ground") {
@@ -133,10 +107,11 @@ int loadSceneDefinition(lua_State* L) {
   return 1;
 } // loadSceneDefinition
 
+/*
 void Game_initChapter(size_t n) {
   lua_State* L = interpreter.L;
 
-  interpreter.pushWrapper(Game::getInstance());
+  luaPush<Game&>(L, Game::getInstance());
   size_t t = lua_gettop(L);
 
   lua_getfield(L, t, "_chapter_ctors");
@@ -146,12 +121,13 @@ void Game_initChapter(size_t n) {
   if(r)
     throw LuaException(L);
 }
+*/
 
 int _Game_instance(lua_State* L) {
-  Game *obj = &(Game::getInstance());
-  obj->initChapter = &Game_initChapter;
+  LuaGame *obj = &(LuaGame::getInstance());
+  //obj->initChapter = &Game_initChapter;
   assert(obj != NULL);
-  return luaPush<Game&>(L, *obj);
+  return luaPush<LuaGame&>(L, *obj);
 }
 
 
@@ -167,10 +143,10 @@ inline void base(std::string baseName) {
 }
 
 void registerHandcraftedWrappings() {
-  function("get", &_get);
+  //function("get", &_get);
 
-  function("registerChapter", &registerChapter);
-  function("registerApplication", &registerApplication);
+  //function("registerChapter", &registerChapter);
+  //function("registerApplication", &registerApplication);
   function("loadSceneDefinition", &loadSceneDefinition);
 
   method("Game", "getInstance", &_Game_instance);

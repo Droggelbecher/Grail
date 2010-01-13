@@ -9,6 +9,8 @@
 #include <list>
 #include <map>
 
+#include "utils.h"
+
 class Unittest {
     static std::map<std::string, std::list<Unittest*> > tests;
 
@@ -34,12 +36,6 @@ class Unittest {
     static void runAll();
 
 };
-
-template<typename T> std::string toString(T t) {
-  std::ostringstream ss;
-  ss << t;
-  return ss.str();
-}
 
 #define TEST(GROUP, TEST) class __unittest__ ## GROUP ## __ ## TEST : public Unittest { \
   public: \

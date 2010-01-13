@@ -4,13 +4,16 @@
 
 #include <SDL/SDL.h>
 #include <stdint.h>
+#include <string>
 #include "classes.h"
 #include "game.h"
-#include "registry.h"
+#include "reference_counting.h"
 
-class UserInterface : public Object {
+class UserInterface : public ReferenceCounted {
   public:
-    UserInterface() : Object("UserInterface") { }
+    static const std::string className;
+
+    UserInterface() { }
     virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
 };
 

@@ -1,54 +1,61 @@
 /* vim: set ft=cpp: */
 
 class Actor {
-  ctor()
-  void addAnimation(string, Animation&)
-  void setMode(string)
-  void setPosition(VirtualPosition)
-  void walkStraight(VirtualPosition)
+  ctor();
+  void addAnimation(string, Animation&);
+  void setMode(string);
+  void setPosition(VirtualPosition);
+  void walkStraight(VirtualPosition);
+  /* foo bar */
 }
 
 class Game {
-  void runChapter(int)
-  Viewport& getViewport()
-  void goToScene(Scene&)
-  ResourceManager& getResourceManager()
-  void setUserInterface(UserInterface&)
-  UserInterface& getUserInterface()
+  void runChapter(int);
+  Viewport& getViewport();
+  void goToScene(Scene&);
+  ResourceManager& getResourceManager();
+  void setUserInterface(UserInterface&);
+  UserInterface& getUserInterface();
+
+  void registerChapterConstructor(int, Chunk*);
+}
+
+class UserInterface {
+  int handleEvent(SDL_Event&, int);
 }
 
 class Ground {
-  ctor()
-  void addWall(VirtualPosition, VirtualPosition)
-  void addWalls(Polygon&)
-  bool directReachable(VirtualPosition, VirtualPosition)
+  ctor();
+  void addWall(VirtualPosition, VirtualPosition);
+  void addWalls(Polygon&);
+  bool directReachable(VirtualPosition, VirtualPosition);
 }
 
 class Viewport {
-  ctor()
-  void setup(lua_Number, lua_Number, bool)
-  void setCameraPosition(VirtualPosition)
-  void keepCentering(Actor&)
+  ctor();
+  void setup(int, int, bool);
+  void setCameraPosition(VirtualPosition);
+  void keepCentering(Actor&);
 }
 
 class Scene {
-  ctor()
-  void setBackground(Animation&)
-  void addActor(Actor&)
+  ctor();
+  void setBackground(Animation&);
+  void addActor(Actor&);
 }
 
 class Image {
-  ctor(string)
+  ctor(string);
 }
 
 class StripeSprite {
-  ctor(string, int)
+  ctor(string, int);
 }
 
 class DirectionAnimation {
-  ctor(int)
-  void setDirection(int)
-  void setAnimation(int, Animation*)
+  ctor(int);
+  void setDirection(int);
+  void setAnimation(int, Animation*);
 }
 
 

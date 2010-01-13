@@ -8,6 +8,8 @@ using std::copy;
 #include "game.h"
 #include "scene.h"
 
+const string Actor::className = "Actor";
+
 void Actor::setAlignment(double x, double y) {
   alignmentX = x;
   alignmentY = y;

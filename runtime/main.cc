@@ -13,6 +13,7 @@
 #include "lib/game.h"
 #include "lib/resource_manager.h"
 #include "lua_user_interface.h"
+#include "lua_game.h"
 
 #include "lib/unittest.h"
 
@@ -30,8 +31,6 @@ void registerHandcraftedWrappings();
 
 int main(int argc, char** argv) {
 
-  Unittest::runAll();
-
   cout << "basedir:" << dirName(argv[0]) << endl;
 
   int c;
@@ -44,7 +43,7 @@ int main(int argc, char** argv) {
   }
 
   if(optind < argc) {
-    Game& g = Game::getInstance();
+    LuaGame& g = LuaGame::getInstance();
 
     g.getResourceManager().mount(
         new DirectoryResourceHandler(argv[optind]), "/"

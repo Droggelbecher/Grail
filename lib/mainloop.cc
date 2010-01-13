@@ -30,7 +30,7 @@ void MainLoop::run() {
     SDL_Event sdlEvent;
     while(SDL_PollEvent(&sdlEvent) != 0) {
       handleEvent(sdlEvent, frameDuration);
-      freeUserEventData(sdlEvent);
+      //freeUserEventData(sdlEvent);
     }
     SDL_Delay(max(0, (int32_t)frameEnd - (int32_t)SDL_GetTicks()));
 
@@ -58,13 +58,6 @@ void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
   }
 
   else if(event.type == SDL_USEREVENT) {
-    Event* evt = (Event*)event.user.data1;
-    if(dynamic_cast<ActorClickEvent*>(evt)) {
-      cerr << "Click on actor!" << endl;
-    }
-    else if(dynamic_cast<SceneClickEvent*>(evt)) {
-      cerr << "Scene click!" << endl;
-    }
   }
 
   if(controller.getUserInterface().handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {

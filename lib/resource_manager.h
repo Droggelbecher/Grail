@@ -9,7 +9,6 @@
 #include <SDL/SDL.h>
 
 #include "classes.h"
-#include "registry.h"
 
 enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
 
@@ -90,11 +89,13 @@ class Resource {
  * filesystems into the same tree. (ResourceHandlers are the anologon to file
  * system drivers here)
  */
-class ResourceManager : public Object {
+class ResourceManager {
     std::map<std::string, ResourceHandler*> resourceHandlers;
 
   public:
-    ResourceManager() : Object("ResourceManager", false) { }
+    static const std::string className;
+
+    ResourceManager() { }
     ~ResourceManager();
 
 

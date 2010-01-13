@@ -10,22 +10,22 @@
 #include "classes.h"
 #include "vector2d.h"
 #include "animation.h"
-#include "registry.h"
 #include "area.h"
+#include "reference_counting.h"
 
 #include <iostream>
 using namespace std;
 
 typedef std::list<VirtualPosition> Path;
 
-class Actor : public Object, public Area {
-    Animation *animation;
+class Actor : public Area {
+    Reference<Animation> animation;
     std::map<std::string, Animation*> animationModes;
     std::string mode;
 
     VirtualPosition position;
     double alignmentX, alignmentY;
-    Area* area;
+    Reference<Area> area;
     double speed; ///< Unit is virtual pixels / second
 
     Path walkPath;
@@ -34,6 +34,7 @@ class Actor : public Object, public Area {
     VirtualPosition getUpperLeftCorner() const;
 
   public:
+    static const string className;
 
     struct CompareByY {
       bool operator()(Actor* a, Actor* b) const {
@@ -41,9 +42,7 @@ class Actor : public Object, public Area {
       }
     };
 
-    Actor() :
-      Object("Actor"), animation(0), mode("default"), alignmentX(0.5), alignmentY(1.0), area(0),
-      speed(1000.0)
+    Actor() : mode("default"), alignmentX(0.5), alignmentY(1.0), speed(1000.0)
     {
     }
 

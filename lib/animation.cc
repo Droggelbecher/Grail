@@ -3,6 +3,10 @@
 
 #include <cassert>
 
+const std::string Animation::className = "Animation";
+
+const std::string DirectionAnimation::className = "DirectionAnimation";
+
 DirectionAnimation::DirectionAnimation(uint16_t directions) :
   Animation("DirectionAnimation"), currentDirection(0), directions(directions) {
   assert(directions > 0);

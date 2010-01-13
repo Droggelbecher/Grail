@@ -11,7 +11,9 @@ using std::pop_heap;
 
 #include "ground.h"
 
-Ground::Ground() : Object("Ground") {
+const std::string Ground::className = "Ground";
+
+Ground::Ground() {
 }
 
 void Ground::addWall(VirtualPosition a, VirtualPosition b) {

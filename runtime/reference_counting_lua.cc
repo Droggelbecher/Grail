@@ -21,6 +21,7 @@ int onReferenceCollected(lua_State* L) {
   void *userdata = lua_touserdata(L, 1);
   void *ptr = *((void**)userdata);
   ((ReferenceCounted*)ptr)->decrementReferences();
+  return 0;
 }
 
 

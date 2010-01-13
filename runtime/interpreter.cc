@@ -10,6 +10,7 @@
 #include "lib/vector2d.h"
 #include "lib/resource_manager.h"
 #include "lib/event.h"
+#include "lib/debug.h"
 
 using std::string;
 using std::cerr;
@@ -112,69 +113,6 @@ void Interpreter::pushWrapperBase(std::string className) {
 
   lua_remove(L, -3); // internalTable
   lua_remove(L, -2); // wrapperBases
-
-  L_RETURN(L, 1);
-}
-
-void Interpreter::pushWrapper(Object& r) {
-  L_STACK(L);
-
-  // Lets see if there is a wrapper for r already
-  pushInternalTable();
-  getOrCreateAsEmptyTable("wrappers");
-  // [ internal | wrappers ]
-  lua_remove(L, -2); // remove internal table
-  // [ wrappers ]
-
-  size_t s_wrappers = lua_gettop(L);
-
-  lua_pushlightuserdata(L, &r);
-  // [ wrappers | &r ]
-  lua_gettable(L, s_wrappers);
-  // [ wrappers | wrapper/nil ]
-
-  if(lua_isnil(L, -1)) {
-    lua_pop(L, 1);
-    lua_newtable(L);
-    // [ wrappers | new wrap ]
-    L_RETURN(L, 2);
-
-    size_t s_new_wrap = lua_gettop(L);
-    assert(lua_type(L, s_new_wrap) == LUA_TTABLE);
-
-    lua_pushlightuserdata(L, &r); // key for insertion into s_wrappers
-    // [ wrappers | new wrap | &r ]
-    L_RETURN(L, 3);
-
-    lua_pushvalue(L, s_new_wrap);
-    // [ wrappers | new wrap | &r | new wrap ]
-    L_RETURN(L, 4);
-
-    lua_pushlightuserdata(L, &r);
-    // [ wrappers | new wrap | &r | new wrap | &r ]
-    L_RETURN(L, 5);
-
-    lua_setfield(L, s_new_wrap, "_ptr");
-    // [ wrappers | new wrap | &r | new wrap ]
-    L_RETURN(L, 4);
-
-    pushWrapperBase(r.className); L_NOTNIL(L);
-    // [ wrappers | new wrap | &r | new wrap | base ]
-    L_RETURN(L, 5);
-
-    lua_setmetatable(L, s_new_wrap);
-    // [ wrappers | new wrap | &r | new wrap ]
-    L_RETURN(L, 4);
-
-    // insert wrapper into "wrappers"
-    lua_settable(L, s_wrappers);
-    // [ wrappers | new wrap ]
-    L_RETURN(L, 2);
-  }
-
-  // [ wrappers | new wrap ]
-  L_RETURN(L, 2);
-  lua_remove(L, s_wrappers); // remove "wrappers" table
 
   L_RETURN(L, 1);
 }

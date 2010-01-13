@@ -13,16 +13,16 @@ using std::endl;
 
 #include "vector2d.h"
 #include "shortcuts.h"
+#include "utils.h"
 
 class Surface {
     SDL_Surface* sdlSurface;
-    SDL_Surface* backup;
 
     void loadFromFile(std::string filename) {
       sdlSurface = IMG_Load_RW(getRW(filename, MODE_READ), true);
-      backup = sdlSurface;
-      assert(sdlSurface != NULL);
-      assert(sdlSurface == backup);
+      if(!sdlSurface) {
+        throw Exception(std::string("Could not load surface '") + filename + "'");
+      }
     }
 
 
@@ -35,7 +35,6 @@ class Surface {
     Surface(std::string &path) : sdlSurface(NULL) {
       loadFromFile(path);
       assert(sdlSurface != NULL);
-      assert(sdlSurface == backup);
     }
 
     ~Surface() {
@@ -50,7 +49,6 @@ class Surface {
     }
 
     void blit(SDL_Rect* from, SDL_Surface* target, SDL_Rect* to) const {
-      assert(sdlSurface == backup);
       SDL_BlitSurface(sdlSurface, from, target, to);
     }
 };
