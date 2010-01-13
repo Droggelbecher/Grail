@@ -29,7 +29,7 @@ class Game : public ReferenceCounted {
   public:
     static const std::string className;
 
-    ~Game();
+    virtual ~Game();
 
     static Game& getInstance();
 
@@ -46,8 +46,6 @@ class Game : public ReferenceCounted {
     void eachFrame(uint32_t ticks);
     void renderEverything(uint32_t ticks);
     void handleEvent(const SDL_Event &event, uint32_t ticks);
-
-    void quit();
 };
 
 } // namespace grail

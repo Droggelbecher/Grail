@@ -4,7 +4,7 @@
 namespace grail {
 
 #ifdef DEBUG
-  std::ostream &cdbg = cerr;
+  std::ostream &cdbg = std::cerr;
 #else
   NullStream cdbg;
 #endif

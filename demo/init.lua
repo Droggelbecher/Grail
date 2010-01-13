@@ -1,9 +1,24 @@
 
-test_luabind()
+print("x")
+
+GAME:setInitChapterCallback(function(n)
+    print("This is initChapter("..n..")")
+  end)
+print("a")
+
+GAME:setUserInterface(grail.UserInterface())
+
+print("b")
+
+GAME:getViewport():setup(800, 600, false)
+
+print("c")
+
+GAME:runChapter(0)
 
 --[[
 
-GAME:getViewport():setup(800, 600, false)
+
 --s = _GRAIL.loadSceneDefinition("/media/test.scene")
 
 GAME:registerChapterConstructor(0, function(n)
