@@ -4,6 +4,8 @@
 
 #include "vector2d.h"
 
+namespace grail {
+
 class Line {
     VirtualPosition a, b;
   public:
@@ -11,6 +13,8 @@ class Line {
 
     bool intersects(const Line& other) const;
 };
+
+} // namespace grail
 
 #endif // LINE_H
 

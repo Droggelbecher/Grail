@@ -10,6 +10,8 @@ using std::ifstream;
 using std::ofstream;
 using std::pair;
 
+namespace grail {
+
 bool startsWith(string s, string prefix) {
   return s.substr(0, prefix.length()) == prefix;
 }
@@ -108,5 +110,7 @@ string normalizePath(string path) {
 bool isParentOrEqualPath(string path1, string path2) {
   return path1 == path2.substr(0, path1.length());
 }
+
+} // namespace grail
 
 

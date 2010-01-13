@@ -14,6 +14,8 @@ using std::endl;
 #include "vector2d.h"
 #include "animation.h"
 
+namespace grail {
+
 class Image : public Animation {
   protected:
     const Surface& surface;
@@ -34,9 +36,11 @@ class Image : public Animation {
       SDL_Rect t = conv<PhysicalPosition, SDL_Rect>(
           conv<VirtualPosition, PhysicalPosition>(p)
           );
-      surface.blit(NULL, target, &t);
+      surface.blit(0, target, &t);
     }
 };
+
+} // namespace grail
 
 #endif // IMAGE_H
 

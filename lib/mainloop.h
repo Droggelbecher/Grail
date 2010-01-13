@@ -5,6 +5,8 @@
 #include <SDL/SDL.h>
 #include "game.h"
 
+namespace grail {
+
 class MainLoop {
   bool exit_;
   double targetFPS;
@@ -18,6 +20,8 @@ class MainLoop {
 
     virtual void handleEvent(SDL_Event& event, uint32_t frameDuration);
 };
+
+} // namespace grail
 
 #endif // MAINLOOP_H
 

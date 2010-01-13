@@ -15,6 +15,7 @@
 using std::string;
 using std::cerr;
 using std::endl;
+using namespace grail;
 
 const std::string Interpreter::internalTableName = "_GRAIL";
 

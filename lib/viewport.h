@@ -9,6 +9,8 @@
 #include "scene.h"
 #include "reference_counting.h"
 
+namespace grail {
+
 class Viewport : public ReferenceCounted {
     SDL_Surface* screen;
     VirtualSize virtualSize;
@@ -46,6 +48,8 @@ class Viewport : public ReferenceCounted {
       cameraTarget = &actor;
     }
 };
+
+} // namespace grail
 
 
 #endif // VIEWPORT_H

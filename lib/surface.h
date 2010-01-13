@@ -15,6 +15,8 @@ using std::endl;
 #include "shortcuts.h"
 #include "utils.h"
 
+namespace grail {
+
 class Surface {
     SDL_Surface* sdlSurface;
 
@@ -52,6 +54,8 @@ class Surface {
       SDL_BlitSurface(sdlSurface, from, target, to);
     }
 };
+
+} // namespace grail
 
 #endif // SURFACE_H
 

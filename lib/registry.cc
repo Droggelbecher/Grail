@@ -7,6 +7,8 @@ using std::string;
 using std::map;
 using std::list;
 
+namespace grail {
+
 Registry::~Registry() {
   clearData(SCOPE_ALL);
 }
@@ -68,4 +70,6 @@ void Registry::clearData(Scope scope) {
     }
   } // for
 } // clearData
+
+} // namespace grail
 

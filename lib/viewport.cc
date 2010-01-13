@@ -5,6 +5,8 @@
 #include "viewport.h"
 #include "scene.h"
 
+namespace grail {
+
 const std::string Viewport::className = "Viewport";
 
 Viewport::Viewport() : screen(0),
@@ -64,4 +66,6 @@ void Viewport::renderScene(const Scene& scene, uint32_t ticks) {
   scene.renderAt(screen, ticks, -cameraPosition);
   SDL_Flip(screen);
 }
+
+} // namespace grail
 

@@ -6,6 +6,8 @@
 #include "vector2d.h"
 #include "actor.h"
 
+namespace grail {
+
 enum EventState { EVENT_STATE_HANDLED, EVENT_STATE_UNHANDLED };
 enum EventType { _EVT_GRAIL_START = 100, EVT_SCENE_CLICK = 100, EVT_ACTOR_CLICK };
 
@@ -40,6 +42,8 @@ class Event {
     static Event* actorClick(Actor* a, VirtualPosition, uint8_t button);
 
 };
+
+} // namespace grail
 
 #endif // EVENT_H
 

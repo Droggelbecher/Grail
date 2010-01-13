@@ -14,7 +14,8 @@
 #include "reference_counting.h"
 
 #include <iostream>
-using namespace std;
+
+namespace grail {
 
 typedef std::list<VirtualPosition> Path;
 
@@ -34,7 +35,7 @@ class Actor : public Area {
     VirtualPosition getUpperLeftCorner() const;
 
   public:
-    static const string className;
+    static const std::string className;
 
     struct CompareByY {
       bool operator()(Actor* a, Actor* b) const {
@@ -88,6 +89,8 @@ class Actor : public Area {
     void walk(const Path& path);
     void walkStraight(VirtualPosition p);
 };
+
+} // namespace grail
 
 #endif // ACTOR_H
 

@@ -1,4 +1,8 @@
 
+test_luabind()
+
+--[[
+
 GAME:getViewport():setup(800, 600, false)
 --s = _GRAIL.loadSceneDefinition("/media/test.scene")
 
@@ -57,4 +61,7 @@ GAME:getUserInterface().handleEvent = function(self, evt, duration)
 end
 
 GAME:runChapter(0)
+
+
+]]--
 

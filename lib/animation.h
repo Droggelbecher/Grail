@@ -9,6 +9,8 @@
 #include "vector2d.h"
 #include "area.h"
 
+namespace grail {
+
 class Animation : public Area {
 
   public:
@@ -54,6 +56,8 @@ class DirectionAnimation : public Animation {
 
     void setAnimation(uint16_t direction, Animation* animation);
 };
+
+} // namespace grail
 
 #endif // ANIMATION_H
 

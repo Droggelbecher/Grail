@@ -2,6 +2,8 @@
 #include "event.h"
 #include "utils.h"
 
+namespace grail {
+
 void freeUserEventData(SDL_Event& evt) {
   if(evt.type == SDL_USEREVENT) {
     delete (Event*)(evt.user.data1);
@@ -104,6 +106,6 @@ VirtualPosition Event::getPosition() const { return position; }
 uint8_t Event::getButtonState() const { return buttonState; }
 SDL_keysym Event::getKeysym() const { return keysym; }
 
-
+} // namespace grail
 
 

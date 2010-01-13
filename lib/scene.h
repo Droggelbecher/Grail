@@ -12,6 +12,8 @@
 #include "actor.h"
 #include "reference_counting.h"
 
+namespace grail {
+
 class Scene : public ReferenceCounted {
     const Animation* background;
     std::list<Actor*> actors;
@@ -39,6 +41,8 @@ class Scene : public ReferenceCounted {
 
     EventState handleEvent(SDL_Event& event, uint32_t ticks);
 };
+
+}
 
 #endif // SCENE_H
 

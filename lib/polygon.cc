@@ -3,6 +3,8 @@
 #include "polygon.h"
 #include "vector2d.h"
 
+namespace grail {
+
 Polygon::Polygon() {
 }
 
@@ -63,4 +65,6 @@ bool Polygon::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition 
   else
     return w < 0;
 } // intersects()
+
+}
 

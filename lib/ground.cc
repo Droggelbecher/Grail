@@ -11,6 +11,8 @@ using std::pop_heap;
 
 #include "ground.h"
 
+namespace grail {
+
 const std::string Ground::className = "Ground";
 
 Ground::Ground() {
@@ -135,4 +137,6 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
     } while(p && *p != source);
   }
 } // getPath
+
+}
 

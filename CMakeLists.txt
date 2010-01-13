@@ -12,11 +12,12 @@ find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
 find_package(SDL_image REQUIRED)
 find_package(PNG REQUIRED)
+set(LUABIND_LIBRARY luabind)
 
 if(debug)
   set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
   set(CMAKE_CXX_FLAGS "-g -O0 -Wall -pipe")
-  add_definitions(-DDEBUG)
+  #add_definitions(-DDEBUG)
 endif(debug)
 
 set(GRAIL_LIBDIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")

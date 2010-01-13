@@ -3,6 +3,8 @@
 
 #include <cassert>
 
+namespace grail {
+
 const std::string Animation::className = "Animation";
 
 const std::string DirectionAnimation::className = "DirectionAnimation";
@@ -41,4 +43,7 @@ void DirectionAnimation::setAnimation(uint16_t direction, Animation* animation) 
   assert(direction < directions);
   animations[direction] = animation;
 }
+
+} // namespace grail
+
 

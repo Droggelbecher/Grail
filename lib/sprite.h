@@ -8,6 +8,8 @@
 #include "surface.h"
 #include "animation.h"
 
+namespace grail {
+
 class Sprite : public Animation {
   protected:
     std::vector<uint32_t> frameDurations;
@@ -63,6 +65,8 @@ class StripeSprite : public Sprite {
           );
     }
 };
+
+} // namespace grail
 
 /*
 class ImageSprite : public Sprite {

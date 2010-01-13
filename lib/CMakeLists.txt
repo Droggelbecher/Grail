@@ -3,6 +3,7 @@ set(GRAIL_FILES
   actor.cc
   area.cc
   animation.cc
+  debug.cc
   event.cc
   game.cc
   ground.cc

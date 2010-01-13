@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <SDL/SDL.h>
 
+namespace grail {
+
 template <typename T, int N> class Vector2d;
 
 template <typename T, int N> Vector2d<T, N> operator*(double scalar, Vector2d<T, N> v);
@@ -89,6 +91,8 @@ template <> PhysicalPosition conv<VirtualPosition, PhysicalPosition>(VirtualPosi
 
 template <> VirtualPosition conv<SDL_MouseButtonEvent&, VirtualPosition>(SDL_MouseButtonEvent& p);
 template <> VirtualPosition conv<SDL_MouseMotionEvent&, VirtualPosition>(SDL_MouseMotionEvent& p);
+
+} // namespace grail
 
 #endif // VECTOR2D_H
 

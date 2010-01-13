@@ -11,6 +11,8 @@ using std::list;
 #include "actor.h" // ->Path
 #include "line.h"
 
+namespace grail {
+
 /**
  * The "ground" of a scene. This defines, from where you can go where and how.
  */
@@ -136,6 +138,8 @@ class Ground {
     void getPath(Waypoint& source, Waypoint& target, Path& path);
 
 };
+
+} // namespace grail
 
 #endif // GROUND_H
 

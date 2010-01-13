@@ -11,6 +11,8 @@
 
 #include "utils.h"
 
+namespace grail {
+
 class Unittest {
     static std::map<std::string, std::list<Unittest*> > tests;
 
@@ -45,6 +47,8 @@ class Unittest {
   void __unittest__ ## GROUP ## __ ## TEST :: run(Unittest::TestResult& result)
 
 #define CHECK_EQUAL(x, y) checkEqual((x) == (y), toString((x)), #x, #y, result)
+
+} // namespace grail
 
 #endif // UNITTEST_H
 

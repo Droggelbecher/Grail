@@ -2,6 +2,7 @@
 #include <cassert>
 #include "reference_counting.h"
 
+namespace grail {
 ReferenceCounted::ReferenceCounted() : referenceCount(0) { }
 
 ReferenceCounted::~ReferenceCounted() { }
@@ -75,5 +76,6 @@ T* Reference<T>::operator->() const { return target; }
 
 int ReferenceCountingTest::instances = 0;
 
+} // namespace grail
 
 

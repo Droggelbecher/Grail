@@ -10,6 +10,8 @@
 
 #include "classes.h"
 
+namespace grail {
+
 enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
 
 /**
@@ -154,6 +156,8 @@ class DirectoryResourceHandler : public ResourceHandler {
     bool fileExists(std::string path);
     //std::list<std::string> listDirectory(std::string path);
 };
+
+} // namespace grail
 
 #endif // RESOURCE_MANAGER_H
 

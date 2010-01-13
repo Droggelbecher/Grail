@@ -6,6 +6,8 @@
 #include "vector2d.h"
 #include "reference_counting.h"
 
+namespace grail {
+
 class Area : public ReferenceCounted {
   public:
     static const std::string className;
@@ -14,6 +16,8 @@ class Area : public ReferenceCounted {
     virtual ~Area() { }
     virtual bool hasPoint(VirtualPosition p) const = 0;
 };
+
+}
 
 #endif // AREA_H
 

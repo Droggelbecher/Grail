@@ -9,6 +9,8 @@
 
 using std::make_pair;
 
+namespace grail {
+
 TEST(Vector2d, nearestDirection) {
   CHECK_EQUAL((int)VirtualPosition(  0, 10).nearestDirection(4), 0);
   CHECK_EQUAL((int)VirtualPosition(  3, 10).nearestDirection(4), 0);
@@ -99,11 +101,12 @@ TEST(ReferenceCounting, reference_counting) {
   CHECK_EQUAL(ReferenceCountingTest::instances, 0);
 }
 
-
+} // namespace grail
 
 
 int main(int argc, char** argv) {
-  Unittest::runAll();
+  grail::Unittest::runAll();
   return 0;
 }
+
 

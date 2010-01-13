@@ -4,6 +4,8 @@
 
 #include "animation.h"
 
+namespace grail {
+
 class SceneAnimation {
   protected:
     Animation *animation;
@@ -13,6 +15,8 @@ class SceneAnimation {
     SceneAnimation(Animation animation) : animation(animation) { }
 
 };
+
+} // namespace grail
 
 #endif // SCENE_ANIMATION_H
 

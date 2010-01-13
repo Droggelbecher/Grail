@@ -4,6 +4,8 @@
 
 #include "area.h"
 
+namespace grail {
+
 class Rect : public Area {
     VirtualPosition topLeft;
     VirtualSize size;
@@ -19,6 +21,8 @@ class Rect : public Area {
         p.getY() < (topLeft + size).getY();
     }
 };
+
+} // namespace grail
 
 #endif // RECT_H
 

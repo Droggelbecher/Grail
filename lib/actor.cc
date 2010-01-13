@@ -8,7 +8,9 @@ using std::copy;
 #include "game.h"
 #include "scene.h"
 
-const string Actor::className = "Actor";
+namespace grail {
+
+const std::string Actor::className = "Actor";
 
 void Actor::setAlignment(double x, double y) {
   alignmentX = x;
@@ -70,4 +72,6 @@ void Actor::eachFrame(uint32_t ticks) {
     }
   } // if walkPath not empty
 }
+
+} // namespace grail
 

@@ -13,6 +13,8 @@ using std::cerr;
 using std::clog;
 using std::endl;
 
+namespace grail {
+
 Game* Game::_instance = 0;
 
 const std::string Game::className = "Game";
@@ -80,5 +82,5 @@ void Game::renderEverything(uint32_t ticks) {
 void Game::handleEvent(const SDL_Event &event, uint32_t ticks) {
 }
 
-
+}
 

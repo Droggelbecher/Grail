@@ -10,6 +10,8 @@
 #include "event.h"
 #include "reference_counting.h"
 
+namespace grail {
+
 class Game : public ReferenceCounted {
   protected:
 
@@ -47,6 +49,8 @@ class Game : public ReferenceCounted {
 
     void quit();
 };
+
+} // namespace grail
 
 #endif // GAME_H
 

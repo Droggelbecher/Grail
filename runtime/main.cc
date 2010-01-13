@@ -16,6 +16,7 @@
 #include "lua_game.h"
 
 #include "lib/unittest.h"
+#include "lua_bindings.h"
 
 using std::cin;
 using std::cout;
@@ -29,46 +30,17 @@ Interpreter interpreter;
 void registerLuaWrappings();
 void registerHandcraftedWrappings();
 
+
 int main(int argc, char** argv) {
+  Game& g = Game::getInstance();
 
-  cout << "basedir:" << dirName(argv[0]) << endl;
+  g.getResourceManager().mount(
+      new DirectoryResourceHandler(argv[optind]), "/"
+      );
+  
+  init(interpreter.L);
+  interpreter.loadDirectory("/");
 
-  int c;
-  while((c = getopt(argc, argv, "v")) != -1) {
-    switch(c) {
-      case 'v':
-        cout << "verbose" << endl;
-        break;
-    }
-  }
-
-  if(optind < argc) {
-    LuaGame& g = LuaGame::getInstance();
-
-    g.getResourceManager().mount(
-        new DirectoryResourceHandler(argv[optind]), "/"
-        );
-
-    g.getResourceManager().mount(
-        new DirectoryResourceHandler(dirName(argv[0]) + pathDelimiter + "prelude"),
-        "/prelude"
-        );
-
-    g.setUserInterface(*(new LuaUserInterface()));
-
-    registerLuaWrappings();
-    registerHandcraftedWrappings();
-
-    interpreter.loadPrelude("/prelude");
-    interpreter.loadDirectory("/");
-
-    delete &g;
-  }
-  else {
-    cerr << "Please specify path to a game to run" << endl;
-    return 1;
-  }
-
-  return 0;
+  delete &g;
 }
 

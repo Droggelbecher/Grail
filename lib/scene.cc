@@ -12,6 +12,8 @@ using std::endl;
 #include "rect.h"
 #include "actor.h"
 
+namespace grail {
+
 const std::string Scene::className = "Scene";
 
 Scene::Scene() : background(0), _actorsMoved(false) {
@@ -76,4 +78,6 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
 
   return EVENT_STATE_UNHANDLED;
 }
+
+} // namespace grail
 

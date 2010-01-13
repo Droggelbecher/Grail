@@ -10,6 +10,8 @@ using std::map;
 using std::setw;
 using std::left;
 
+namespace grail {
+
 std::map<std::string, std::list<Unittest*> > Unittest::tests;
 
 Unittest::Unittest(string group, string name) : group(group), name(name), out(cerr) {
@@ -52,4 +54,6 @@ void Unittest::checkEqual(bool r, string v1, string s1, string s2, TestResult& r
     result.passed++;
   }
 }
+
+} // namespace grail
 

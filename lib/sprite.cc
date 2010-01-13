@@ -6,6 +6,8 @@
 using std::string;
 using std::vector;
 
+namespace grail {
+
 void Sprite::setFrameDurations(const vector<uint32_t>& durations) {
   frameDurations = durations;
 }
@@ -38,5 +40,7 @@ void StripeSprite::renderCurrentFrameAt(SDL_Surface* target, VirtualPosition p) 
   
   surface->blit(&from, target, &to);
 }
+
+} // namespace grail
 
 

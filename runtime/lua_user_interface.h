@@ -8,6 +8,8 @@
 #include <iostream>
 using namespace std;
 
+using namespace grail;
+
 class LuaUserInterface : public UserInterface {
   public:
     EventState handleEvent(SDL_Event& event, uint32_t frameDuration) {

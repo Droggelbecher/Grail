@@ -4,15 +4,21 @@
 
 #include <iostream>
 
+namespace grail {
+
 #ifdef DEBUG
-#define cdbg cerr
+extern std::ostream &cdbg;
 #else
-struct DebugStream {
+struct NullStream {
   template <typename T>
-  DebugStream& operator<<(T obj) {
+  NullStream& operator<<(T obj) {
+    return *this;
   }
-} cdbg;
+};
+extern NullStream cdbg;
 #endif
+
+}
 
 #endif // DEBUG_H
 

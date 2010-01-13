@@ -9,6 +9,8 @@
 #include <iostream>
 using namespace std;
 
+namespace grail {
+
 template <typename T, int N>
 Vector2d<T, N> Vector2d<T, N>::operator+(Vector2d<T, N> other) const {
   return Vector2d<T, N>(_x + other._x, _y + other._y);
@@ -124,4 +126,6 @@ VirtualPosition conv<SDL_MouseMotionEvent&, VirtualPosition>(SDL_MouseMotionEven
       PhysicalPosition(p.x, p.y)
   );
 }
+
+} // namespace grail
 

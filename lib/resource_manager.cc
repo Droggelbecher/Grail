@@ -15,6 +15,8 @@ using std::endl;
 #include "game.h"
 #include "viewport.h"
 
+namespace grail {
+
 Resource::Resource(string path, ResourceMode mode) : buffer(0), bufferSize(0), path(path) {
   rw = Game::getInstance().getResourceManager().getRW(path, mode);
 }
@@ -118,5 +120,7 @@ bool DirectoryResourceHandler::fileExists(string path) {
   string fullpath = baseDirectory + pathDelimiter + path;
   return exists(fullpath);
 }
+
+} // namespace grail
 
 

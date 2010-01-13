@@ -1,6 +1,8 @@
 
 #include "vector2d.cc"
 
+namespace grail {
+
 template class Vector2d<int32_t, 0>;
 template class Vector2d<int32_t, 1>;
 
@@ -18,5 +20,7 @@ CONV(PhysicalPosition, SDL_Rect);
 CONV(SDL_MouseButtonEvent&, VirtualPosition);
 CONV(SDL_MouseMotionEvent&, VirtualPosition);
 CONV(VirtualPosition, SDL_Rect);
+
+} // namespace grail
 
 

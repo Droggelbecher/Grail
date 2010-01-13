@@ -12,6 +12,8 @@ using std::cerr;
 using std::endl;
 using std::max;
 
+namespace grail {
+
 void MainLoop::run() {
   Game &controller = Game::getInstance();
 
@@ -69,4 +71,6 @@ void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
   }
 
 }
+
+} // namespace grail
 

@@ -9,6 +9,8 @@
 #include <iostream>
 #include <sstream>
 
+namespace grail {
+
 class Exception : public std::exception {
   std::string _what;
   public:
@@ -155,6 +157,8 @@ std::string normalizePath(std::string path);
  * path2
  */
 bool isParentOrEqualPath(std::string path1, std::string path2);
+
+} // namespace grail
 
 #endif // UTILS_H
 

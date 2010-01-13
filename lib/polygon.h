@@ -9,6 +9,8 @@ using std::list;
 #include "vector2d.h"
 #include "line.h"
 
+namespace grail {
+
 class Polygon : public Area {
     list<VirtualPosition> nodes;
 
@@ -44,6 +46,8 @@ class Polygon : public Area {
     LineIterator beginLines() { return LineIterator(this, nodes.begin()); }
     LineIterator endLines() { return LineIterator(this, nodes.end()); }
 };
+
+} // namespace grail
 
 #endif // POLYGON_H
 

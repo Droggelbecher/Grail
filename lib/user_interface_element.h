@@ -4,6 +4,8 @@
 
 #include "game.h"
 
+namespace grail {
+
 class UserInterfaceElement {
   public:
     UserInterfaceElement() { };
@@ -11,6 +13,8 @@ class UserInterfaceElement {
 
     virtual EventState handleEvent(Event& event, uint32_t frameDuration) = 0;
 };
+
+} // namespace grail
 
 #endif // USER_INTERFACE_ELEMENT_H
 

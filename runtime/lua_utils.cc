@@ -11,6 +11,8 @@ using std::string;
 #include "lib/image.h"
 #include "lib/utils.h"
 
+using namespace grail;
+
 extern Interpreter interpreter;
 
 template <typename T>

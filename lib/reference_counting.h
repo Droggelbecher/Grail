@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <lua.hpp>
 
+namespace grail {
+
 class ReferenceCounted {
     uint32_t referenceCount;
 
@@ -44,6 +46,7 @@ struct ReferenceCountingTest : public ReferenceCounted {
   ~ReferenceCountingTest() { instances--; }
 };
 
+} // namespace grail
 
 #endif // REFERENCE_COUNTING_H
 
