@@ -36,7 +36,8 @@ extern "C" int init(lua_State* L) {
       .def("setUserInterface", &GameWrapper::setUserInterface)
       .def("initChapter", &GameWrapper::initChapter)
       .def("setInitChapterCallback", &GameWrapper::setInitChapterCallback)
-      .def("runChapter", &GameWrapper::runChapter),
+      .def("runChapter", &GameWrapper::runChapter)
+      ,
 
     //class_<Image>("Image")
     //  .def(constructor<std::string>()),
@@ -45,10 +46,12 @@ extern "C" int init(lua_State* L) {
     class_<ResourceManager>("ResourceManager"),
 
     class_<Scene>("Scene")
-      .def(constructor<>()),
+      .def(constructor<>())
+      ,
 
     class_<UserInterface>("UserInterface")
-      .def(constructor<>()),
+      .def(constructor<>())
+      ,
 
     class_<VirtualPosition>("VirtualPosition")
       .def(constructor<>())

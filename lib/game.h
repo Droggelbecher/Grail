@@ -9,6 +9,7 @@
 #include "classes.h"
 #include "event.h"
 #include "reference_counting.h"
+#include "exceptions.h"
 
 namespace grail {
 
@@ -37,7 +38,7 @@ class Game : public ReferenceCounted {
     void runChapter(size_t chapter);
 
     Viewport& getViewport();
-    Scene& getCurrentScene() const;
+    Scene& getCurrentScene() const throw(ValueNotSet);
     void goToScene(Scene& scene);
     ResourceManager& getResourceManager();
     void setUserInterface(UserInterface& ui);

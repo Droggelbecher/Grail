@@ -48,7 +48,10 @@ Viewport& Game::getViewport() {
   return *viewport;
 }
 
-Scene& Game::getCurrentScene() const {
+Scene& Game::getCurrentScene() const throw(ValueNotSet) {
+  if(!currentScene) {
+    throw ValueNotSet("Game doesn't have a current scene.");
+  }
   return *currentScene;
 }
 

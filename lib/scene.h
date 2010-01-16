@@ -42,7 +42,7 @@ class Scene : public ReferenceCounted {
     EventState handleEvent(SDL_Event& event, uint32_t ticks);
 };
 
-}
+} // namespace grail
 
 #endif // SCENE_H
 
