@@ -5,7 +5,6 @@
 
 #include "vector2d.h"
 #include "utils.h"
-#include "reference_counting.h"
 
 using std::make_pair;
 
@@ -84,21 +83,6 @@ TEST(Utils, split) {
   CHECK_EQUAL(*iter, "bang"); iter++;
   CHECK_EQUAL(*iter, "buff"); iter++;
   CHECK_EQUAL(iter, iter.end());
-}
-
-TEST(ReferenceCounting, reference_counting) {
-  {
-    Reference<ReferenceCountingTest> g;
-    CHECK_EQUAL(ReferenceCountingTest::instances, 0);
-
-    {
-      Reference<ReferenceCountingTest> f(new ReferenceCountingTest());
-      CHECK_EQUAL(ReferenceCountingTest::instances, 1);
-      g = f;
-    }
-    CHECK_EQUAL(ReferenceCountingTest::instances, 1);
-  }
-  CHECK_EQUAL(ReferenceCountingTest::instances, 0);
 }
 
 } // namespace grail

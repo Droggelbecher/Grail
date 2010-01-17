@@ -2,9 +2,11 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include <SDL/SDL.h>
 #include <string>
 #include <cassert>
+
+#include <SDL/SDL.h>
+#include <boost/shared_ptr.hpp>
 
 #include "vector2d.h"
 #include "area.h"
@@ -14,6 +16,9 @@ namespace grail {
 class Animation : public Area {
 
   public:
+    typedef boost::shared_ptr<Animation> Ptr;
+    typedef boost::shared_ptr<const Animation> ConstPtr;
+
     static const std::string className;
 
     Animation(std::string classname) { }
@@ -33,7 +38,7 @@ class Animation : public Area {
 class DirectionAnimation : public Animation {
     uint16_t currentDirection;
     uint16_t directions;
-    Animation** animations;
+    Animation::Ptr* animations;
   public:
     static const std::string className;
 
@@ -54,7 +59,7 @@ class DirectionAnimation : public Animation {
       setDirection(p.nearestDirection(directions));
     }
 
-    void setAnimation(uint16_t direction, Animation* animation);
+    void setAnimation(uint16_t direction, Animation::Ptr animation);
 };
 
 } // namespace grail

@@ -12,7 +12,7 @@ const std::string DirectionAnimation::className = "DirectionAnimation";
 DirectionAnimation::DirectionAnimation(uint16_t directions) :
   Animation("DirectionAnimation"), currentDirection(0), directions(directions) {
   assert(directions > 0);
-  animations = new Animation*[directions];
+  animations = new Animation::Ptr[directions];
 }
 
 DirectionAnimation::~DirectionAnimation() {
@@ -39,7 +39,7 @@ void DirectionAnimation::eachFrame(uint32_t ticks) {
   return animations[currentDirection]->eachFrame(ticks);
 }
 
-void DirectionAnimation::setAnimation(uint16_t direction, Animation* animation) {
+void DirectionAnimation::setAnimation(uint16_t direction, Animation::Ptr animation) {
   assert(direction < directions);
   animations[direction] = animation;
 }

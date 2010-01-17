@@ -5,29 +5,37 @@
 #include <algorithm>
 #include <string>
 
+#include <boost/shared_ptr.hpp>
+
 #include "classes.h"
-#include "game.h"
 #include "vector2d.h"
 #include "animation.h"
+#include "event.h"
 #include "actor.h"
-#include "reference_counting.h"
 
 namespace grail {
 
-class Scene : public ReferenceCounted {
-    const Animation* background;
+class Scene {
+    Animation::ConstPtr background;
+
     std::list<Actor*> actors;
     bool _actorsMoved;
 
   public:
+    typedef boost::shared_ptr<Scene> Ptr;
+    typedef boost::shared_ptr<const Scene> ConstPtr;
+
     static const std::string className;
 
     Scene();
+    Scene(const Animation& background);
+    Scene(const std::string& backgroundPath);
+
     virtual ~Scene();
 
     VirtualSize getSize() const;
 
-    void setBackground(const Animation& background) { this->background = &background; }
+    void setBackground(const Animation& background);
 
     void addActor(Actor& entity) {
       actors.push_back(&entity);

@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "viewport.h"
 #include "scene.h"
+#include "game.h"
 
 namespace grail {
 
@@ -11,8 +12,7 @@ const std::string Viewport::className = "Viewport";
 
 Viewport::Viewport() : screen(0),
   virtualSize(VirtualSize(4000, 3000)), cameraMode(CAMERA_CENTER),
-  cameraLimit(LIMIT_SCENE), cameraPosition(VirtualPosition(0, 0)),
-  cameraTarget(0) {
+  cameraLimit(LIMIT_SCENE), cameraPosition(VirtualPosition(0, 0)) {
 }
 
 Viewport::Viewport(uint32_t w, uint32_t h, bool fullscreen) : screen(0) {
@@ -45,25 +45,25 @@ void Viewport::setCameraPosition(VirtualPosition position) {
     if(cameraPosition.getX() < 0) { cameraPosition.setX(0); }
     if(cameraPosition.getY() < 0) { cameraPosition.setY(0); }
     VirtualPosition bottomRight = cameraPosition + virtualSize;
-    Scene& scene = Game::getInstance().getCurrentScene();
-    if(&scene) {
-      if(bottomRight.getX() >= scene.getSize().getX()) {
-        cameraPosition.setX(scene.getSize().getX() - virtualSize.getX());
+    Scene::Ptr scene = Game::getInstance().getCurrentScene();
+    if(scene) {
+      if(bottomRight.getX() >= scene->getSize().getX()) {
+        cameraPosition.setX(scene->getSize().getX() - virtualSize.getX());
       }
-      if(bottomRight.getY() >= scene.getSize().getY()) {
-        cameraPosition.setY(scene.getSize().getY() - virtualSize.getY());
+      if(bottomRight.getY() >= scene->getSize().getY()) {
+        cameraPosition.setY(scene->getSize().getY() - virtualSize.getY());
       }
     }
   } // if LIMIT_SCENE
 } // setCameraPosition()
 
-void Viewport::renderScene(const Scene& scene, uint32_t ticks) {
+void Viewport::renderScene(Scene::ConstPtr scene, uint32_t ticks) {
   if(cameraTarget) {
     setCameraPosition(
         cameraTarget->getPosition() - (virtualSize / 2.0)
     );
   }
-  scene.renderAt(screen, ticks, -cameraPosition);
+  scene->renderAt(screen, ticks, -cameraPosition);
   SDL_Flip(screen);
 }
 

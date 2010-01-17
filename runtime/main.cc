@@ -14,7 +14,7 @@
 #include "wrappings.h"
 #include "lib/game.h"
 #include "lib/resource_manager.h"
-#include "lua_user_interface.h"
+#include "lib/debug.h"
 
 #include "lib/unittest.h"
 #include "lua_bindings.h"
@@ -57,9 +57,9 @@ int main(int argc, char** argv) {
 
   init(interpreter.L);
 
-  cdbg << "--- Prelude" << endl;
+  cdbg << "--- Prelude\n";
   interpreter.loadPrelude("/prelude");
-  cdbg << "--- Game" << endl;
+  cdbg << "--- Game\n";
   interpreter.loadDirectory("/");
 
   delete &g;

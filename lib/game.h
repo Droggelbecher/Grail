@@ -4,30 +4,37 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 
+#include <boost/shared_ptr.hpp>
 #include <SDL/SDL.h>
+
 #include "classes.h"
 #include "event.h"
-#include "reference_counting.h"
 #include "exceptions.h"
+#include "scene.h"
+#include "user_interface.h"
 
 namespace grail {
 
-class Game : public ReferenceCounted {
+class Game {
   protected:
-
     static Game* _instance;
 
     double targetFPS;
 
     Viewport* viewport;
-    Scene* currentScene;
+    Scene::Ptr currentScene;
     ResourceManager* resourceManager;
-    UserInterface* userInterface;
+    UserInterface::Ptr userInterface;
+    std::map<std::string, Scene::Ptr> scenes;
 
     Game();
 
   public:
+    typedef boost::shared_ptr<Game> Ptr;
+    typedef boost::shared_ptr<const Game> ConstPtr;
+
     static const std::string className;
 
     virtual ~Game();
@@ -38,11 +45,14 @@ class Game : public ReferenceCounted {
     void runChapter(size_t chapter);
 
     Viewport& getViewport();
-    Scene& getCurrentScene() const throw(ValueNotSet);
-    void goToScene(Scene& scene);
+    void registerScene(Scene::Ptr scene, std::string name);
+    Scene::Ptr getScene(std::string name);
+    Scene::Ptr getCurrentScene() const throw(ValueNotSet);
+    void clearScenes();
+    void goToScene(Scene::Ptr scene);
     ResourceManager& getResourceManager();
-    void setUserInterface(UserInterface& ui);
-    UserInterface& getUserInterface();
+    void setUserInterface(UserInterface::Ptr ui);
+    UserInterface::Ptr getUserInterface();
 
     void eachFrame(uint32_t ticks);
     void renderEverything(uint32_t ticks);

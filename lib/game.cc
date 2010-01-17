@@ -12,6 +12,7 @@ using std::cout;
 using std::cerr;
 using std::clog;
 using std::endl;
+using std::string;
 
 namespace grail {
 
@@ -19,14 +20,13 @@ Game* Game::_instance = 0;
 
 const std::string Game::className = "Game";
 
-Game::Game() : targetFPS(50.0), viewport(0), currentScene(0), resourceManager(0) {
+Game::Game() : targetFPS(50.0), viewport(0), resourceManager(0) {
   SDL_Init(SDL_INIT_EVERYTHING);
 }
 
 Game::~Game() {
   delete viewport;
   delete resourceManager;
-  delete userInterface;
   SDL_Quit();
 }
 
@@ -48,15 +48,27 @@ Viewport& Game::getViewport() {
   return *viewport;
 }
 
-Scene& Game::getCurrentScene() const throw(ValueNotSet) {
+void Game::registerScene(Scene::Ptr scene, string name) {
+  scenes[name] = scene;
+}
+
+Scene::Ptr Game::getScene(string name) {
+  return scenes[name];
+}
+
+void Game::clearScenes() {
+  scenes.clear();
+}
+
+Scene::Ptr Game::getCurrentScene() const throw(ValueNotSet) {
   if(!currentScene) {
     throw ValueNotSet("Game doesn't have a current scene.");
   }
-  return *currentScene;
+  return currentScene;
 }
 
-void Game::goToScene(Scene& scene) {
-  currentScene = &scene;
+void Game::goToScene(Scene::Ptr scene) {
+  currentScene = scene;
 }
 
 ResourceManager& Game::getResourceManager() {
@@ -64,10 +76,12 @@ ResourceManager& Game::getResourceManager() {
   return *resourceManager;
 }
 
-void Game::setUserInterface(UserInterface& ui) { userInterface = &ui; }
-UserInterface& Game::getUserInterface() {
-  assert(userInterface);
-  return *userInterface;
+void Game::setUserInterface(UserInterface::Ptr ui) {
+  userInterface = ui;
+}
+
+UserInterface::Ptr Game::getUserInterface() {
+  return userInterface;
 }
 
 void Game::eachFrame(uint32_t ticks) {
@@ -78,12 +92,12 @@ void Game::eachFrame(uint32_t ticks) {
 
 void Game::renderEverything(uint32_t ticks) {
   if(viewport && currentScene) {
-    viewport->renderScene(*currentScene, ticks);
+    viewport->renderScene(currentScene, ticks);
   }
 }
 
 void Game::handleEvent(const SDL_Event &event, uint32_t ticks) {
 }
 
-}
+} // namespace grail
 

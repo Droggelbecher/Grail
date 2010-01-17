@@ -62,11 +62,11 @@ void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
   else if(event.type == SDL_USEREVENT) {
   }
 
-  if(controller.getUserInterface().handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
+  if(controller.getUserInterface()->handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
     return;
   }
 
-  if(controller.getCurrentScene().handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
+  if(controller.getCurrentScene()->handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
     return;
   }
 

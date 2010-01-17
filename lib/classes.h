@@ -1,28 +1,41 @@
 
-#ifndef LIB_CLASSES_H
-#define LIB_CLASSES_H
+#ifndef CLASSES_H
+#define CLASSES_H
 
 namespace grail {
 
-class Animation;
-class DirectoryResourceHandler;
-class Event;
-class Exception;
-class Game;
-class Image;
-class MainLoop;
-class Registrable;
-class Resource;
-class ResourceHandler;
-class ResourceManager;
-class Scene;
-class SceneEntity;
-class Surface;
-class UserInterface;
-class UserInterfaceElement;
-class Viewport;
+  class Actor;
+  class Animation;
+  class Area;
+  class DirectionAnimation;
+  class DirectoryResourceHandler;
+  class Event;
+  class Exception;
+  class Game;
+  class Ground;
+  class Image;
+  class ImageSprite;
+  class Line;
+  class LineIterator;
+  class MainLoop;
+  class Polygon;
+  class Rect;
+  class Resource;
+  class ResourceHandler;
+  class ResourceManager;
+  class Scene;
+  class SceneAnimation;
+  class SplitIterator;
+  class Sprite;
+  class StripeSprite;
+  class Surface;
+  class Unittest;
+  class UserInterface;
+  class UserInterfaceElement;
+  class ValueNotSet;
+  class Viewport;
 
-}
+} // namespace grail
 
-#endif // LIB_CLASSES_H
+#endif // CLASSES_H
 

@@ -3,13 +3,17 @@
 #define AREA_H
 
 #include <string>
+
+#include <boost/shared_ptr.hpp>
+
 #include "vector2d.h"
-#include "reference_counting.h"
 
 namespace grail {
 
-class Area : public ReferenceCounted {
+class Area {
   public:
+    typedef boost::shared_ptr<Area> Ptr;
+
     static const std::string className;
 
     Area() { }

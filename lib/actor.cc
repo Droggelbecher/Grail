@@ -64,7 +64,7 @@ void Actor::eachFrame(uint32_t ticks) {
     }
 
     if(diff.length()) {
-      Game::getInstance().getCurrentScene().actorsMoved();
+      Game::getInstance().getCurrentScene()->actorsMoved();
     }
 
     if(position == target) {

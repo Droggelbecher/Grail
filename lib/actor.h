@@ -7,26 +7,25 @@
 #include <iostream>
 #include <list>
 
+#include <boost/shared_ptr.hpp>
+
 #include "classes.h"
 #include "vector2d.h"
 #include "animation.h"
 #include "area.h"
-#include "reference_counting.h"
-
-#include <iostream>
 
 namespace grail {
 
 typedef std::list<VirtualPosition> Path;
 
 class Actor : public Area {
-    Reference<Animation> animation;
-    std::map<std::string, Animation*> animationModes;
+    Animation::Ptr animation;
+    std::map<std::string, Animation::Ptr> animationModes;
     std::string mode;
 
     VirtualPosition position;
     double alignmentX, alignmentY;
-    Reference<Area> area;
+    Area::Ptr area;
     double speed; ///< Unit is virtual pixels / second
 
     Path walkPath;
@@ -35,6 +34,9 @@ class Actor : public Area {
     VirtualPosition getUpperLeftCorner() const;
 
   public:
+    typedef boost::shared_ptr<Actor> Ptr;
+    typedef boost::shared_ptr<const Actor> ConstPtr;
+
     static const std::string className;
 
     struct CompareByY {
@@ -67,8 +69,8 @@ class Actor : public Area {
       }
     }
 
-    void addAnimation(std::string mode, Animation& animation) {
-      animationModes[mode] = &animation;
+    void addAnimation(std::string mode, Animation::Ptr animation) {
+      animationModes[mode] = animation;
       if(animationModes.count(mode)) {
         this->animation = animationModes[mode];
       }
@@ -84,7 +86,7 @@ class Actor : public Area {
     }
 
     void setPosition(VirtualPosition position) { this->position = position; }
-    VirtualPosition getPosition() { return position; }
+    VirtualPosition getPosition() const { return position; }
 
     void walk(const Path& path);
     void walkStraight(VirtualPosition p);

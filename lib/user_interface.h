@@ -2,20 +2,26 @@
 #ifndef USER_INTERFACE_H
 #define USER_INTERFACE_H
 
-#include <SDL/SDL.h>
 #include <stdint.h>
 #include <string>
+
+#include <SDL/SDL.h>
+#include <boost/shared_ptr.hpp>
+
 #include "classes.h"
-#include "game.h"
-#include "reference_counting.h"
+#include "event.h"
 
 namespace grail {
 
-class UserInterface : public ReferenceCounted {
+class UserInterface {
   public:
+    typedef boost::shared_ptr<UserInterface> Ptr;
+
     static const std::string className;
 
     UserInterface() { }
+    virtual ~UserInterface() { }
+
     virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
 };
 

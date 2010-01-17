@@ -7,16 +7,25 @@ using std::cerr;
 using std::endl;
 
 #include "scene.h"
-
+#include "game.h"
 #include "viewport.h"
 #include "rect.h"
 #include "actor.h"
+#include "image.h"
 
 namespace grail {
 
 const std::string Scene::className = "Scene";
 
-Scene::Scene() : background(0), _actorsMoved(false) {
+Scene::Scene() : _actorsMoved(false) {
+}
+
+Scene::Scene(const Animation& background) : _actorsMoved(false) {
+  this->background = Animation::ConstPtr(&background);
+}
+
+Scene::Scene(const std::string& backgroundPath) : _actorsMoved(false) {
+  this->background = Animation::ConstPtr(new Image(backgroundPath));
 }
 
 Scene::~Scene() {
@@ -25,6 +34,10 @@ Scene::~Scene() {
 VirtualSize Scene::getSize() const {
   if(background) { return background->getSize(); }
   return VirtualSize(0, 0);
+}
+
+void Scene::setBackground(const Animation& background) {
+  this->background.reset(&background);
 }
 
 void Scene::eachFrame(uint32_t ticks) {

@@ -7,11 +7,10 @@
 #include <SDL/SDL.h>
 
 #include "scene.h"
-#include "reference_counting.h"
 
 namespace grail {
 
-class Viewport : public ReferenceCounted {
+class Viewport {
     SDL_Surface* screen;
     VirtualSize virtualSize;
 
@@ -26,7 +25,7 @@ class Viewport : public ReferenceCounted {
     CameraMode cameraMode;
     CameraLimit cameraLimit;
     VirtualPosition cameraPosition;
-    Actor* cameraTarget;
+    Actor::ConstPtr cameraTarget;
 
   public:
     static const std::string className;
@@ -42,10 +41,10 @@ class Viewport : public ReferenceCounted {
 
     VirtualPosition getCameraPosition() { return cameraPosition; }
     void setCameraPosition(VirtualPosition position);
-    void renderScene(const Scene& scene, uint32_t ticks);
+    void renderScene(Scene::ConstPtr scene, uint32_t ticks);
 
-    void keepCentering(Actor& actor) {
-      cameraTarget = &actor;
+    void keepCentering(Actor::ConstPtr actor) {
+      cameraTarget = actor;
     }
 };
 

@@ -3,9 +3,13 @@
 #define LUA_BINDINGS_H
 
 #include <iostream>
+
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include "lib/game.h"
+#include "lib/user_interface.h"
 #include "lib/debug.h"
 
 class GameWrapper : public grail::Game {
@@ -13,8 +17,6 @@ class GameWrapper : public grail::Game {
     luabind::object initChapterCallback;
 
   public:
-
-
     static GameWrapper& getInstance() {
       using namespace grail;
       using namespace std;
@@ -37,8 +39,20 @@ class GameWrapper : public grail::Game {
     void setInitChapterCallback(luabind::object cb) {
       initChapterCallback = cb;
     }
+}; // class GameWrapper
 
-};
+class UserInterfaceWrapper : public grail::UserInterface, public luabind::wrap_base {
+  public:
+    UserInterfaceWrapper() { }
+    grail::EventState handleEvent(SDL_Event& event, uint32_t frameDuration) {
+      call<grail::EventState>("handleEvent", event, frameDuration);
+    }
+
+    static grail::EventState default_handleEvent(UserInterface* ptr, SDL_Event& event, uint32_t frameDuration) {
+      return ptr->UserInterface::handleEvent(event, frameDuration);
+    }
+}; // class UserInterfaceWrapper
+
 
 extern "C" int init(lua_State* L);
 
