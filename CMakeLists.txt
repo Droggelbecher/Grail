@@ -2,6 +2,7 @@
 
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 set(GRAIL_VERSION "0.1" CACHE STRING "Version")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "cmake/Modules")
 
 project(grail)
 
@@ -12,7 +13,7 @@ find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
 find_package(SDL_image REQUIRED)
 find_package(PNG REQUIRED)
-find_package(LUABIND REQUIRED)
+find_package(Luabind REQUIRED)
 
 if(debug)
   set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
