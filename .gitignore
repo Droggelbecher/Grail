@@ -3,10 +3,10 @@
 *.so
 *.swp
 *.a
-*.cmake
 Makefile
 CMakeCache.txt
 CMakeFiles
+cmake_install.cmake
 runtime/grail_runtime
 lib/run_unittests
 runtime/wrapc
