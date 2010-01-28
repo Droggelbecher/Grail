@@ -37,12 +37,10 @@ uint16_t Vector2d<T, N>::nearestDirection(uint16_t directions) const {
   if(directions < 2) { return 0; }
 
   double alpha = atan2(_x, _y);
-  //cerr << "x=" << _x << " y=" << _y << " aplha=" << (alpha / (2.0 * M_PI)) << endl;
   alpha = alpha + (M_PI / (double)directions);
   if(alpha < 0) {
     alpha += 2.0 * M_PI;
   }
-  //cerr << "alpha'=" << (alpha / (2.0 * M_PI)) << endl;
   return (uint16_t)floor(alpha * directions / (2.0 * M_PI));
 }
 

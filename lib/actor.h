@@ -13,6 +13,7 @@
 #include "vector2d.h"
 #include "animation.h"
 #include "area.h"
+#include "debug.h"
 
 namespace grail {
 
@@ -22,6 +23,7 @@ class Actor : public Area {
     Animation::Ptr animation;
     std::map<std::string, Animation::Ptr> animationModes;
     std::string mode;
+    std::string name;
 
     VirtualPosition position;
     double alignmentX, alignmentY;
@@ -40,13 +42,17 @@ class Actor : public Area {
     static const std::string className;
 
     struct CompareByY {
-      bool operator()(Actor* a, Actor* b) const {
+      bool operator()(Actor::Ptr a, Actor::Ptr b) const {
         return a->position.getY() < b->position.getY();
       }
     };
 
-    Actor() : mode("default"), alignmentX(0.5), alignmentY(1.0), speed(1000.0)
+    Actor(std::string name) : mode("default"), name(name), alignmentX(0.5), alignmentY(1.0), speed(1000.0)
     {
+    }
+
+    std::string getName() const {
+      return name;
     }
 
     bool hasPoint(VirtualPosition p) const {
@@ -91,6 +97,9 @@ class Actor : public Area {
     void walk(const Path& path);
     void walkStraight(VirtualPosition p);
 };
+
+std::ostream& operator<<(std::ostream& os, const Actor& actor);
+
 
 } // namespace grail
 

@@ -2,11 +2,14 @@
 #include <iostream>
 #include <algorithm>
 #include <SDL/SDL.h>
+
 #include "mainloop.h"
 #include "game.h"
 #include "utils.h"
 #include "user_interface.h"
 #include "scene.h"
+#include "debug.h"
+#include "event.h"
 
 using std::cerr;
 using std::endl;
@@ -32,7 +35,7 @@ void MainLoop::run() {
     SDL_Event sdlEvent;
     while(SDL_PollEvent(&sdlEvent) != 0) {
       handleEvent(sdlEvent, frameDuration);
-      //freeUserEventData(sdlEvent);
+      freeUserEventData(sdlEvent);
     }
     SDL_Delay(max(0, (int32_t)frameEnd - (int32_t)SDL_GetTicks()));
 

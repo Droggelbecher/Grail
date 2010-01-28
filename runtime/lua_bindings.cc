@@ -16,6 +16,7 @@
 #include "lib/vector2d.h"
 #include "lib/viewport.h"
 #include "lib/sprite.h"
+#include "lua_converter.h"
 
 void test_luabind() {
   grail::cdbg << "If you can read this, luabind works\n";
@@ -49,7 +50,7 @@ extern "C" int init(lua_State* L) {
       ,
 
     class_<Actor, Actor::Ptr>("Actor")
-      .def(constructor<>())
+      .def(constructor<std::string>())
       .def("hasPoint", &Actor::hasPoint)
       .def("addAnimation", &Actor::addAnimation)
       .def("setAlignment", &Actor::setAlignment)
@@ -58,6 +59,7 @@ extern "C" int init(lua_State* L) {
       .def("getPosition", &Actor::getPosition)
       .def("walk", &Actor::walk)
       .def("walkStraight", &Actor::walkStraight)
+      .def(tostring(self))
       ,
 
     class_<Animation, Animation::Ptr>("Animation"),
@@ -78,49 +80,22 @@ extern "C" int init(lua_State* L) {
 
     class_<Scene, Scene::Ptr>("Scene")
       .def(constructor<>())
-      .def(constructor<const Animation&>())
+      .def(constructor<Animation::ConstPtr>())
       .def(constructor<const std::string&>())
       .def("setBackground", &Scene::setBackground)
       .def("addActor", &Scene::addActor)
       .def("actorsMoved", &Scene::actorsMoved)
       ,
 
-    class_<SDL_Event>("SDL_Event")
-      .def_readonly("type", &SDL_Event::type)
-      .def_readonly("motion", &SDL_Event::motion)
-      .def_readonly("key", &SDL_Event::key)
-      .def_readonly("user", &SDL_Event::user)
+    class_<Event>("Event")
+      .def(constructor<>())
+      .def("getType", &Event::getType)
+      .def("getButton", &Event::getButton)
+      .def("getActor", &Event::getActor)
+      .def("getPosition", &Event::getPosition)
+      .def("getButtonState", &Event::getButtonState)
+      //.def("getKeysym", &Event::getKeysym)
       ,
-
-    class_<SDL_KeyboardEvent>("SDL_KeyboardEvent")
-      .def_readonly("which", &SDL_KeyboardEvent::which)
-      .def_readonly("state", &SDL_KeyboardEvent::state)
-      .def_readonly("keysym", &SDL_KeyboardEvent::keysym)
-      ,
-
-    class_<SDL_MouseButtonEvent>("SDL_MouseButtonEvent")
-      .def_readonly("which", &SDL_MouseButtonEvent::which)
-      .def_readonly("button", &SDL_MouseButtonEvent::button)
-      .def_readonly("state", &SDL_MouseButtonEvent::state)
-      .def_readonly("x", &SDL_MouseButtonEvent::x)
-      .def_readonly("y", &SDL_MouseButtonEvent::y)
-      ,
-
-    class_<SDL_MouseMotionEvent>("SDL_MouseMotionEvent")
-      .def_readonly("which", &SDL_MouseMotionEvent::which)
-      .def_readonly("state", &SDL_MouseMotionEvent::state)
-      .def_readonly("x", &SDL_MouseMotionEvent::x)
-      .def_readonly("y", &SDL_MouseMotionEvent::y)
-      .def_readonly("xrel", &SDL_MouseMotionEvent::xrel)
-      .def_readonly("yrel", &SDL_MouseMotionEvent::yrel)
-      ,
-
-    class_<SDL_UserEvent>("SDL_UserEvent")
-      .def_readonly("code", &SDL_UserEvent::code)
-      .def_readonly("data1", &SDL_UserEvent::data1)
-      .def_readonly("data2", &SDL_UserEvent::data2)
-      ,
-
 
     class_<StripeSprite, Animation, Animation::Ptr>("StripeSprite")
       .def(constructor<std::string, size_t>())
@@ -134,16 +109,17 @@ extern "C" int init(lua_State* L) {
     class_<VirtualPosition>("VirtualPosition")
       .def(constructor<>())
       .def(constructor<VirtualPosition::X, VirtualPosition::Y>())
-      .property("x", &VirtualPosition::getX, &VirtualPosition::setX)
-      .property("y", &VirtualPosition::getY, &VirtualPosition::setY)
+      .def("length", &VirtualPosition::length)
+      .def("nearestDirection", &VirtualPosition::nearestDirection)
+      .def(-self)
+      .def(double() * self)
+      .def(self * double())
       .def(self + self)
       .def(self - self)
-      .def(-self)
-      .def(self * double())
-      .def(double() * self)
       .def(self == self)
-      .def("nearestDirection", &VirtualPosition::nearestDirection)
-      .def("length", &VirtualPosition::length)
+      .def(tostring(self))
+      .property("x", &VirtualPosition::getX, &VirtualPosition::setX)
+      .property("y", &VirtualPosition::getY, &VirtualPosition::setY)
       ,
 
     class_<Viewport>("Viewport")

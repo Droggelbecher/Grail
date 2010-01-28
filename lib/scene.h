@@ -18,7 +18,7 @@ namespace grail {
 class Scene {
     Animation::ConstPtr background;
 
-    std::list<Actor*> actors;
+    std::list<Actor::Ptr> actors;
     bool _actorsMoved;
 
   public:
@@ -28,7 +28,7 @@ class Scene {
     static const std::string className;
 
     Scene();
-    Scene(const Animation& background);
+    Scene(Animation::ConstPtr);
     Scene(const std::string& backgroundPath);
 
     virtual ~Scene();
@@ -37,8 +37,8 @@ class Scene {
 
     void setBackground(const Animation& background);
 
-    void addActor(Actor& entity) {
-      actors.push_back(&entity);
+    void addActor(Actor::Ptr entity) {
+      actors.push_back(entity);
       std::inplace_merge(actors.begin(), actors.end(), actors.end(), Actor::CompareByY());
     }
 

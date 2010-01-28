@@ -12,6 +12,8 @@ namespace grail {
 enum EventState { EVENT_STATE_HANDLED, EVENT_STATE_UNHANDLED };
 enum EventType { _EVT_GRAIL_START = 100, EVT_SCENE_CLICK = 100, EVT_ACTOR_CLICK };
 
+void freeUserEventData(SDL_Event& evt);
+
 class Event {
   protected:
     uint8_t type;
@@ -19,7 +21,9 @@ class Event {
     uint8_t buttonState;
     uint8_t button;
     SDL_keysym keysym;
-    Actor* actor;
+    Actor::Ptr actor;
+
+    void getData(Event* other);
 
   public:
     Event();
@@ -31,13 +35,14 @@ class Event {
     void push() const;
 
     int getType() const;
-    Actor* getActor() const;
+    Actor::Ptr getActor() const;
     uint8_t getButton() const;
     VirtualPosition getPosition() const;
     uint8_t getButtonState() const;
     SDL_keysym getKeysym() const;
 
-    static Event* actorClick(Actor* a, VirtualPosition, uint8_t button);
+    static Event* actorClick(Actor::Ptr a, VirtualPosition, uint8_t button);
+    static Event* sceneClick( VirtualPosition, uint8_t button);
 
 };
 

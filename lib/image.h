@@ -18,25 +18,24 @@ namespace grail {
 
 class Image : public Animation {
   protected:
-    const Surface& surface;
+    Surface::ConstPtr surface;
 
   public:
-    Image(std::string path) : Animation("Image"), surface(*(new Surface(path))) {
+    Image(std::string path) : Animation("Image"), surface(new Surface(path)) {
     }
 
-    ~Image() {
-      delete &surface;
+    virtual ~Image() {
     }
 
     VirtualSize getSize() const {
-      return conv<PhysicalSize, VirtualSize>(surface.getSize());
+      return conv<PhysicalSize, VirtualSize>(surface->getSize());
     }
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
       SDL_Rect t = conv<PhysicalPosition, SDL_Rect>(
           conv<VirtualPosition, PhysicalPosition>(p)
           );
-      surface.blit(0, target, &t);
+      surface->blit(0, target, &t);
     }
 };
 

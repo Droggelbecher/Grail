@@ -10,6 +10,7 @@ using std::endl;
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <boost/shared_ptr.hpp>
 
 #include "vector2d.h"
 #include "shortcuts.h"
@@ -33,16 +34,18 @@ class Surface {
     const Surface& operator=(const Surface& s) { return *this; }
 
   public:
+    typedef boost::shared_ptr<Surface> Ptr;
+    typedef boost::shared_ptr<const Surface> ConstPtr;
 
-    Surface(std::string &path) : sdlSurface(NULL) {
+    Surface(std::string &path) : sdlSurface(0) {
       loadFromFile(path);
-      assert(sdlSurface != NULL);
+      assert(sdlSurface);
     }
 
     ~Surface() {
-      if(sdlSurface != NULL) {
+      if(sdlSurface) {
         SDL_FreeSurface(sdlSurface);
-        sdlSurface = NULL;
+        sdlSurface = 0;
       }
     }
 

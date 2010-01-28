@@ -20,8 +20,8 @@ const std::string Scene::className = "Scene";
 Scene::Scene() : _actorsMoved(false) {
 }
 
-Scene::Scene(const Animation& background) : _actorsMoved(false) {
-  this->background = Animation::ConstPtr(&background);
+Scene::Scene(Animation::ConstPtr background) : _actorsMoved(false) {
+  this->background = background;
 }
 
 Scene::Scene(const std::string& backgroundPath) : _actorsMoved(false) {
@@ -46,7 +46,7 @@ void Scene::eachFrame(uint32_t ticks) {
     _actorsMoved = false;
   }
 
-  list<Actor*>::const_iterator iter;
+  list<Actor::Ptr>::const_iterator iter;
   for(iter = actors.begin(); iter != actors.end(); iter++) {
     (*iter)->eachFrame(ticks);
   }
@@ -58,7 +58,7 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
     background->renderAt(target, ticks, p);
   }
 
-  list<Actor*>::const_iterator iter;
+  list<Actor::Ptr>::const_iterator iter;
   for(iter = actors.begin(); iter != actors.end(); iter++) {
     (*iter)->renderAt(target, ticks, p);
   }
@@ -70,7 +70,7 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
     VirtualPosition pos = conv<SDL_MouseButtonEvent&, VirtualPosition>(event.button);
 
     if(Rect(getSize()).hasPoint(pos)) {
-      list<Actor*>::const_iterator iter;
+      list<Actor::Ptr>::const_iterator iter;
       bool event_sent = false;
       VirtualPosition cam = Game::getInstance().getViewport().getCameraPosition();
 
@@ -78,13 +78,12 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
         if((*iter)->hasPoint(pos + cam)) {
           Event::actorClick(*iter, pos + cam, event.button.button)->push();
 
-          //(new ActorClickEvent(**iter, pos + cam, event.button.button))->push();
           event_sent = true;
           break;
         }
       } // for
       if(!event_sent) {
-        //(new SceneClickEvent(pos + cam))->push();
+        Event::sceneClick(pos + cam, event.button.button)->push();
       }
     } // if area has point
   } // if mouse button down

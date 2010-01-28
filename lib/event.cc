@@ -11,15 +11,23 @@ void freeUserEventData(SDL_Event& evt) {
   }
 }
 
+void Event::getData(Event* other) {
+  type = other->type;
+  position = other->position;
+  buttonState = other->buttonState;
+  button = other->button;
+  keysym = other->keysym;
+  actor = other->actor;
+}
+
 Event::Event() {
 }
 
 Event::Event(const SDL_Event& evt) {
   type = evt.type;
   if(evt.type == SDL_USEREVENT) {
-    //type = evt.user.code;
-    //userEvent = (UserEvent*)evt.user.data1;
-    //getData(*((UserEvent*)evt.user.data1));
+    type = evt.user.code;
+    getData((Event*)evt.user.data1);
   }
   else {
     switch(evt.type) {
@@ -47,10 +55,18 @@ Event::Event(const SDL_Event& evt) {
   } // else
 }
 
-Event* Event::actorClick(Actor* a, VirtualPosition p, uint8_t b) {
+Event* Event::actorClick(Actor::Ptr a, VirtualPosition p, uint8_t b) {
   Event* e = new Event();
   e->type = EVT_ACTOR_CLICK;
   e->actor = a;
+  e->position = p;
+  e->button = b;
+  return e;
+}
+
+Event* Event::sceneClick(VirtualPosition p, uint8_t b) {
+  Event* e = new Event();
+  e->type = EVT_SCENE_CLICK;
   e->position = p;
   e->button = b;
   return e;
@@ -62,6 +78,7 @@ SDL_Event Event::toSDL() const {
     Event* copy = new Event();
     *copy = *this;
     evt.type = SDL_USEREVENT;
+    evt.user.code = type;
     evt.user.data1 = (void*)copy;
   }
   else {
@@ -100,7 +117,7 @@ void Event::push() const {
 }
 
 int Event::getType() const { return type; }
-Actor* Event::getActor() const { return actor; }
+Actor::Ptr Event::getActor() const { return actor; }
 uint8_t Event::getButton() const { return button; }
 VirtualPosition Event::getPosition() const { return position; }
 uint8_t Event::getButtonState() const { return buttonState; }

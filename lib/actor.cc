@@ -73,5 +73,10 @@ void Actor::eachFrame(uint32_t ticks) {
   } // if walkPath not empty
 }
 
+std::ostream& operator<<(std::ostream& os, const Actor& actor) {
+  os << actor.getName();
+  return os;
+}
+
 } // namespace grail
 

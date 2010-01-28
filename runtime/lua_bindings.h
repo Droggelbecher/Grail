@@ -45,7 +45,7 @@ class UserInterfaceWrapper : public grail::UserInterface, public luabind::wrap_b
   public:
     UserInterfaceWrapper() { }
     grail::EventState handleEvent(SDL_Event& event, uint32_t frameDuration) {
-      call<grail::EventState>("handleEvent", event, frameDuration);
+      return call<grail::EventState>("handleEvent", event, frameDuration);
     }
 
     static grail::EventState default_handleEvent(UserInterface* ptr, SDL_Event& event, uint32_t frameDuration) {
