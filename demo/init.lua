@@ -1,21 +1,5 @@
 
-class 'MyUI' (UserInterface)
-
-function MyUI:__init()
-  UserInterface.__init(self)
-end
-
-function MyUI:handleEvent(evt, frameDuration)
-
-  if evt:getType() == EVT_ACTORCLICK then
-    print("You clicked actor '"..tostring(evt:getActor()).."' with button "..tostring(evt:getButton()).." at "..tostring(evt:getPosition()))
-
-  elseif evt:getType() == EVT_SCENECLICK then
-    print("You clicked the scene with button "..tostring(evt:getButton()).." at "..tostring(evt:getPosition()))
-    GAME:getMainCharacter():walkStraight(evt:getPosition())
-  end
-  return EVENT_STATE_UNHANDLED
-end
+import("/user_interface.lua")
 
 function initChapter(n)
   print("This is initChapter("..n..")")
@@ -36,21 +20,21 @@ function initChapter(n)
 
     guy:addAnimation("default", lineboy_default)
     guy:setPosition(VP(2000, 2000))
-    GAME:getViewport():keepCentering(guy)
+    GAME:getViewport():setFollowing(guy)
 
     s:addActor(guy)
     GAME:setMainCharacter(guy)
     GAME:goToScene(s)
+
+    local coke = Actor("coke")
+    coke:addAnimation("default", Image("/media/$res/coke.jpg"))
+    coke:setPosition(VP(3000, 3000))
+
   end
 end
 
 GAME:setInitChapterCallback(initChapter)
 
-print(1)
-ui = MyUI()
-print(2)
-GAME:setUserInterface(ui)
-print(3)
 GAME:getViewport():setup(800, 600, false)
 
 GAME:runChapter(0)

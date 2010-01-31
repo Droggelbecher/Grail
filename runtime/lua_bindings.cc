@@ -4,6 +4,7 @@
 #include <luabind/luabind.hpp>
 #include <luabind/operator.hpp>
 #include <SDL/SDL.h>
+#include <lua.hpp>
 
 #include "lua_bindings.h"
 #include "lib/animation.h"
@@ -17,9 +18,18 @@
 #include "lib/viewport.h"
 #include "lib/sprite.h"
 #include "lua_converter.h"
+#include "lib/resource_manager.h"
+#include "lua_chunk.h"
 
 void test_luabind() {
   grail::cdbg << "If you can read this, luabind works\n";
+}
+
+void import(lua_State* L, std::string path) {
+  grail::Resource resource(path, grail::MODE_READ);
+  LuaChunk chunk(resource);
+  chunk.load(L);
+  lua_call(L, 0, 0);
 }
 
 extern "C" int init(lua_State* L) {
@@ -31,6 +41,7 @@ extern "C" int init(lua_State* L) {
   module(L)[
     def("test_luabind", &test_luabind),
     def("getGame", &GameWrapper::getInstance),
+    def("import", &import, raw(_1)),
 
     class_<GameWrapper>("Game")
       .scope[
@@ -129,7 +140,8 @@ extern "C" int init(lua_State* L) {
       .def(constructor<uint32_t, uint32_t>())
       .def(constructor<uint32_t, uint32_t, bool>())
       .def("setup", &Viewport::setup)
-      .def("keepCentering", &Viewport::keepCentering)
+      .def("setFollowing", &Viewport::setFollowing)
+      .def("setNoFollowing", &Viewport::setNoFollowing)
   ];
 
   return 0;

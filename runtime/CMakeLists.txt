@@ -7,6 +7,7 @@ add_executable(grail_runtime
   ../lib/vector2d_impl.cc
   main.cc
   lua_bindings.cc
+  lua_chunk.cc
 )
 
 set(LIBS grail ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY} ${LUA_LIBRARIES} ${LUABIND_LIBRARY})

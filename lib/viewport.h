@@ -43,8 +43,12 @@ class Viewport {
     void setCameraPosition(VirtualPosition position);
     void renderScene(Scene::ConstPtr scene, uint32_t ticks);
 
-    void keepCentering(Actor::ConstPtr actor) {
+    void setFollowing(Actor::ConstPtr actor) {
       cameraTarget = actor;
+    }
+
+    void setNoFollowing() {
+      cameraTarget.reset();
     }
 };
 

@@ -55,6 +55,8 @@ class Resource {
     Resource(std::string path, ResourceMode mode);
     ~Resource();
 
+    std::string getPath() const { return path; }
+
     /**
      * Get rwops pointer. DONT delete the returned pointer, we'll do it in our
      * d'tor.
