@@ -25,12 +25,14 @@ void test_luabind() {
   grail::cdbg << "If you can read this, luabind works\n";
 }
 
+/*
 void import(lua_State* L, std::string path) {
   grail::Resource resource(path, grail::MODE_READ);
   LuaChunk chunk(resource);
   chunk.load(L);
   lua_call(L, 0, 0);
 }
+*/
 
 extern "C" int init(lua_State* L) {
   using namespace luabind;
@@ -41,7 +43,7 @@ extern "C" int init(lua_State* L) {
   module(L)[
     def("test_luabind", &test_luabind),
     def("getGame", &GameWrapper::getInstance),
-    def("import", &import, raw(_1)),
+    //def("import", &import, raw(_1)),
 
     class_<GameWrapper>("Game")
       .scope[
