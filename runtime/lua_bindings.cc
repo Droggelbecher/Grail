@@ -46,6 +46,8 @@ extern "C" int init(lua_State* L) {
       .def("setUserInterface", &GameWrapper::setUserInterface)
       .def("initChapter", &GameWrapper::initChapter)
       .def("setInitChapterCallback", &GameWrapper::setInitChapterCallback)
+      .def("setMainCharacter", &GameWrapper::setMainCharacter)
+      .def("getMainCharacter", &GameWrapper::getMainCharacter)
       .def("runChapter", &GameWrapper::runChapter)
       ,
 

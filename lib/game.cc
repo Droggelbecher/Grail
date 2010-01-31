@@ -84,6 +84,14 @@ UserInterface::Ptr Game::getUserInterface() {
   return userInterface;
 }
 
+void Game::setMainCharacter(Actor::Ptr actor) {
+  mainCharacter = actor;
+}
+
+Actor::Ptr Game::getMainCharacter() const {
+  return mainCharacter;
+}
+
 void Game::eachFrame(uint32_t ticks) {
   if(currentScene) {
     currentScene->eachFrame(ticks);

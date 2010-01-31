@@ -14,6 +14,7 @@
 #include "exceptions.h"
 #include "scene.h"
 #include "user_interface.h"
+#include "actor.h"
 
 namespace grail {
 
@@ -27,6 +28,7 @@ class Game {
     Scene::Ptr currentScene;
     ResourceManager* resourceManager;
     UserInterface::Ptr userInterface;
+    Actor::Ptr mainCharacter;
     std::map<std::string, Scene::Ptr> scenes;
 
     Game();
@@ -53,6 +55,9 @@ class Game {
     ResourceManager& getResourceManager();
     void setUserInterface(UserInterface::Ptr ui);
     UserInterface::Ptr getUserInterface();
+
+    Actor::Ptr getMainCharacter() const;
+    void setMainCharacter(Actor::Ptr actor);
 
     void eachFrame(uint32_t ticks);
     void renderEverything(uint32_t ticks);
