@@ -3,6 +3,8 @@
 *.so
 *.swp
 *.a
+*.orig
+tags
 Makefile
 CMakeCache.txt
 CMakeFiles
