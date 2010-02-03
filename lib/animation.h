@@ -19,9 +19,7 @@ class Animation : public Area {
     typedef boost::shared_ptr<Animation> Ptr;
     typedef boost::shared_ptr<const Animation> ConstPtr;
 
-    static const std::string className;
-
-    Animation(std::string classname) { }
+    Animation() { }
     virtual ~Animation() { }
 
     virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const = 0;

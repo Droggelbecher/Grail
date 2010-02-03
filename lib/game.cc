@@ -93,14 +93,23 @@ Actor::Ptr Game::getMainCharacter() const {
 }
 
 void Game::eachFrame(uint32_t ticks) {
+  if(userInterface) {
+    userInterface->eachFrame(ticks);
+  }
   if(currentScene) {
     currentScene->eachFrame(ticks);
   }
 }
 
 void Game::renderEverything(uint32_t ticks) {
-  if(viewport && currentScene) {
-    viewport->renderScene(currentScene, ticks);
+  if(viewport) {
+    if(currentScene) {
+      viewport->renderScene(currentScene, ticks);
+    }
+    if(userInterface) {
+      viewport->renderUserInterface(userInterface, ticks);
+    }
+    viewport->finishRendering();
   }
 }
 

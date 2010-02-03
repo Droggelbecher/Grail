@@ -12,6 +12,7 @@ set(CMAKE_CXX_FLAGS $ENV{CXXFLAGS})
 find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
 find_package(SDL_image REQUIRED)
+find_package(SDL_ttf REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Luabind REQUIRED)
 

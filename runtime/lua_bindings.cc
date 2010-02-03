@@ -6,33 +6,28 @@
 #include <SDL/SDL.h>
 #include <lua.hpp>
 
-#include "lua_bindings.h"
+#include "lib/actor.h"
 #include "lib/animation.h"
 #include "lib/game.h"
 #include "lib/image.h"
 #include "lib/resource_manager.h"
-#include "lib/scene.h"
-#include "lib/user_interface.h"
-#include "lib/actor.h"
-#include "lib/vector2d.h"
-#include "lib/viewport.h"
-#include "lib/sprite.h"
-#include "lua_converter.h"
 #include "lib/resource_manager.h"
-#include "lua_chunk.h"
+#include "lib/scene.h"
+#include "lib/sprite.h"
+#include "lib/text.h"
+#include "lib/user_interface.h"
+#include "lib/user_interface_element.h"
+#include "lib/vector2d.h"
+#include "lib/font.h"
+#include "lib/viewport.h"
+#include "lib/action_text.h"
+#include "lua_bindings.h"
+#include "lua_converter.h"
+#include "lib/sdl_exception.h"
 
 void test_luabind() {
   grail::cdbg << "If you can read this, luabind works\n";
 }
-
-/*
-void import(lua_State* L, std::string path) {
-  grail::Resource resource(path, grail::MODE_READ);
-  LuaChunk chunk(resource);
-  chunk.load(L);
-  lua_call(L, 0, 0);
-}
-*/
 
 extern "C" int init(lua_State* L) {
   using namespace luabind;
@@ -43,7 +38,15 @@ extern "C" int init(lua_State* L) {
   module(L)[
     def("test_luabind", &test_luabind),
     def("getGame", &GameWrapper::getInstance),
-    //def("import", &import, raw(_1)),
+
+    /*
+    class_<SDLException>("SDLException")
+      .def("what", &SDLException::what)
+      ,
+    */
+
+    class_<BlitCached>("_BlitCached")
+      ,
 
     class_<GameWrapper>("Game")
       .scope[
@@ -79,16 +82,29 @@ extern "C" int init(lua_State* L) {
 
     class_<Animation, Animation::Ptr>("Animation"),
 
-    class_<DirectionAnimation, Animation, Animation::Ptr>("DirectionAnimation")
-      .def(constructor<uint16_t>())
-      .def("setDirection", (void (DirectionAnimation::*)(uint16_t))&DirectionAnimation::setDirection)
-      .def("setDirection", (void (DirectionAnimation::*)(VirtualPosition))&DirectionAnimation::setDirection)
-      .def("setAnimation", &DirectionAnimation::setAnimation)
-      ,
+      class_<DirectionAnimation, Animation, Animation::Ptr>("DirectionAnimation")
+        .def(constructor<uint16_t>())
+        .def("setDirection", (void (DirectionAnimation::*)(uint16_t))&DirectionAnimation::setDirection)
+        .def("setDirection", (void (DirectionAnimation::*)(VirtualPosition))&DirectionAnimation::setDirection)
+        .def("setAnimation", &DirectionAnimation::setAnimation)
+        ,
 
-    class_<Image, Animation, Animation::Ptr>("Image")
-      .def(constructor<std::string>())
-      ,
+      class_<Image, Animation, Animation::Ptr>("Image")
+        .def(constructor<std::string>())
+        ,
+
+      class_<Text, Animation, BlitCached, Animation::Ptr>("Text")
+        .def(constructor<Font::Ptr>())
+        .def("getColor", &Text::getColor)
+        .def("setColor", &Text::setColor)
+        .def("getSize", &Text::getSize)
+        .def("getOutlineColor", &Text::getOutlineColor)
+        .def("setOutlineColor", &Text::setOutlineColor)
+        .def("setOutlineFont", &Text::setOutlineFont)
+        .def("setOutline", &Text::setOutline)
+        .def("getText", &Text::getText)
+        .def("setText", &Text::setText)
+        ,
 
     class_<ResourceManager>("ResourceManager")
       ,
@@ -112,6 +128,11 @@ extern "C" int init(lua_State* L) {
       //.def("getKeysym", &Event::getKeysym)
       ,
 
+    class_<Font, Font::Ptr>("Font")
+      .def(constructor<std::string, int, int>())
+      .def(constructor<const Font&>())
+      ,
+
     class_<StripeSprite, Animation, Animation::Ptr>("StripeSprite")
       .def(constructor<std::string, size_t>())
       ,
@@ -119,7 +140,19 @@ extern "C" int init(lua_State* L) {
     class_<UserInterface, UserInterfaceWrapper, UserInterface::Ptr>("UserInterface")
       .def(constructor<>())
       .def("handleEvent", &UserInterface::handleEvent, &UserInterfaceWrapper::default_handleEvent)
+      .def("addElement", &UserInterface::addElement)
       ,
+
+    class_<UserInterfaceElement, UserInterfaceElement::Ptr>("UserInterfaceElement")
+      .def("setPosition", &UserInterfaceElement::setPosition)
+      .def("setAlignmentX", &UserInterfaceElement::setAlignmentX)
+      .def("setAlignmentY", &UserInterfaceElement::setAlignmentY)
+      ,
+
+      class_<ActionText, UserInterfaceElement, UserInterfaceElement::Ptr>("ActionText")
+        .def(constructor<Font::Ptr>())
+        .def("setOutlineFont", &ActionText::setOutlineFont)
+        ,
 
     class_<VirtualPosition>("VirtualPosition")
       .def(constructor<>())

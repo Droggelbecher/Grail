@@ -21,7 +21,7 @@ class Image : public Animation {
     Surface::ConstPtr surface;
 
   public:
-    Image(std::string path) : Animation("Image"), surface(new Surface(path)) {
+    Image(std::string path) : surface(new Surface(path)) {
     }
 
     virtual ~Image() {

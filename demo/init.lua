@@ -1,7 +1,4 @@
 
-import('user_interface')
-import('guy')
-
 function initChapter(n)
   print("This is initChapter("..n..")")
 
@@ -29,6 +26,9 @@ end
 
 GAME:setInitChapterCallback(initChapter)
 GAME:getViewport():setup(800, 600, false)
+
+import('user_interface')
+import('guy')
 
 guy.create()
 

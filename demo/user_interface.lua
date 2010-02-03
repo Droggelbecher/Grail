@@ -3,6 +3,14 @@ class 'MyUI' (UserInterface)
 
 function MyUI:__init()
   UserInterface.__init(self)
+
+  local at = ActionText(Font("fonts/crkdownr.ttf", 32, 0))
+  at:setOutlineFont(Font("fonts/crkdwno1.ttf", 36, 0), 1)
+  at:setPosition(VP(2000, 2500))
+  at:setAlignmentX(0.5)
+  at:setAlignmentY(0.5)
+
+  self:addElement(at)
 end
 
 function MyUI:handleEvent(evt, frameDuration)
@@ -21,5 +29,6 @@ function MyUI:handleEvent(evt, frameDuration)
 end
 
 ui = MyUI()
+
 GAME:setUserInterface(ui)
 

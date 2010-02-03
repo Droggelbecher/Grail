@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "utils.h"
+#include "debug.h"
 
 using std::list;
 using std::string;
@@ -75,6 +76,7 @@ void touch(std::string path) {
 }
 
 bool exists(string path) {
+  cdbg << "exists(" << path << ")\n";
   ifstream s(path.c_str());
   return (bool)s;
 }
@@ -103,6 +105,9 @@ string normalizePath(string path) {
 
   if(r.at(r.length() - 1) == pathDelimiter) {
     r.resize(r.length() - 1);
+  }
+  if(r.length() == 0) {
+    r = "/";
   }
   return r;
 }

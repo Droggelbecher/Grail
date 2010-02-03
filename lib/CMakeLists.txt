@@ -1,10 +1,13 @@
 
 set(GRAIL_FILES
   actor.cc
-  area.cc
   animation.cc
+  action_text.cc
+  area.cc
+  blit_cached.cc
   debug.cc
   event.cc
+  font.cc
   game.cc
   ground.cc
   line.cc
@@ -12,10 +15,13 @@ set(GRAIL_FILES
   polygon.cc
   resource_manager.cc
   scene.cc
+  sdlutils.cc
   shortcuts.cc
   sprite.cc
+  text.cc
   unittest.cc
   user_interface.cc
+  user_interface_element.cc
   utils.cc
   vector2d.cc
   viewport.cc
@@ -23,8 +29,8 @@ set(GRAIL_FILES
 
 add_library(grail SHARED ${GRAIL_FILES})
 
-include_directories(${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${LUA_INCLUDE_DIR})
+include_directories(${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${LUA_INCLUDE_DIR})
 add_executable(run_unittests  run_unittests.cc vector2d_impl.cc)
-set(LIBS grail ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY} ${LUA_LIBRARIES})
+set(LIBS grail ${SDLTTF_LIBRARY} ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY} ${LUA_LIBRARIES})
 target_link_libraries(run_unittests ${LIBS})
 

@@ -7,6 +7,7 @@
 #include <SDL/SDL.h>
 
 #include "scene.h"
+#include "user_interface.h"
 
 namespace grail {
 
@@ -41,7 +42,10 @@ class Viewport {
 
     VirtualPosition getCameraPosition() { return cameraPosition; }
     void setCameraPosition(VirtualPosition position);
+
     void renderScene(Scene::ConstPtr scene, uint32_t ticks);
+    void renderUserInterface(UserInterface::ConstPtr userInterface, uint32_t ticks);
+    void finishRendering();
 
     void setFollowing(Actor::ConstPtr actor) {
       cameraTarget = actor;

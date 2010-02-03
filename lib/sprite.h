@@ -18,7 +18,7 @@ class Sprite : public Animation {
     uint32_t ticksSinceFrameStart;
 
   public:
-    Sprite(std::string classname) : Animation(classname) {
+    Sprite(std::string classname) {
       defaultDuration = 100;
       currentFrame = 0;
       frames = 0;

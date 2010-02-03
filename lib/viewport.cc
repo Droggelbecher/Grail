@@ -64,6 +64,13 @@ void Viewport::renderScene(Scene::ConstPtr scene, uint32_t ticks) {
     );
   }
   scene->renderAt(screen, ticks, -cameraPosition);
+}
+
+void Viewport::renderUserInterface(UserInterface::ConstPtr userInterface, uint32_t ticks) {
+  userInterface->renderAt(screen, ticks, VirtualPosition(0, 0));
+}
+
+void Viewport::finishRendering() {
   SDL_Flip(screen);
 }
 

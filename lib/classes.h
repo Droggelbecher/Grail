@@ -4,13 +4,18 @@
 
 namespace grail {
 
+  class ActionText;
+  class ActionTextElement;
   class Actor;
   class Animation;
   class Area;
+  class BlitCached;
+  class BlitCached;
   class DirectionAnimation;
   class DirectoryResourceHandler;
   class Event;
   class Exception;
+  class Font;
   class Game;
   class Ground;
   class Image;
@@ -25,10 +30,12 @@ namespace grail {
   class ResourceManager;
   class Scene;
   class SceneAnimation;
+  class SDLException;
   class SplitIterator;
   class Sprite;
   class StripeSprite;
   class Surface;
+  class Text;
   class Unittest;
   class UserInterface;
   class UserInterfaceElement;

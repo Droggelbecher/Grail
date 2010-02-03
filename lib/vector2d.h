@@ -50,6 +50,10 @@ class Vector2d {
     Vector2d<T, N> operator/(double scalar) const;
     Vector2d<T, N> operator-() const;
 
+    bool fitsIn(Vector2d<T, N> other) {
+      return _x <= other._x && _y <= other._y;
+    }
+
     friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
     friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);
     friend bool operator==<T, N>(Vector2d<T, N>, Vector2d<T, N>);
