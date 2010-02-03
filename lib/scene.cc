@@ -88,6 +88,32 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
     } // if area has point
   } // if mouse button down
 
+  else if(event.type == SDL_MOUSEMOTION) {
+    VirtualPosition pos = conv<SDL_MouseMotionEvent&, VirtualPosition>(event.motion);
+
+    if(Rect(getSize()).hasPoint(pos)) {
+      UserInterface::Ptr ui = Game::getInstance().getUserInterface();
+
+      list<Actor::Ptr>::const_iterator iter;
+      VirtualPosition cam = Game::getInstance().getViewport().getCameraPosition();
+
+      bool hovered_something = false;
+      for(iter = actors.begin(); iter != actors.end(); iter++) {
+        if((*iter)->hasPoint(pos + cam)) {
+          if(ui) {
+            hovered_something = true;
+            ui->setHovering(*iter);
+            break;
+          }
+        }
+      }
+      if(!hovered_something) {
+        ui->setHovering(Actor::Ptr());
+      }
+    } // if area has point
+  } // if mouse motion
+
+
   return EVENT_STATE_UNHANDLED;
 }
 

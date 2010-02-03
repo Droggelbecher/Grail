@@ -6,6 +6,8 @@
 #include "user_interface_element.h"
 #include "vector2d.h"
 #include "text.h"
+#include "game.h"
+#include "actor.h"
 
 namespace grail {
 
@@ -19,6 +21,13 @@ namespace grail {
       EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
 
       void eachFrame(uint32_t ticks) {
+        Actor::Ptr hovering = Game::getInstance().getUserInterface()->getHovering();
+        if(hovering) {
+          text.setText("Go to " + hovering->getName());
+        }
+        else {
+          text.setText("Go");
+        }
         text.eachFrame(ticks);
       }
 

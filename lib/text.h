@@ -36,7 +36,12 @@ class Text : public Animation, public BlitCached {
     void setOutlineColor(SDL_Color c) { outlineColor = c; setChanged(); }
 
     std::string getText() const { return text; }
-    void setText(std::string t) { text = t; setChanged(); }
+    void setText(std::string t) {
+      if(text != t) {
+        text = t;
+        setChanged();
+      }
+    }
 
     void setOutlineFont(Font::Ptr f, int outline) {
       this->outline = outline;

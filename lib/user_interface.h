@@ -17,6 +17,7 @@ namespace grail {
 
 class UserInterface {
     std::list<UserInterfaceElement::Ptr> elements;
+    Actor::Ptr hovering;
 
   public:
     typedef boost::shared_ptr<UserInterface> Ptr;
@@ -26,6 +27,10 @@ class UserInterface {
     virtual ~UserInterface() { }
 
     void addElement(UserInterfaceElement::Ptr element);
+
+    void setHovering(Actor::Ptr hovering) { this->hovering = hovering; }
+    Actor::Ptr getHovering() { return hovering; }
+
     virtual void eachFrame(uint32_t ticks);
     virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
     virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
