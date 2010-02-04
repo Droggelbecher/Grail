@@ -1,24 +1,20 @@
 
 #include "blit_cached.h"
+#include "debug.h"
 
 namespace grail {
 
-  BlitCached::BlitCached(int n) : changed(true), n(n), surface(new Surface*[n]) {
+  BlitCached::BlitCached(int n) : changed(true), n(n), surface(new Surface::Ptr[n]) {
   }
 
   BlitCached::~BlitCached() {
-    for(int i=0; i<n; i++) {
-      delete surface[i];
-      surface[i] = 0;
-    }
     delete[] surface;
   }
 
   void BlitCached::eachFrame(uint32_t ticks) {
     if(changed) {
       for(int i=0; i<n; i++) {
-        delete surface[i];
-        surface[i] = render(i);
+        surface[i] = Surface::Ptr(render(i));
       }
       changed = false;
     } // if(changed)

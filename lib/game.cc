@@ -7,6 +7,7 @@
 #include "viewport.h"
 #include "resource_manager.h"
 #include "user_interface.h"
+#include "debug.h"
 
 using std::cout;
 using std::cerr;

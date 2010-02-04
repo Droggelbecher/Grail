@@ -12,7 +12,7 @@ namespace grail {
     protected:
       bool changed;
       int n;
-      Surface **surface;
+      Surface::Ptr *surface;
 
     public:
 

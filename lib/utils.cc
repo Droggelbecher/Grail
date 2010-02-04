@@ -76,7 +76,6 @@ void touch(std::string path) {
 }
 
 bool exists(string path) {
-  cdbg << "exists(" << path << ")\n";
   ifstream s(path.c_str());
   return (bool)s;
 }

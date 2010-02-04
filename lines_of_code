@@ -4,8 +4,22 @@ LOC_LIB=$(cat $(find lib/ -name '*.cc' -or -name '*.h')|wc -l)
 LOC_RT=$(cat $(find runtime/ -name '*.cc' -or -name '*.h')|wc -l)
 LOC_LUA=$(cat $(find -name '*.lua')|wc -l)
 
+echo Code lines
+echo -----------------
 echo library c++ code: $LOC_LIB
 echo runtime c++ code: $LOC_RT
 echo overall lua code: $LOC_LUA
 echo sum: $(($LOC_LIB + $LOC_RT + $LOC_LUA)) raw lines
+
+COC_LIB=$(cat $(find lib/ -name '*.cc' -or -name '*.h')|wc -m)
+COC_RT=$(cat $(find runtime/ -name '*.cc' -or -name '*.h')|wc -m)
+COC_LUA=$(cat $(find -name '*.lua')|wc -m)
+
+echo
+echo Code chars
+echo -----------------
+echo library c++ code: $COC_LIB
+echo runtime c++ code: $COC_RT
+echo overall lua code: $COC_LUA
+echo sum: $(($COC_LIB + $COC_RT + $COC_LUA)) characters
 

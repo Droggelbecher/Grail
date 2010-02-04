@@ -8,6 +8,7 @@
 #include "text.h"
 #include "game.h"
 #include "actor.h"
+#include "debug.h"
 
 namespace grail {
 

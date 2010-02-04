@@ -71,7 +71,6 @@ ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
   for(iter = resourceHandlers.begin(); iter != resourceHandlers.end(); iter++) {
     mountpoint = normalizePath(iter->first);
     sub = path.substr(mountpoint.length());
-    cdbg << "mountpoint=" << mountpoint << " sub=" << sub << "\n";
     if(isParentOrEqualPath(iter->first, path) && iter->second->fileExists(sub)) {
       return iter->second;
     }
