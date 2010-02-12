@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 set(GRAIL_VERSION "0.1" CACHE STRING "Version")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "cmake/Modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 
 project(grail)
 
