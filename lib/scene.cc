@@ -20,15 +20,22 @@ const std::string Scene::className = "Scene";
 Scene::Scene() : _actorsMoved(false) {
 }
 
-Scene::Scene(Animation::ConstPtr background) : _actorsMoved(false) {
+Scene::Scene(Animation::Ptr background) : _actorsMoved(false) {
   this->background = background;
 }
 
 Scene::Scene(const std::string& backgroundPath) : _actorsMoved(false) {
-  this->background = Animation::ConstPtr(new Image(backgroundPath));
+  this->background = Animation::Ptr(new Image(backgroundPath));
 }
 
 Scene::~Scene() {
+  std::list<Parallax*>::iterator iter;
+  for(iter = backgrounds.begin(); iter != backgrounds.end(); ++iter) {
+    delete *iter;
+  }
+  for(iter = foregrounds.begin(); iter != foregrounds.end(); ++iter) {
+    delete *iter;
+  }
 }
 
 VirtualSize Scene::getSize() const {
@@ -36,8 +43,18 @@ VirtualSize Scene::getSize() const {
   return VirtualSize(0, 0);
 }
 
-void Scene::setBackground(const Animation& background) {
-  this->background.reset(&background);
+void Scene::setBackground(Animation::Ptr background) {
+  background = background;
+}
+
+void Scene::addBackground(Animation::Ptr background, VirtualPosition offset, double scrollFactorX, double scrollFactorY) {
+  Parallax* bg = new Parallax(background, offset, scrollFactorX, scrollFactorY);
+  backgrounds.push_back(bg);
+}
+
+void Scene::addForeground(Animation::Ptr foreground, VirtualPosition offset, double scrollFactorX, double scrollFactorY) {
+  Parallax* bg = new Parallax(foreground, offset, scrollFactorX, scrollFactorY);
+  foregrounds.push_back(bg);
 }
 
 void Scene::eachFrame(uint32_t ticks) {
@@ -58,9 +75,28 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
     background->renderAt(target, ticks, p);
   }
 
+  list<Parallax*>::const_iterator piter;
+  for(piter = backgrounds.begin(); piter != backgrounds.end(); ++piter) {
+    (*piter)->animation->renderAt(target, ticks,
+        VirtualPosition(
+          p.getX() * (*piter)->scrollFactorX,
+          p.getY() * (*piter)->scrollFactorY
+        ) + (*piter)->offset
+    );
+  }
+
   list<Actor::Ptr>::const_iterator iter;
-  for(iter = actors.begin(); iter != actors.end(); iter++) {
+  for(iter = actors.begin(); iter != actors.end(); ++iter) {
     (*iter)->renderAt(target, ticks, p);
+  }
+
+  for(piter = foregrounds.begin(); piter != foregrounds.end(); ++piter) {
+    (*piter)->animation->renderAt(target, ticks,
+        VirtualPosition(
+          p.getX() * (*piter)->scrollFactorX,
+          p.getY() * (*piter)->scrollFactorY
+        ) + (*piter)->offset
+    );
   }
 
 } // renderAt

@@ -16,10 +16,20 @@
 namespace grail {
 
 class Scene {
-    Animation::ConstPtr background;
+    struct Parallax {
+      Animation::Ptr animation;
+      VirtualPosition offset;
+      double scrollFactorX, scrollFactorY;
+      Parallax(Animation::Ptr animation, VirtualPosition offset, double scrollFactorX, double scrollFactorY) :
+        animation(animation), offset(offset), scrollFactorX(scrollFactorX), scrollFactorY(scrollFactorY) {
+      }
+    }; // Parallax
 
+    Animation::Ptr background;
+    std::list<Parallax*> backgrounds, foregrounds;
     std::list<Actor::Ptr> actors;
     bool _actorsMoved;
+
 
   public:
     typedef boost::shared_ptr<Scene> Ptr;
@@ -28,14 +38,17 @@ class Scene {
     static const std::string className;
 
     Scene();
-    Scene(Animation::ConstPtr);
+    Scene(Animation::Ptr);
     Scene(const std::string& backgroundPath);
 
     virtual ~Scene();
 
     VirtualSize getSize() const;
 
-    void setBackground(const Animation& background);
+    void setBackground(Animation::Ptr background);
+
+    void addBackground(Animation::Ptr background, VirtualPosition offset = VirtualPosition(), double scrollFactorX = 1.0, double scrollFactorY = 1.0);
+    void addForeground(Animation::Ptr forgeground, VirtualPosition offset = VirtualPosition(), double scrollFactorX = 1.0, double scrollFactorY = 1.0);
 
     void addActor(Actor::Ptr entity) {
       actors.push_back(entity);

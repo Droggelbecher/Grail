@@ -9,15 +9,17 @@ function initChapter(n)
     local s = Scene(Image("/media/$res/scene1/background.png"))
     GAME:registerScene(s, "scene1")
 
-    main_character.mc:setPosition(VP(2000, 2000))
+    s:addBackground(Image("/media/$res/scene1/static_background.png"), VP(0, 0), 0.0, 1.0)
+    s:addBackground(Image("/media/$res/scene1/tower.png"), VP(1000, 700), 0.1, 1.0)
+    s:addBackground(Image("/media/$res/scene1/mountains01.png"), VP(0, 1500), 0.25, 1.0)
+    s:addBackground(Image("/media/$res/scene1/mountains02.png"), VP(0, 1900), 0.50, 1.0)
+    s:addBackground(Image("/media/$res/scene1/mountains03.png"), VP(0, 2050), 0.75, 1.0)
+    s:addForeground(Image("/media/$res/scene1/foreground.png"), VP(700, 590), 1.2, 1.0)
+
+    main_character.mc:setPosition(VP(250, 2700))
     s:addActor(mc)
 
     GAME:goToScene(s)
-
-    local lamp = Actor("lamp")
-    lamp:addAnimation("default", Image("/media/$res/lamp.png"))
-    lamp:setPosition(VP(3000, 3000))
-    s:addActor(lamp)
 
   end
 end

@@ -77,7 +77,7 @@ class Actor : public Area {
 
     void addAnimation(std::string mode, Animation::Ptr animation) {
       animationModes[mode] = animation;
-      if(animationModes.count(mode)) {
+      if(animationModes.count(this->mode)) {
         this->animation = animationModes[mode];
       }
     }
@@ -87,7 +87,9 @@ class Actor : public Area {
     void setMode(std::string mode) {
       this->mode = mode;
       if(animationModes.count(mode)) {
+        Animation::Ptr previous = animation;
         animation = animationModes[mode];
+        animation->makeContinuationOf(*previous);
       }
     }
 

@@ -106,9 +106,11 @@ extern "C" int init(lua_State* L) {
 
     class_<Scene, Scene::Ptr>("Scene")
       .def(constructor<>())
-      .def(constructor<Animation::ConstPtr>())
+      .def(constructor<Animation::Ptr>())
       .def(constructor<const std::string&>())
       .def("setBackground", &Scene::setBackground)
+      .def("addBackground", &Scene::addBackground)
+      .def("addForeground", &Scene::addForeground)
       .def("addActor", &Scene::addActor)
       .def("actorsMoved", &Scene::actorsMoved)
       ,

@@ -29,8 +29,13 @@ class Animation : public Area {
         (p.getY() >= 0) && (p.getY() < getSize().getY());
     }
     virtual void eachFrame(uint32_t ticks) { }
+    virtual uint16_t getDirection() const { return 0; }
     virtual void setDirection(uint16_t direction) { }
     virtual void setDirection(VirtualPosition p) { }
+
+    virtual void makeContinuationOf(const Animation& other) {
+      setDirection(other.getDirection());
+    }
 };
 
 class DirectionAnimation : public Animation {
@@ -48,6 +53,9 @@ class DirectionAnimation : public Animation {
     VirtualSize getSize() const;
     bool hasPoint(VirtualPosition) const;
     void eachFrame(uint32_t);
+
+
+    uint16_t getDirection() const { return currentDirection; }
 
     void setDirection(uint16_t direction) {
       assert(direction < directions);

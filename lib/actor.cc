@@ -45,11 +45,15 @@ void Actor::eachFrame(uint32_t ticks) {
     animation->eachFrame(ticks);
   }
 
-  if(!walkPath.empty()) {
+  if(walkPath.empty()) {
+    setMode("default");
+  }
+  else {
+    setMode("walk");
     VirtualPosition target = walkPath.front();
     VirtualPosition diff = target - position;
 
-    if(animation) {
+    if(animation && diff.length()) {
       animation->setDirection(diff);
     }
 

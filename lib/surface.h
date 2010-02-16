@@ -27,6 +27,10 @@ class Surface {
       if(!sdlSurface) {
         throw new SDLException(std::string("Could not load surface '") + filename + "'");
       }
+      SDL_SetColorKey(sdlSurface, SDL_RLEACCEL, sdlSurface->format->colorkey);
+      SDL_Surface* newSurface = SDL_DisplayFormatAlpha(sdlSurface);
+      SDL_FreeSurface(sdlSurface);
+      sdlSurface = newSurface;
     }
 
 
