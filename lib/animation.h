@@ -36,11 +36,12 @@ class Animation : public Area {
 class DirectionAnimation : public Animation {
     uint16_t currentDirection;
     uint16_t directions;
+    double offset;
     Animation::Ptr* animations;
   public:
     static const std::string className;
 
-    DirectionAnimation(uint16_t directions);
+    DirectionAnimation(uint16_t directions, double offset=0);
     ~DirectionAnimation();
 
     void renderAt(SDL_Surface*, uint32_t, VirtualPosition) const;
@@ -54,7 +55,7 @@ class DirectionAnimation : public Animation {
     }
 
     void setDirection(VirtualPosition p) {
-      setDirection(p.nearestDirection(directions));
+      setDirection(p.nearestDirection(directions, offset));
     }
 
     void setAnimation(uint16_t direction, Animation::Ptr animation);

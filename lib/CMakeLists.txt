@@ -27,10 +27,20 @@ set(GRAIL_FILES
   viewport.cc
 )
 
+# Library
+
 add_library(grail SHARED ${GRAIL_FILES})
 
-include_directories(${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${LUA_INCLUDE_DIR})
-add_executable(run_unittests  run_unittests.cc vector2d_impl.cc)
-set(LIBS grail ${SDLTTF_LIBRARY} ${PNG_LIBRARIES} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY} ${LUA_LIBRARIES})
-target_link_libraries(run_unittests ${LIBS})
+# Unit tests for library
+
+include_directories(${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${BOOST_INCLUDE_DIR} ${LUA_INCLUDE_DIR})
+#add_executable(run_unittests  run_unittests.cc vector2d_impl.cc)
+#set(LIBS
+#  grail
+#  ${BOOST_LIBRARY}
+#  ${SDLTTF_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY}
+#  ${PNG_LIBRARIES}
+#  ${LUA_LIBRARIES}
+#)
+#target_link_libraries(run_unittests ${LIBS})
 

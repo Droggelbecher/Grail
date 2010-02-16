@@ -18,12 +18,12 @@ class Sprite : public Animation {
     uint32_t ticksSinceFrameStart;
 
   public:
-    Sprite(std::string classname) {
-      defaultDuration = 100;
+    Sprite(uint32_t frames = 0, uint32_t defaultDuration = 100) :
+      frames(frames), defaultDuration(defaultDuration) {
       currentFrame = 0;
-      frames = 0;
       ticksSinceFrameStart = 0;
     }
+
     virtual ~Sprite() { };
 
     uint32_t getFrameDuration(size_t n) {
@@ -41,19 +41,14 @@ class Sprite : public Animation {
     virtual void renderCurrentFrameAt(SDL_Surface* target, VirtualPosition p) const = 0;
 };
 
-#include <iostream>
-
 class StripeSprite : public Sprite {
   protected:
     Surface* surface;
     PhysicalSize::X frameWidth;
   public:
-    StripeSprite(std::string path, size_t frames) : Sprite("StripeSprite") {
-      surface = new Surface(path);
-      frameWidth = surface->getSize().getX() / frames;
-      std::cerr  << "frameWidth:" << frameWidth << endl;
-      this->frames = frames;
-    }
+    StripeSprite(std::string path, size_t frames);
+    StripeSprite(std::string path, size_t frames, uint32_t frameDuration);
+
     ~StripeSprite() {
       delete surface;
     }
@@ -66,22 +61,19 @@ class StripeSprite : public Sprite {
     }
 };
 
-} // namespace grail
-
-/*
 class ImageSprite : public Sprite {
   protected:
-    std::vector<Surface*> frames;
+    std::vector<Surface::Ptr> surfaces;
 
-    Surface* getCurrentSurface();
+    Surface::Ptr getCurrentSurface() const;
 
   public:
-    ImageSprite(std::string path) : Sprite("ImageSprite");
-    void renderCurrentFrameAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
-    VirtualSize getSize() const {
-      return conv<PhysicalSize, VirtualSize>(getCurrentSurface().getSize());
-    }
+    ImageSprite(std::string dir, uint32_t defaultDuration = 100);
+    void renderCurrentFrameAt(SDL_Surface* target, VirtualPosition p) const;
+    VirtualSize getSize() const;
 };
-*/
+
+} // namespace grail
+
 #endif // SPRITE_H
 

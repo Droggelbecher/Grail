@@ -27,8 +27,11 @@ Resource::~Resource() {
   delete[] buffer;
 }
 
+//
+// ResourceManager
+//
 
-const std::string ResourceManager::className = "ResourceManager";
+ResourceManager::DirectoryIterator ResourceManager::DirectoryIterator::_end;
 
 ResourceManager::~ResourceManager() {
   map<string, ResourceHandler*>::const_iterator iter;
@@ -78,6 +81,23 @@ ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
   return 0;
 }
 
+bool ResourceManager::exists(string path) {
+  path = normalizePath(substituteVariables(path));
+  string mountpoint;
+  ResourceHandler* handler = findHandler(path, mountpoint);
+  return (handler != 0);
+}
+
+ResourceManager::DirectoryIterator ResourceManager::beginListing(string path) {
+  path = normalizePath(substituteVariables(path));
+  string mountpoint;
+  ResourceHandler* handler = findHandler(path, mountpoint);
+  if(!handler) {
+    return endListing();
+  }
+  return DirectoryIterator(handler->beginListing(path));
+} // beginListing
+
 SDL_RWops* ResourceManager::getRW(string path, ResourceMode mode) {
   path = normalizePath(substituteVariables(path));
 
@@ -94,7 +114,11 @@ SDL_RWops* ResourceManager::getRW(string path, ResourceMode mode) {
 } // getRW()
 
 
-DirectoryResourceHandler::DirectoryResourceHandler(std::string dir) : baseDirectory(dir) {
+//
+//
+//
+
+DirectoryResourceHandler::DirectoryResourceHandler(string dir) : baseDirectory(dir) {
 }
 
 SDL_RWops* DirectoryResourceHandler::getRW(string path, ResourceMode mode) {
@@ -120,6 +144,31 @@ SDL_RWops* DirectoryResourceHandler::getRW(string path, ResourceMode mode) {
 bool DirectoryResourceHandler::fileExists(string path) {
   string fullpath = baseDirectory + pathDelimiter + path;
   return exists(fullpath);
+}
+
+DirectoryResourceHandler::DirectoryIteratorImpl::Ptr DirectoryResourceHandler::beginListing(std::string path) {
+  string fullpath = baseDirectory + pathDelimiter + path;
+  return ResourceManager::DirectoryIteratorImpl::Ptr(new DirectoryIteratorImpl(fullpath));
+}
+
+
+
+//
+//
+//
+
+DirectoryResourceHandler::DirectoryIteratorImpl& DirectoryResourceHandler::DirectoryIteratorImpl::operator++() {
+  ++iter;
+  return *this;
+}
+
+
+bool DirectoryResourceHandler::DirectoryIteratorImpl::operator==(const ResourceManager::DirectoryIteratorImpl& other) const {
+    const DirectoryIteratorImpl* o = dynamic_cast<const DirectoryIteratorImpl*>(&other);
+    if(!o) {
+      return false;
+    }
+    return iter == o->iter;
 }
 
 } // namespace grail

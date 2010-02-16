@@ -7,8 +7,8 @@ namespace grail {
 
 const std::string DirectionAnimation::className = "DirectionAnimation";
 
-DirectionAnimation::DirectionAnimation(uint16_t directions) :
-  Animation(), currentDirection(0), directions(directions) {
+DirectionAnimation::DirectionAnimation(uint16_t directions, double offset) :
+  Animation(), currentDirection(0), directions(directions), offset(offset) {
   assert(directions > 0);
   animations = new Animation::Ptr[directions];
 }

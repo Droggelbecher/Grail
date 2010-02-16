@@ -69,7 +69,7 @@ class Vector2d {
      * A vector pointing in positive y direction ("down"), will have direction
      * 0, other directions follow counter-clock-wise.
      */
-    uint16_t nearestDirection(uint16_t directions) const;
+    uint16_t nearestDirection(uint16_t directions, double offset=0) const;
 
     double length() const;
 };

@@ -1,24 +1,22 @@
 
+require 'user_interface'
+require 'main_character'
+
 function initChapter(n)
   print("This is initChapter("..n..")")
 
   if n == 0 then
-    local s = Scene(Image("/media/$res/grey_fading.jpg"))
-    GAME:registerScene(s, "grey_room")
+    local s = Scene(Image("/media/$res/scene1/background.png"))
+    GAME:registerScene(s, "scene1")
 
-    guy.guy:setPosition(VP(2000, 2000))
-    s:addActor(guy.guy)
+    main_character.mc:setPosition(VP(2000, 2000))
+    s:addActor(mc)
 
     GAME:goToScene(s)
 
-    local coke = Actor("coke")
-    coke:addAnimation("default", Image("/media/$res/coke.jpg"))
-    coke:setPosition(VP(3000, 3000))
-    s:addActor(coke)
-
     local lamp = Actor("lamp")
     lamp:addAnimation("default", Image("/media/$res/lamp.png"))
-    lamp:setPosition(VP(5000, 4500))
+    lamp:setPosition(VP(3000, 3000))
     s:addActor(lamp)
 
   end
@@ -27,11 +25,15 @@ end
 GAME:setInitChapterCallback(initChapter)
 GAME:getViewport():setup(800, 600, false)
 
-import('user_interface')
-import('guy')
+-- UI
+local ui = user_interface.create()
+GAME:setUserInterface(ui)
 
-guy.create()
+-- Main Character
+mc = main_character.create()
+GAME:setMainCharacter(mc)
+GAME:getViewport():setFollowing(mc)
 
+-- Run!
 GAME:runChapter(0)
-
 

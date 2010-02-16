@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <cassert>
+#include <boost/filesystem.hpp>
 
 #include <SDL/SDL.h>
 
@@ -97,7 +98,95 @@ class ResourceManager {
     std::map<std::string, ResourceHandler*> resourceHandlers;
 
   public:
-    static const std::string className;
+    /**
+     */
+    class DirectoryIteratorImpl {
+      public:
+        typedef boost::shared_ptr<DirectoryIteratorImpl> Ptr;
+        virtual ~DirectoryIteratorImpl() {};
+        virtual DirectoryIteratorImpl& operator++() = 0;
+        virtual std::string operator*() const = 0;
+        virtual bool operator==(const DirectoryIteratorImpl& other) const = 0;
+        virtual DirectoryIteratorImpl::Ptr copy() const = 0;
+        virtual bool atEnd() const = 0;
+    };
+
+    /**
+     */
+    class DirectoryIterator : public std::iterator<std::input_iterator_tag, int> {
+      private:
+        DirectoryIteratorImpl::Ptr impl;
+        bool _isEnd;
+        static ResourceManager::DirectoryIterator _end;
+
+
+      protected:
+
+      public:
+        /**
+         * Creates an "end"-iterator
+         */
+        DirectoryIterator() : _isEnd(true) { }
+
+        /**
+         * Takes ownership of impl
+         */
+        DirectoryIterator(DirectoryIteratorImpl::Ptr impl) : impl(impl), _isEnd(false) {
+          assert(impl);
+        };
+
+        DirectoryIterator(const DirectoryIterator& other) {
+          if(other.impl) { impl = other.impl->copy(); }
+          else { impl = other.impl; }
+          _isEnd = other._isEnd;
+          assert(_isEnd || impl);
+        };
+
+        ~DirectoryIterator() { };
+
+        DirectoryIterator& operator=(const DirectoryIterator& other) {
+          if(other.impl) { impl = other.impl->copy(); }
+          else { impl = other.impl; }
+          _isEnd = other._isEnd;
+          assert(_isEnd || impl);
+          return *this;
+        };
+
+        DirectoryIterator& operator++() {
+          ++(*impl);
+          return *this;
+        };
+        DirectoryIterator operator++(int) {
+          DirectoryIterator r = *this;
+          ++(*impl);
+          return r;
+        };
+
+        std::string operator*() const { return **impl; }
+
+        static const DirectoryIterator& end() {
+          _end._isEnd = true;
+          return _end;
+        }
+
+        virtual bool operator==(const DirectoryIterator& other) const {
+          bool this_is_end = this->_isEnd || this->impl->atEnd();
+          bool other_is_end = other._isEnd || other.impl->atEnd();
+
+          if(this_is_end && other_is_end) {
+            return true;
+          }
+
+          if(this->impl && other.impl) {
+            return this->impl == other.impl;
+          }
+          return false;
+        }
+
+        virtual bool operator!=(const DirectoryIterator& other) const {
+          return !(*this == other);
+        }
+    }; // DirectoryIterator
 
     ResourceManager() { }
     ~ResourceManager();
@@ -124,6 +213,18 @@ class ResourceManager {
     ResourceHandler* findHandler(std::string path, std::string &mountpoint);
 
     /**
+     */
+    bool exists(std::string path);
+
+    /**
+     */
+    DirectoryIterator beginListing(std::string path);
+
+    /**
+     */
+    DirectoryIterator endListing() { return DirectoryIterator::end(); }
+
+    /**
      * Caller is responsible for freeing/closing the returned RWops
      */
     SDL_RWops* getRW(std::string path, ResourceMode mode);
@@ -142,7 +243,7 @@ class ResourceHandler {
 
     virtual SDL_RWops* getRW(std::string path, ResourceMode mode) = 0;
     virtual bool fileExists(std::string path) = 0;
-    //virtual std::list<std::string> listDirectory(std::string path) = 0;
+    virtual ResourceManager::DirectoryIteratorImpl::Ptr beginListing(std::string path) = 0;
 };
 
 /**
@@ -151,12 +252,34 @@ class ResourceHandler {
 class DirectoryResourceHandler : public ResourceHandler {
     std::string baseDirectory;
 
+    /**
+     */
+    class DirectoryIteratorImpl : public ResourceManager::DirectoryIteratorImpl {
+      private:
+        boost::filesystem::directory_iterator iter;
+        std::string dir;
+
+      public:
+        DirectoryIteratorImpl(const std::string& dir) : iter(dir), dir(dir) {
+        }
+
+        ResourceManager::DirectoryIteratorImpl::Ptr copy() const {
+          ResourceManager::DirectoryIteratorImpl::Ptr ptr(new DirectoryIteratorImpl(dir));
+          return ptr;
+        }
+
+        DirectoryIteratorImpl& operator++();
+        std::string operator*() const { return iter->leaf(); }
+        bool operator==(const ResourceManager::DirectoryIteratorImpl& other) const;
+        bool atEnd() const { return iter == boost::filesystem::directory_iterator(); }
+    };
+
   public:
     DirectoryResourceHandler(std::string dir);
 
     SDL_RWops* getRW(std::string path, ResourceMode mode);
     bool fileExists(std::string path);
-    //std::list<std::string> listDirectory(std::string path);
+    DirectoryIteratorImpl::Ptr beginListing(std::string path);
 };
 
 } // namespace grail

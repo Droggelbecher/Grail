@@ -36,6 +36,8 @@ class UserInterface {
     virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
 };
 
+std::ostream& operator<<(std::ostream& os, const UserInterface& ui);
+
 } // namespace grail
 
 #endif // USER_INTERFACE_H

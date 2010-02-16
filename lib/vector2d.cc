@@ -33,10 +33,10 @@ Vector2d<T, N> Vector2d<T, N>::operator-() const {
 
 
 template <typename T, int N>
-uint16_t Vector2d<T, N>::nearestDirection(uint16_t directions) const {
+uint16_t Vector2d<T, N>::nearestDirection(uint16_t directions, double offset) const {
   if(directions < 2) { return 0; }
 
-  double alpha = atan2(_x, _y);
+  double alpha = atan2(_x, _y) + offset;
   alpha = alpha + (M_PI / (double)directions);
   if(alpha < 0) {
     alpha += 2.0 * M_PI;

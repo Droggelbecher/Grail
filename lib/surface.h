@@ -22,7 +22,7 @@ namespace grail {
 class Surface {
     SDL_Surface* sdlSurface;
 
-    void loadFromFile(std::string filename) {
+    void loadFromFile(const std::string& filename) {
       sdlSurface = IMG_Load_RW(getRW(filename, MODE_READ), true);
       if(!sdlSurface) {
         throw new SDLException(std::string("Could not load surface '") + filename + "'");
@@ -41,7 +41,7 @@ class Surface {
     /**
      * Create new surface from image resource
      */
-    Surface(std::string &path) : sdlSurface(0) {
+    Surface(const std::string &path) : sdlSurface(0) {
       loadFromFile(path);
       assert(sdlSurface);
     }

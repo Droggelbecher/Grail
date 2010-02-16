@@ -25,5 +25,9 @@ namespace grail {
     }
   }
 
+  std::ostream& operator<<(std::ostream& os, const UserInterface& ui) {
+    os << "UserInterface";
+    return os;
+  }
 } // namespace grail
 

@@ -39,12 +39,6 @@ extern "C" int init(lua_State* L) {
     def("test_luabind", &test_luabind),
     def("getGame", &GameWrapper::getInstance),
 
-    /*
-    class_<SDLException>("SDLException")
-      .def("what", &SDLException::what)
-      ,
-    */
-
     class_<BlitCached>("_BlitCached")
       ,
 
@@ -84,6 +78,7 @@ extern "C" int init(lua_State* L) {
 
       class_<DirectionAnimation, Animation, Animation::Ptr>("DirectionAnimation")
         .def(constructor<uint16_t>())
+        .def(constructor<uint16_t, double>())
         .def("setDirection", (void (DirectionAnimation::*)(uint16_t))&DirectionAnimation::setDirection)
         .def("setDirection", (void (DirectionAnimation::*)(VirtualPosition))&DirectionAnimation::setDirection)
         .def("setAnimation", &DirectionAnimation::setAnimation)
@@ -135,12 +130,19 @@ extern "C" int init(lua_State* L) {
 
     class_<StripeSprite, Animation, Animation::Ptr>("StripeSprite")
       .def(constructor<std::string, size_t>())
+      .def(constructor<std::string, size_t, uint32_t>())
+      ,
+
+    class_<ImageSprite, Animation, Animation::Ptr>("ImageSprite")
+      .def(constructor<std::string>())
+      .def(constructor<std::string, size_t>())
       ,
 
     class_<UserInterface, UserInterfaceWrapper, UserInterface::Ptr>("UserInterface")
       .def(constructor<>())
       .def("handleEvent", &UserInterface::handleEvent, &UserInterfaceWrapper::default_handleEvent)
       .def("addElement", &UserInterface::addElement)
+      .def(tostring(self))
       ,
 
     class_<UserInterfaceElement, UserInterfaceElement::Ptr>("UserInterfaceElement")

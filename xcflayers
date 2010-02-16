@@ -1,0 +1,41 @@
+#!/bin/sh
+
+XCF2PNG=$(which xcf2png)
+XCF=$1
+TARGETDIR=$2
+
+if [ ! -x "$XCF2PNG" ]; then
+  echo "Need xcf2png.";
+  exit 1;
+fi
+
+if [ ! -e "$XCF" -o ! -e "$TARGETDIR" ]; then
+  echo "Syntax: $0 [xcffile] [targetfolder] ([filter])";
+  exit 2;
+fi
+
+PREFIX=$3
+
+BASENAME=$(basename "$XCF" .xcf)
+
+xcfinfo $XCF | {
+  read INFO;
+  echo Reading xcf file $INFO;
+  name="_"
+  while [ ! -z "$name" ]; do
+    read plus size colors mode name;
+    if [ -z "$name" ]; then
+      break;
+    fi
+
+    # if name - after removal of prefix - is still the same,
+    # it doesnt contain that prefix
+    if [ "${name#${PREFIX}}" = "${name}" -a ! -z "$PREFIX" ]; then
+      continue;
+    fi
+    targetfile=$TARGETDIR/$name.png
+    echo "\"$name\" ($size $colors) -> $targetfile"
+    xcf2png $XCF $name > $targetfile
+  done
+}
+

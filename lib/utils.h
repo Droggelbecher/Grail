@@ -39,13 +39,18 @@ std::string rstrip(std::string s);
  */
 std::string strip(std::string s);
 
-
+/**
+ * Split given string in two at the given delimiter.
+ */
 std::pair<std::string, std::string> split2(std::string s, std::string delimiter = "=");
 
 class SplitIterator;
 
 std::ostream& operator<<(std::ostream&, SplitIterator&);
 
+/**
+ * Iterator over split "words"
+ */
 class SplitIterator : public std::iterator<std::input_iterator_tag, int> {
     std::string s;
     std::string delimiter;

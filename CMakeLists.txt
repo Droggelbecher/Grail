@@ -15,6 +15,7 @@ find_package(SDL_image REQUIRED)
 find_package(SDL_ttf REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Luabind REQUIRED)
+find_package(Boost REQUIRED)
 
 if(debug)
   set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")

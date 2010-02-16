@@ -1,4 +1,6 @@
 
+module('user_interface', package.seeall)
+
 class 'MyUI' (UserInterface)
 
 function MyUI:__init()
@@ -29,7 +31,9 @@ function MyUI:handleEvent(evt, frameDuration)
   return EVENT_STATE_UNHANDLED
 end
 
-ui = MyUI()
 
-GAME:setUserInterface(ui)
+function create()
+  return MyUI()
+end
+
 
