@@ -35,7 +35,6 @@ class Game {
 
   public:
     typedef boost::shared_ptr<Game> Ptr;
-    typedef boost::shared_ptr<const Game> ConstPtr;
 
     static const std::string className;
 

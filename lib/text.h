@@ -23,7 +23,6 @@ class Text : public Animation, public BlitCached {
 
   public:
     typedef boost::shared_ptr<Text> Ptr;
-    typedef boost::shared_ptr<const Text> ConstPtr;
 
     Text(Font::Ptr font, Font::Ptr outlineFont);
     Text(Font::Ptr font);

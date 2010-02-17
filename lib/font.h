@@ -19,7 +19,6 @@ namespace grail {
 
     public:
       typedef boost::shared_ptr<Font> Ptr;
-      typedef boost::shared_ptr<const Font> ConstPtr;
 
       Font(std::string path, int size, int outline);
       Font(const Font& other);

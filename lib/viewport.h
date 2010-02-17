@@ -26,7 +26,7 @@ class Viewport {
     CameraMode cameraMode;
     CameraLimit cameraLimit;
     VirtualPosition cameraPosition;
-    Actor::ConstPtr cameraTarget;
+    Actor::Ptr cameraTarget;
 
   public:
     static const std::string className;
@@ -43,11 +43,11 @@ class Viewport {
     VirtualPosition getCameraPosition() { return cameraPosition; }
     void setCameraPosition(VirtualPosition position);
 
-    void renderScene(Scene::ConstPtr scene, uint32_t ticks);
-    void renderUserInterface(UserInterface::ConstPtr userInterface, uint32_t ticks);
+    void renderScene(Scene::Ptr scene, uint32_t ticks);
+    void renderUserInterface(UserInterface::Ptr userInterface, uint32_t ticks);
     void finishRendering();
 
-    void setFollowing(Actor::ConstPtr actor) {
+    void setFollowing(Actor::Ptr actor) {
       cameraTarget = actor;
     }
 

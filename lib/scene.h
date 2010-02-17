@@ -33,7 +33,6 @@ class Scene {
 
   public:
     typedef boost::shared_ptr<Scene> Ptr;
-    typedef boost::shared_ptr<const Scene> ConstPtr;
 
     static const std::string className;
 

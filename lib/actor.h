@@ -38,7 +38,6 @@ class Actor : public Area {
 
   public:
     typedef boost::shared_ptr<Actor> Ptr;
-    typedef boost::shared_ptr<const Actor> ConstPtr;
 
     static const std::string className;
 

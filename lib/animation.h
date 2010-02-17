@@ -17,7 +17,6 @@ class Animation : public Area {
 
   public:
     typedef boost::shared_ptr<Animation> Ptr;
-    typedef boost::shared_ptr<const Animation> ConstPtr;
 
     Animation() { }
     virtual ~Animation() { }

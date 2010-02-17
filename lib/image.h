@@ -18,7 +18,7 @@ namespace grail {
 
 class Image : public Animation {
   protected:
-    Surface::ConstPtr surface;
+    Surface::Ptr surface;
 
   public:
     Image(std::string path) : surface(new Surface(path)) {

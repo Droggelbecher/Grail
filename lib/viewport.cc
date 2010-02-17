@@ -57,7 +57,7 @@ void Viewport::setCameraPosition(VirtualPosition position) {
   } // if LIMIT_SCENE
 } // setCameraPosition()
 
-void Viewport::renderScene(Scene::ConstPtr scene, uint32_t ticks) {
+void Viewport::renderScene(Scene::Ptr scene, uint32_t ticks) {
   if(cameraTarget) {
     setCameraPosition(
         cameraTarget->getPosition() - (virtualSize / 2.0)
@@ -66,7 +66,7 @@ void Viewport::renderScene(Scene::ConstPtr scene, uint32_t ticks) {
   scene->renderAt(screen, ticks, -cameraPosition);
 }
 
-void Viewport::renderUserInterface(UserInterface::ConstPtr userInterface, uint32_t ticks) {
+void Viewport::renderUserInterface(UserInterface::Ptr userInterface, uint32_t ticks) {
   userInterface->renderAt(screen, ticks, VirtualPosition(0, 0));
 }
 

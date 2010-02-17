@@ -15,7 +15,6 @@ namespace grail {
 
     public:
       typedef boost::shared_ptr<UserInterfaceElement> Ptr;
-      typedef boost::shared_ptr<const UserInterfaceElement> ConstPtr;
 
       UserInterfaceElement();
       virtual ~UserInterfaceElement() { };

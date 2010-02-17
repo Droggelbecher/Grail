@@ -21,7 +21,6 @@ class UserInterface {
 
   public:
     typedef boost::shared_ptr<UserInterface> Ptr;
-    typedef boost::shared_ptr<const UserInterface> ConstPtr;
 
     UserInterface() { }
     virtual ~UserInterface() { }

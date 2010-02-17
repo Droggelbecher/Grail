@@ -40,7 +40,6 @@ class Surface {
 
   public:
     typedef boost::shared_ptr<Surface> Ptr;
-    typedef boost::shared_ptr<const Surface> ConstPtr;
 
     /**
      * Create new surface from image resource
