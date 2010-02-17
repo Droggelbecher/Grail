@@ -33,7 +33,7 @@ namespace grail {
       virtual VirtualPosition getSize() const = 0;
 
       virtual void eachFrame(uint32_t ticks) = 0;
-      virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration) = 0;
+      virtual EventState handleEvent(const SDL_Event& event, uint32_t frameDuration) = 0;
       virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const = 0;
   };
 

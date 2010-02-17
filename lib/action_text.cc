@@ -8,7 +8,7 @@ namespace grail {
     text.setText("Go to blah");
   }
 
-  EventState ActionText::handleEvent(SDL_Event& event, uint32_t frameDuration) {
+  EventState ActionText::handleEvent(const SDL_Event& event, uint32_t frameDuration) {
     return EVENT_STATE_UNHANDLED;
   }
 

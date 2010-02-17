@@ -44,11 +44,11 @@ class GameWrapper : public grail::Game {
 class UserInterfaceWrapper : public grail::UserInterface, public luabind::wrap_base {
   public:
     UserInterfaceWrapper() { }
-    grail::EventState handleEvent(SDL_Event& event, uint32_t frameDuration) {
+    grail::EventState handleEvent(const SDL_Event& event, uint32_t frameDuration) {
       return call<grail::EventState>("handleEvent", event, frameDuration);
     }
 
-    static grail::EventState default_handleEvent(UserInterface* ptr, SDL_Event& event, uint32_t frameDuration) {
+    static grail::EventState default_handleEvent(UserInterface::Ptr ptr, SDL_Event event, uint32_t frameDuration) {
       return ptr->UserInterface::handleEvent(event, frameDuration);
     }
 }; // class UserInterfaceWrapper

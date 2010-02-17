@@ -6,24 +6,27 @@
 #include <SDL/SDL.h>
 #include <lua.hpp>
 
+#include "lib/action_text.h"
 #include "lib/actor.h"
 #include "lib/animation.h"
+#include "lib/box.h"
+#include "lib/button.h"
+#include "lib/font.h"
 #include "lib/game.h"
 #include "lib/image.h"
 #include "lib/resource_manager.h"
-#include "lib/resource_manager.h"
 #include "lib/scene.h"
+#include "lib/sdl_exception.h"
 #include "lib/sprite.h"
 #include "lib/text.h"
 #include "lib/user_interface.h"
+#include "lib/user_interface_animation.h"
 #include "lib/user_interface_element.h"
 #include "lib/vector2d.h"
-#include "lib/font.h"
 #include "lib/viewport.h"
-#include "lib/action_text.h"
 #include "lua_bindings.h"
+#include "lua_button.h"
 #include "lua_converter.h"
-#include "lib/sdl_exception.h"
 
 void test_luabind() {
   grail::cdbg << "If you can read this, luabind works\n";
@@ -38,6 +41,8 @@ extern "C" int init(lua_State* L) {
   module(L)[
     def("test_luabind", &test_luabind),
     def("getGame", &GameWrapper::getInstance),
+    def("rgb", (SDL_Color (*)(uint32_t))&rgb),
+    def("rgb", (SDL_Color (*)(uint8_t, uint8_t, uint8_t))&rgb),
 
     class_<BlitCached>("_BlitCached")
       ,
@@ -68,6 +73,7 @@ extern "C" int init(lua_State* L) {
       .def("setAlignment", &Actor::setAlignment)
       .def("setMode", &Actor::setMode)
       .def("setPosition", &Actor::setPosition)
+      .def("setYOffset", &Actor::setYOffset)
       .def("getPosition", &Actor::getPosition)
       .def("walk", &Actor::walk)
       .def("walkStraight", &Actor::walkStraight)
@@ -75,6 +81,11 @@ extern "C" int init(lua_State* L) {
       ,
 
     class_<Animation, Animation::Ptr>("Animation"),
+
+      class_<Box, Animation, Animation::Ptr>("Box")
+        .def(constructor<VirtualSize>())
+        .def(constructor<VirtualSize, SDL_Color>())
+        ,
 
       class_<DirectionAnimation, Animation, Animation::Ptr>("DirectionAnimation")
         .def(constructor<uint16_t>())
@@ -144,6 +155,7 @@ extern "C" int init(lua_State* L) {
       .def(constructor<>())
       .def("handleEvent", &UserInterface::handleEvent, &UserInterfaceWrapper::default_handleEvent)
       .def("addElement", &UserInterface::addElement)
+      .def("addAnimation", &UserInterface::addAnimation)
       .def(tostring(self))
       ,
 
@@ -156,6 +168,17 @@ extern "C" int init(lua_State* L) {
       class_<ActionText, UserInterfaceElement, UserInterfaceElement::Ptr>("ActionText")
         .def(constructor<Font::Ptr>())
         .def("setOutlineFont", &ActionText::setOutlineFont)
+        ,
+
+      class_<Button, UserInterfaceElement, UserInterfaceElement::Ptr>("_Button")
+        ,
+
+      class_<LuaButton, Button, UserInterfaceElement::Ptr>("Button")
+        .def(constructor<Animation::Ptr, luabind::object>())
+        ,
+
+      class_<UserInterfaceAnimation, UserInterfaceElement, UserInterfaceElement::Ptr>("UserInterfaceAnimation")
+        .def(constructor<Animation::Ptr>())
         ,
 
     class_<VirtualPosition>("VirtualPosition")

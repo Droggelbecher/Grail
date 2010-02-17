@@ -9,6 +9,7 @@ namespace grail {
   extern SDL_Color black;
 
   SDL_Color rgb(uint32_t v);
+  SDL_Color rgb(uint8_t r, uint8_t g, uint8_t b);
 }
 
 #endif // SDLUTILS_H

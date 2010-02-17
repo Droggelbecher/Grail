@@ -93,8 +93,8 @@ template <> SDL_Rect conv<VirtualPosition, SDL_Rect>(VirtualPosition p);
 template <> VirtualPosition conv<PhysicalPosition, VirtualPosition>(PhysicalPosition p);
 template <> PhysicalPosition conv<VirtualPosition, PhysicalPosition>(VirtualPosition p);
 
-template <> VirtualPosition conv<SDL_MouseButtonEvent&, VirtualPosition>(SDL_MouseButtonEvent& p);
-template <> VirtualPosition conv<SDL_MouseMotionEvent&, VirtualPosition>(SDL_MouseMotionEvent& p);
+template <> VirtualPosition conv<const SDL_MouseButtonEvent&, VirtualPosition>(const SDL_MouseButtonEvent& p);
+template <> VirtualPosition conv<const SDL_MouseMotionEvent&, VirtualPosition>(const SDL_MouseMotionEvent& p);
 
 } // namespace grail
 

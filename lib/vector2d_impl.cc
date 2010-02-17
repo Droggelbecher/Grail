@@ -17,8 +17,8 @@ template std::ostream& operator<<(std::ostream&, VirtualPosition);
 CONV(PhysicalPosition, VirtualPosition);
 CONV(VirtualPosition, PhysicalPosition);
 CONV(PhysicalPosition, SDL_Rect);
-CONV(SDL_MouseButtonEvent&, VirtualPosition);
-CONV(SDL_MouseMotionEvent&, VirtualPosition);
+CONV(const SDL_MouseButtonEvent&, VirtualPosition);
+CONV(const SDL_MouseMotionEvent&, VirtualPosition);
 CONV(VirtualPosition, SDL_Rect);
 
 } // namespace grail

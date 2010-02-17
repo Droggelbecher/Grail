@@ -19,7 +19,7 @@ namespace grail {
       ActionText(Font::Ptr font);
       virtual ~ActionText() { };
 
-      EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
+      EventState handleEvent(const SDL_Event& event, uint32_t frameDuration);
 
       void eachFrame(uint32_t ticks) {
         Actor::Ptr hovering = Game::getInstance().getUserInterface()->getHovering();

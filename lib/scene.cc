@@ -103,7 +103,7 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 
 EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
   if(event.type == SDL_MOUSEBUTTONDOWN) {
-    VirtualPosition pos = conv<SDL_MouseButtonEvent&, VirtualPosition>(event.button);
+    VirtualPosition pos = conv<const SDL_MouseButtonEvent&, VirtualPosition>(event.button);
 
     if(Rect(getSize()).hasPoint(pos)) {
       list<Actor::Ptr>::const_iterator iter;
@@ -125,7 +125,7 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
   } // if mouse button down
 
   else if(event.type == SDL_MOUSEMOTION) {
-    VirtualPosition pos = conv<SDL_MouseMotionEvent&, VirtualPosition>(event.motion);
+    VirtualPosition pos = conv<const SDL_MouseMotionEvent&, VirtualPosition>(event.motion);
 
     if(Rect(getSize()).hasPoint(pos)) {
       UserInterface::Ptr ui = Game::getInstance().getUserInterface();

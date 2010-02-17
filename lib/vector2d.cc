@@ -1,13 +1,13 @@
 
-#include <cmath>
 #include <SDL/SDL.h>
-#include "classes.h"
-#include "vector2d.h"
-#include "game.h"
-#include "viewport.h"
-
+#include <cmath>
 #include <iostream>
 using namespace std;
+
+#include "classes.h"
+#include "game.h"
+#include "vector2d.h"
+#include "viewport.h"
 
 namespace grail {
 
@@ -73,7 +73,7 @@ std::ostream& operator<<(std::ostream& os, Vector2d<T, N> v) {
 
 
 template <typename A, typename B>
-B conv(A a) { assert(false); }
+B conv(A a) { assert("Couldnt convert types" && false); };
 
 template <>
 SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p) {
@@ -112,14 +112,14 @@ SDL_Rect conv<VirtualPosition, SDL_Rect>(VirtualPosition p) {
 
 
 template <>
-VirtualPosition conv<SDL_MouseButtonEvent&, VirtualPosition>(SDL_MouseButtonEvent& p) {
+VirtualPosition conv<const SDL_MouseButtonEvent&, VirtualPosition>(const SDL_MouseButtonEvent& p) {
   return conv<PhysicalPosition, VirtualPosition>(
       PhysicalPosition(p.x, p.y)
   );
 }
 
 template <>
-VirtualPosition conv<SDL_MouseMotionEvent&, VirtualPosition>(SDL_MouseMotionEvent& p) {
+VirtualPosition conv<const SDL_MouseMotionEvent&, VirtualPosition>(const SDL_MouseMotionEvent& p) {
   return conv<PhysicalPosition, VirtualPosition>(
       PhysicalPosition(p.x, p.y)
   );

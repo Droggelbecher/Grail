@@ -27,12 +27,13 @@ class UserInterface {
     virtual ~UserInterface() { }
 
     void addElement(UserInterfaceElement::Ptr element);
+    void addAnimation(Animation::Ptr animation);
 
     void setHovering(Actor::Ptr hovering) { this->hovering = hovering; }
     Actor::Ptr getHovering() { return hovering; }
 
     virtual void eachFrame(uint32_t ticks);
-    virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
+    virtual EventState handleEvent(const SDL_Event& event, uint32_t frameDuration);
     virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
 };
 

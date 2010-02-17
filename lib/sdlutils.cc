@@ -13,5 +13,13 @@ namespace grail {
     r.b = v & 0xff;
     return r;
   }
+
+  SDL_Color rgb(uint8_t r, uint8_t g, uint8_t b) {
+    SDL_Color c;
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    return c;
+  }
 }
 

@@ -26,6 +26,7 @@ class Actor : public Area {
     std::string name;
 
     VirtualPosition position;
+    VirtualPosition::Y yOffset;
     double alignmentX, alignmentY;
     Area::Ptr area;
     double speed; ///< Unit is virtual pixels / second
@@ -47,7 +48,7 @@ class Actor : public Area {
       }
     };
 
-    Actor(std::string name) : mode("default"), name(name), alignmentX(0.5), alignmentY(1.0), speed(1000.0)
+    Actor(std::string name) : mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0)
     {
     }
 
@@ -57,10 +58,10 @@ class Actor : public Area {
 
     bool hasPoint(VirtualPosition p) const {
       if(area) {
-        return area->hasPoint(p - getUpperLeftCorner());
+        return area->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
       }
       else if(animation) {
-        return animation->hasPoint(p - getUpperLeftCorner());
+        return animation->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
       }
       else {
         return false;
@@ -71,7 +72,7 @@ class Actor : public Area {
 
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
       if(animation) {
-        animation->renderAt(target, ticks, getUpperLeftCorner() + p);
+        animation->renderAt(target, ticks, getUpperLeftCorner() + p + VirtualPosition(0, yOffset));
       }
     }
 
@@ -95,6 +96,7 @@ class Actor : public Area {
 
     void setPosition(VirtualPosition position) { this->position = position; }
     VirtualPosition getPosition() const { return position; }
+    void setYOffset(VirtualPosition::Y offset) { yOffset = offset; }
 
     void walk(const Path& path);
     void walkStraight(VirtualPosition p);

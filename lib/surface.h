@@ -53,7 +53,7 @@ class Surface {
     /**
      * Create new surface with given size and flags.
      */
-    Surface(PhysicalSize size, uint32_t flags = SDL_SWSURFACE) {
+    Surface(PhysicalSize size, uint32_t flags = SDL_HWSURFACE) {
       uint32_t rmask, gmask, bmask, amask;
 
       // Stolen from: http://www.libsdl.org/cgi/docwiki.cgi/SDL_CreateRGBSurface
