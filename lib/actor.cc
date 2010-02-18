@@ -10,7 +10,47 @@ using std::copy;
 
 namespace grail {
 
-const std::string Actor::className = "Actor";
+Actor::Actor(std::string name) :
+  mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0) {
+}
+
+std::string Actor::getName() const {
+  return name;
+}
+
+bool Actor::hasPoint(VirtualPosition p) const {
+  if(area) {
+    return area->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
+  }
+  else if(animation) {
+    return animation->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
+  }
+  else {
+    return false;
+  }
+}
+
+void Actor::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+  if(animation) {
+    animation->renderAt(target, ticks, getUpperLeftCorner() + p + VirtualPosition(0, yOffset));
+  }
+}
+
+void Actor::addAnimation(std::string mode, Animation::Ptr animation) {
+  animationModes[mode] = animation;
+  if(animationModes.count(this->mode)) {
+    this->animation = animationModes[mode];
+  }
+}
+
+void Actor::setMode(std::string mode) {
+  this->mode = mode;
+  if(animationModes.count(mode)) {
+    Animation::Ptr previous = animation;
+    animation = animationModes[mode];
+    animation->makeContinuationOf(*previous);
+  }
+}
 
 void Actor::setAlignment(double x, double y) {
   alignmentX = x;
@@ -27,6 +67,14 @@ VirtualPosition Actor::getUpperLeftCorner() const {
   else {
     return position;
   }
+}
+
+void Actor::walkTo(Actor::Ptr actor) {
+  walkTo(actor->getInteractionPosition());
+}
+
+void Actor::walkTo(VirtualPosition p) {
+  walkStraight(p);
 }
 
 void Actor::walk(const Path& path) {

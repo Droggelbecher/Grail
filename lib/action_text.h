@@ -22,13 +22,8 @@ namespace grail {
       EventState handleEvent(const SDL_Event& event, uint32_t frameDuration);
 
       void eachFrame(uint32_t ticks) {
-        Actor::Ptr hovering = Game::getInstance().getUserInterface()->getHovering();
-        if(hovering) {
-          text.setText("Go to " + hovering->getName());
-        }
-        else {
-          text.setText("Go");
-        }
+        std::string s = Game::getInstance().getUserInterface()->getActionText();
+        text.setText(s);
         text.eachFrame(ticks);
       }
 

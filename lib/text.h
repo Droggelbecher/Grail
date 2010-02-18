@@ -56,9 +56,10 @@ class Text : public Animation, public BlitCached {
       if(surface[1]) {
         return conv<PhysicalSize, VirtualSize>(surface[1]->getSize());
       }
-      else {
+      else if(surface[0]) {
         return conv<PhysicalSize, VirtualSize>(surface[0]->getSize());
       }
+      return VirtualSize();
     }
     
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {

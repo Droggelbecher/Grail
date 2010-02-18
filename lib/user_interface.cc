@@ -1,6 +1,7 @@
 
 #include "user_interface.h"
 #include "user_interface_animation.h"
+#include "debug.h"
 
 namespace grail {
 
@@ -21,6 +22,26 @@ namespace grail {
   void UserInterface::addAnimation(Animation::Ptr animation) {
     UserInterfaceElement::Ptr elem(new UserInterfaceAnimation(animation));
     addElement(elem);
+  }
+
+  void UserInterface::setHovering(Actor::Ptr actor) {
+    if(hovering) {
+      currentActors.pop_back();
+    }
+    if(actor) {
+      hovering = true;
+      currentActors.push_back(actor);
+    }
+    else {
+      hovering = false;
+    }
+  }
+
+  Actor::Ptr UserInterface::getHovering() const {
+    if(hovering) {
+      return currentActors.back();
+    }
+    return Actor::Ptr();
   }
 
   void UserInterface::eachFrame(uint32_t ticks) {

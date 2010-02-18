@@ -51,7 +51,7 @@ std::ostream& operator<<(std::ostream&, SplitIterator&);
 /**
  * Iterator over split "words"
  */
-class SplitIterator : public std::iterator<std::input_iterator_tag, int> {
+class SplitIterator : public std::iterator<std::input_iterator_tag, std::string> {
     std::string s;
     std::string delimiter;
     size_t pos;

@@ -90,19 +90,26 @@ class Surface {
     }
 
     PhysicalSize getSize() const {
+      if(!sdlSurface) {
+        return PhysicalSize();
+      }
       return PhysicalSize(sdlSurface->w, sdlSurface->h);
     }
 
     void blit(SDL_Rect* from, SDL_Surface* target, SDL_Rect* to) const {
-      SDL_BlitSurface(sdlSurface, from, target, to);
+      if(sdlSurface) {
+        SDL_BlitSurface(sdlSurface, from, target, to);
+      }
     }
 
     void blit(PhysicalPosition from, SDL_Surface* target, PhysicalPosition to) const {
-      SDL_Rect f = conv<PhysicalPosition, SDL_Rect>(from);
-      f.w = sdlSurface->w;
-      f.h = sdlSurface->h;
-      SDL_Rect t = conv<PhysicalPosition, SDL_Rect>(to);
-      SDL_BlitSurface(sdlSurface, &f, target, &t);
+      if(sdlSurface) {
+        SDL_Rect f = conv<PhysicalPosition, SDL_Rect>(from);
+        f.w = sdlSurface->w;
+        f.h = sdlSurface->h;
+        SDL_Rect t = conv<PhysicalPosition, SDL_Rect>(to);
+        SDL_BlitSurface(sdlSurface, &f, target, &t);
+      }
     }
 
     SDL_Surface* getSDL() { return sdlSurface; }

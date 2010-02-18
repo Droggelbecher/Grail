@@ -8,6 +8,7 @@
 
 #include "lib/action_text.h"
 #include "lib/actor.h"
+#include "lib/action.h"
 #include "lib/animation.h"
 #include "lib/box.h"
 #include "lib/button.h"
@@ -76,8 +77,14 @@ extern "C" int init(lua_State* L) {
       .def("setYOffset", &Actor::setYOffset)
       .def("getPosition", &Actor::getPosition)
       .def("walk", &Actor::walk)
+      .def("walkTo", (void(Actor::*)(VirtualPosition))&Actor::walkTo)
+      .def("walkTo", (void(Actor::*)(Actor::Ptr))&Actor::walkTo)
       .def("walkStraight", &Actor::walkStraight)
       .def(tostring(self))
+      ,
+
+    class_<Action, Action::Ptr>("Action")
+      .def(constructor<std::string, size_t>())
       ,
 
     class_<Animation, Animation::Ptr>("Animation"),
@@ -156,6 +163,7 @@ extern "C" int init(lua_State* L) {
       .def("handleEvent", &UserInterface::handleEvent, &UserInterfaceWrapper::default_handleEvent)
       .def("addElement", &UserInterface::addElement)
       .def("addAnimation", &UserInterface::addAnimation)
+      .def("setAction", &UserInterface::setAction)
       .def(tostring(self))
       ,
 

@@ -22,8 +22,6 @@ class Game {
   protected:
     static Game* _instance;
 
-    double targetFPS;
-
     Viewport* viewport;
     Scene::Ptr currentScene;
     ResourceManager* resourceManager;

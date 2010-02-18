@@ -30,6 +30,10 @@ function MyUI:__init()
   at:setAlignmentX(0.0)
   at:setAlignmentY(0.5)
 
+
+  local go = Action("Go to ", 1)
+  self:setAction(go)
+
   self:addElement(at)
 end
 
@@ -40,6 +44,7 @@ function MyUI:handleEvent(evt, frameDuration)
   end
 
   if evt:getType() == EVT_ACTORCLICK then
+    GAME:getMainCharacter():walkTo(evt:getActor())
     print("You clicked actor '"..tostring(evt:getActor())..
       "' with button "..tostring(evt:getButton())..
       " at "..tostring(evt:getPosition()))
