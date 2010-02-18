@@ -112,6 +112,25 @@ class Surface {
       }
     }
 
+    uint8_t getAlpha(PhysicalPosition p) const {
+      if(!sdlSurface || p.getX() < 0 || p.getX() >= sdlSurface->w ||
+          p.getY() < 0 || p.getY() >= sdlSurface->h) {
+        return 0;
+      }
+
+      if(sdlSurface->format->BitsPerPixel != 32) {
+        throw new Exception("Only 32-Bit-Surfaces are supported atm.");
+      }
+
+      SDL_LockSurface(sdlSurface);
+      uint32_t pixel = ((const uint32_t*)sdlSurface->pixels)[p.getY() * sdlSurface->w + p.getX()];
+      SDL_UnlockSurface(sdlSurface);
+      uint8_t r, g, b, a;
+      SDL_GetRGBA(pixel, sdlSurface->format, &r, &g, &b, &a);
+      return a;
+    }
+
+
     SDL_Surface* getSDL() { return sdlSurface; }
 };
 

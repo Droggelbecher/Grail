@@ -37,6 +37,10 @@ class Image : public Animation {
           );
       surface->blit(0, target, &t);
     }
+
+    bool hasPoint(VirtualPosition p) const {
+      return surface->getAlpha(conv<VirtualPosition, PhysicalPosition>(p)) > 127;
+    }
 };
 
 } // namespace grail
