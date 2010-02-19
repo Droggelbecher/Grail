@@ -11,10 +11,17 @@
 #include "lib/game.h"
 #include "lib/user_interface.h"
 #include "lib/debug.h"
+#include "network_interface.h"
 
 class GameWrapper : public grail::Game {
   private:
     luabind::object initChapterCallback;
+    NetworkInterface network;
+
+    GameWrapper() : grail::Game(), network(12345) {
+      network.bindLocal();
+      network.listen();
+    }
 
   public:
     static GameWrapper& getInstance() {
@@ -34,6 +41,11 @@ class GameWrapper : public grail::Game {
       if(initChapterCallback) {
         luabind::call_function<size_t>(initChapterCallback, n);
       }
+    }
+
+    void eachFrame(uint32_t ticks) {
+      network.select();
+      Game::eachFrame(ticks);
     }
 
     void setInitChapterCallback(luabind::object cb) {

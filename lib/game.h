@@ -56,7 +56,7 @@ class Game {
     Actor::Ptr getMainCharacter() const;
     void setMainCharacter(Actor::Ptr actor);
 
-    void eachFrame(uint32_t ticks);
+    virtual void eachFrame(uint32_t ticks);
     void renderEverything(uint32_t ticks);
     void handleEvent(const SDL_Event &event, uint32_t ticks);
 };

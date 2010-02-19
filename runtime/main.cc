@@ -9,15 +9,15 @@
 #include <getopt.h>
 
 #include "interpreter.h"
-#include "lib/viewport.h"
-#include "lib/utils.h"
-#include "wrappings.h"
+#include "lib/debug.h"
 #include "lib/game.h"
 #include "lib/resource_manager.h"
-#include "lib/debug.h"
-
 #include "lib/unittest.h"
+#include "lib/utils.h"
+#include "lib/viewport.h"
 #include "lua_bindings.h"
+#include "network_interface.h"
+#include "wrappings.h"
 
 Interpreter interpreter;
 int main(int argc, char** argv) {
