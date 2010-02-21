@@ -42,7 +42,7 @@ bool Polygon::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition 
   // intersection point is really between pa and pb.
   // t == 0 would mean: The intersection point is pa, t == 1 would mean the
   // intersection point is pb.
-  double t = (double)(q.getY() - pa.getY()) / (double)dy;
+  double t = static_cast<double>(q.getY() - pa.getY()) / static_cast<double>(dy);
   if(t < 0.0 || t > 1.0)
     return false;
 

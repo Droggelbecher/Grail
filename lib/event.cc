@@ -6,7 +6,7 @@ namespace grail {
 
 void freeUserEventData(SDL_Event& evt) {
   if(evt.type == SDL_USEREVENT) {
-    delete (Event*)(evt.user.data1);
+    delete static_cast<Event*>(evt.user.data1);
     evt.user.data1 = 0;
   }
 }

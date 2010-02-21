@@ -25,7 +25,7 @@ void MainLoop::run() {
 
   while(!exit_) {
     frameStart = SDL_GetTicks();
-    frameEnd = frameStart + (uint32_t)(1000.0 / targetFPS);
+    frameEnd = frameStart + static_cast<uint32_t>(1000.0 / targetFPS);
 
     // Do something
     controller.eachFrame(frameDuration);
@@ -37,7 +37,7 @@ void MainLoop::run() {
       handleEvent(sdlEvent, frameDuration);
       freeUserEventData(sdlEvent);
     }
-    SDL_Delay(max(0, (int32_t)frameEnd - (int32_t)SDL_GetTicks()));
+    SDL_Delay(max(0, static_cast<int32_t>(frameEnd - static_cast<int32_t>(SDL_GetTicks()))));
 
     frameDuration = SDL_GetTicks() - frameStart;
 
@@ -45,7 +45,7 @@ void MainLoop::run() {
     statCycles++;
     if(statDuration >= 5000) {
       cerr << "FPS (avg over 5s): "
-        << 1000.0 * (double)statCycles / (double)statDuration << endl;
+        << 1000.0 * static_cast<double>(statCycles) / static_cast<double>(statDuration) << endl;
       statDuration = 0;
       statCycles = 0;
     }
