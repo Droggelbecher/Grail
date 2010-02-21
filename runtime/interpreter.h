@@ -4,11 +4,10 @@
 
 #include <string>
 #include <lua.hpp>
+#include <luabind/luabind.hpp>
 
 class Interpreter {
     static int l_panic(lua_State* L);
-    static const std::string internalTableName;
-
     static int l_doresource(lua_State* L);
 
     void pushInternalTable();
@@ -24,12 +23,8 @@ class Interpreter {
     void runLuaFromResource(std::string path);
     void loadDirectory(std::string dir);
     void loadPrelude(std::string dir);
-
-    void pushWrapperBase(std::string className);
-    
-    void registerFunction(std::string name, lua_CFunction fn);
-    void registerBase(std::string baseName);
-    void registerMethod(std::string baseName, std::string name, lua_CFunction fn);
+    std::string toLuaString(luabind::object obj, std::string indent="");
+    std::string toLuaString(std::string s);
 };
 
 extern Interpreter interpreter;

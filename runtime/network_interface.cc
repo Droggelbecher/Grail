@@ -1,135 +1,163 @@
 
+#include <algorithm>
+#include <cstring>
 #include <string>
+
 #include <lua.hpp>
 
-#include "string.h" // memset
-#include "network_interface.h"
-#include "lib/utils.h"
 #include "lib/debug.h"
+#include "lib/utils.h"
+
 #include "interpreter.h"
 #include "lua_exception.h"
-
+#include "network_interface.h"
 using namespace grail;
 
-NetworkInterface::NetworkInterface(uint32_t port) : port(port), listenSocket(-1) {
-  #ifdef WIN32
-  WSAData wsaData;
-  int r = WSAStartup(MAKEWORD(1, 1), &wsaData);
-  if(r != 0) {
-    throw Exception("WSAStartup failed with code " + toString(r) + ".");
+using namespace boost::asio;
+using boost::asio::ip::tcp;
+using std::string;
+
+size_t NetworkInterface::Connection::isReadComplete(const boost::system::error_code& error, size_t bytes_transferred) {
+  chunkSize = bytes_transferred;
+
+  buffer[chunkSize] = '\0';
+  split = (uint8_t*)strchr((char*)buffer, '\n');
+  if(!split) {
+    split = buffer + chunkSize;
+    return bufferSize - chunkSize;
   }
-  #endif
-  FD_ZERO(&sockets);
+  return 0;
+}
+
+void NetworkInterface::Connection::handleRead(const boost::system::error_code& error, size_t bytes_transferred) {
+  executeChunk();
+}
+
+
+void NetworkInterface::Connection::handleWrite(const boost::system::error_code& error, size_t bytes_transferred) {
+  grail::cdbg << "Conn:handleWrite\n";
+  startRead();
+}
+
+bool returnTrue(char c) { return true; }
+
+void NetworkInterface::Connection::executeChunk() {
+  // Load buffer
+  lua_State *L = interpreter.L;
+  luaL_loadbuffer(L, (char*)(buffer), split - buffer, "Remote lua code");
+
+  // Delete executed part from buffer
+  int32_t sz = chunkSize - ((split + 1) - buffer);
+  if(sz > 0) {
+    memmove(buffer, split+1, sz);
+    chunkSize = sz;
+  }
+  else {
+    chunkSize = 0;
+  }
+  split = buffer;
+
+  // Execute lua code
+  //int stack_top = lua_gettop(L);
+  int error = lua_pcall(L, 0, 1, 0); //LUA_MULTRET);
+
+  // Was there a problem with the code?
+  cdbg << "Executed remote lua code with return_code " << error << "\n";
+
+  std::string answer = "{\n  [\"return_code\"] = " + toString(error) + ",\n";
+
+  if(error) {
+    std::string err(lua_tostring(L, -1));
+    answer += "  [\"error_message\"] = " + interpreter.toLuaString(err) + ",\n";
+    answer += "  [\"return_value\"] = nil,\n";
+  }
+  else {
+    answer += "  [\"error_message\"] = nil,\n";
+
+    // Fetch return value
+    luabind::object return_value(luabind::from_stack(L, -1));
+    lua_pop(L, 1);
+
+    // Send answer to client
+    std::string ret = interpreter.toLuaString(return_value, "  ");
+    answer += "  [\"return_value\"] = " + ret + ",\n";
+
+  }
+  answer += "}\n";
+
+  boost::asio::async_write(
+        _socket,
+        boost::asio::buffer(answer),
+        boost::bind(
+          &NetworkInterface::Connection::handleWrite,
+          shared_from_this(),
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred
+        )
+  );
+}
+
+
+NetworkInterface::Connection::Connection(boost::asio::io_service& ioService) :
+  bufferSize(64 * 1024),
+  _socket(ioService), chunkSize(0), buffer(new uint8_t[bufferSize]), split(buffer) {
+}
+
+NetworkInterface::Connection::~Connection() {
+  delete[] buffer;
+}
+
+void NetworkInterface::Connection::start() {
+  grail::cdbg << "Conn::start\n";
+  startRead();
+  grail::cdbg << "Conn::start done\n";
+}
+
+void NetworkInterface::Connection::startRead() {
+  boost::asio::async_read(
+        _socket,
+        boost::asio::buffer((void*)buffer, bufferSize),
+        boost::bind(
+          &NetworkInterface::Connection::isReadComplete,
+          shared_from_this(),
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred
+        ),
+        boost::bind(
+          &NetworkInterface::Connection::handleRead,
+          shared_from_this(),
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred
+        )
+  );
+}
+
+NetworkInterface::NetworkInterface(io_service& io_service)
+    : acceptor(io_service, tcp::endpoint(tcp::v4(), 12345)) {
+  startAccept();
 }
 
 NetworkInterface::~NetworkInterface() {
-  #ifdef WIN32
-  WSACleanup();
-  #endif
 }
 
-
-void NetworkInterface::bindLocal() {
-  using std::string;
-
-  int r;
-  sockaddr_in addr;
-
-  memset(&addr, 0, sizeof(sockaddr_in));
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons(port);
-  addr.sin_addr.s_addr = INADDR_ANY; //INADDR_LOOPBACK;
-
-  listenSocket = socket(AF_INET, SOCK_STREAM, 0);
-  if(listenSocket == -1) {
-    throw Exception("Couldnt bind to local socket port " + toString(port));
-  }
-
-  int yes = 1;
-  r = setsockopt(listenSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-  if(r == -1) {
-    throw Exception("setsockopt() failed.");
-  }
-
-  r = bind(listenSocket, (sockaddr*)&addr, sizeof(sockaddr_in));
-  if(r == -1) {
-    close(listenSocket);
-    throw Exception("bind() failed.");
-  }
+void NetworkInterface::startAccept() {
+  cdbg << "NI::startAccept\n";
+  Connection::Ptr connection(new Connection(acceptor.io_service()));
+  cdbg << "connection created\n";
+  acceptor.async_accept(
+      connection->socket(),
+      boost::bind(&NetworkInterface::handleAccept, this, connection,
+        boost::asio::placeholders::error)
+  );
+  cdbg << "NI::startAccept done\n";
 }
 
-void NetworkInterface::listen() {
-  int r = ::listen(listenSocket, 10);
-  if(r == -1) {
-    throw Exception("I won't listen().");
-  }
-  FD_SET(listenSocket, &sockets);
-  maxSocket = listenSocket;
-}
-
-void NetworkInterface::select() {
-  uint8_t buffer[1024];
-  fd_set tmp = sockets;
-  timeval timeout;
-
-  timeout.tv_sec = 0;
-  timeout.tv_usec = 0;
-
-  int r = ::select(maxSocket + 1, &tmp, 0, 0, &timeout);
-  if(r == -1) {
-    throw Exception("select() failed.");
-  }
-
-  for(int i=0; i<=maxSocket; i++) {
-    if(FD_ISSET(i, &tmp)) {
-      if(i == listenSocket) { // New connection on listen socket
-        struct sockaddr_in client_address;
-        socklen_t client_address_length;
-        int new_socket = accept(listenSocket, reinterpret_cast<sockaddr *>(&client_address), &client_address_length);
-
-        if(new_socket != -1) {
-          FD_SET(new_socket, &sockets);
-          if(new_socket > maxSocket) {
-            maxSocket = new_socket;
-          }
-        }
-      } // if listenSocket
-      else { // New data from a client
-        int n = recv(i, buffer, sizeof(buffer)-1, 0);
-        if(n == 0) {
-          // connection closed
-          close(i);
-          FD_CLR(i, &sockets);
-        }
-        else if(n < 0) {
-          close(i);
-          FD_CLR(i, &sockets);
-          throw Exception("recv() failed.");
-        }
-        else { // n > 0
-          buffer[n] = 0;
-          const char* pos = strchr((const char*)buffer, '\n');
-          size_t oldsize = chunk.size();
-          chunk += (char*)buffer;
-          if(pos) {
-            executeChunk(oldsize + (pos - (char*)buffer));
-          }
-        }
-      } // else
-    } // if FD_ISSET
-  } // for
-
-}
-
-void NetworkInterface::executeChunk(size_t n) {
-  cdbg << "Got data chunk: " << chunk.substr(0, n) << "\n";
-  lua_State *L = interpreter.L;
-  luaL_loadbuffer(L, chunk.c_str(), chunk.size(), "Remote lua code");
-  int error = lua_pcall(L, 0, LUA_MULTRET, 0);
-  chunk = chunk.substr(n+1);
-  cdbg << "Executed with code " << error << "\n";
-  if(error) {
-    throw LuaException(L);
+void NetworkInterface::handleAccept(Connection::Ptr connection, const boost::system::error_code& error) {
+  if(!error) {
+    cdbg << "NI::handleAccept\n";
+    connection->start();
+    startAccept();
+    cdbg << "NI::handleAccept done\n";
   }
 }
 

@@ -9,6 +9,8 @@
 #include "lib/event.h"
 #include "lib/debug.h"
 #include "lib/sdlutils.h"
+#include "lib/debug.h"
+#include "lib/vector2d.h"
 
 namespace luabind {
   template <>
@@ -49,6 +51,39 @@ namespace luabind {
       o.push(L);
     }
   };
+
+  template <>
+  struct default_converter<grail::VirtualPosition> : native_converter_base<grail::VirtualPosition> {
+    static int compute_score(lua_State* L, int index) {
+      return (lua_type(L, index) == LUA_TTABLE) /*|| (lua_type(L, index) == LUA_TUSERDATA)*/ ? 0 : -1;
+    }
+
+    grail::VirtualPosition from(lua_State* L, int index) {
+      grail::VirtualPosition r;
+      object o(from_stack(L, index));
+
+      //if(lua_type(L, index) == LUA_TTABLE) {
+        iterator i(o);
+        r.setX(object_cast<grail::VirtualPosition::X>(*i));
+        ++i;
+        r.setY(object_cast<grail::VirtualPosition::Y>(*i));
+      //}
+      /*else if(lua_type(L, index) == LUA_TUSERDATA) {
+        r = reinterpret_cast<grail::VirtualPosition>(touserdata<grail::VirtualPosition>(o));
+        grail::cdbg << "x=" << r.getX() << " y=" << r.getY() << "\n";
+      }*/
+
+      return r;
+    }
+
+    void to(lua_State* L, grail::VirtualPosition p) {
+      object o = newtable(L);
+      o[1] = p.getX();
+      o[2] = p.getY();
+      o.push(L);
+    }
+  };
+
 }
 
 #endif // LUA_CONVERTER_H

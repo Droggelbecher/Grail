@@ -1,4 +1,5 @@
 
+#include <boost/regex.hpp>
 #include <iostream>
 
 #include <lua.hpp>
@@ -16,8 +17,6 @@ using std::string;
 using std::cerr;
 using std::endl;
 using namespace grail;
-
-const std::string Interpreter::internalTableName = "_GRAIL";
 
 void Interpreter::getOrCreateAsEmptyTable(std::string fieldName) {
   lua_getfield(L, -1, fieldName.c_str());
@@ -82,44 +81,62 @@ void Interpreter::loadDirectory(string dir) {
 void Interpreter::loadPrelude(string dir) {
   runLuaFromResource(dir + "/prelude.lua");
 }
+    
+std::string Interpreter::toLuaString(luabind::object obj, std::string indent) {
+  std::string r;
 
-void Interpreter::pushInternalTable() {
-  lua_getglobal(L, internalTableName.c_str());
-  if(lua_isnil(L, -1)) {
-    lua_pop(L, 1);
-    lua_newtable(L);
-    lua_pushvalue(L, -1);
-    lua_setglobal(L, internalTableName.c_str());
+  switch(luabind::type(obj)) {
+    case LUA_TTABLE:
+      r = "{\n";
+      for(luabind::iterator iter(obj), end; iter != end; ++iter) {
+        r += indent + "  [" + toLuaString(iter.key()) + "] = " + toLuaString(*iter, indent + "  ") + ",\n";
+      }
+      r += indent + "}";
+      break;
+
+    case LUA_TNIL:
+      r = "nil";
+      break;
+
+    case LUA_TBOOLEAN:
+      if(obj) { r = "true"; }
+      else { r = "false"; }
+      break;
+
+    case LUA_TNUMBER:
+      r = toString(luabind::object_cast<double>(obj));
+      break;
+
+    case LUA_TSTRING:
+      r = toLuaString(luabind::object_cast<std::string>(obj));
+      break;
+
+    default:
+      r = "__something__";
+      //throw Exception("Couldn't represent lua thingy of type " + toString(luabind::type(obj)) + ".");
+      break;
   }
+  return r;
+} // toLuaString
+
+std::string Interpreter::toLuaString(std::string s) {
+  size_t p = static_cast<size_t>(-1);
+
+  // " -> \"
+  const boost::regex quote("(^|[^\\\\])(\\\\\\\\)*(\")");
+  const std::string quote_replacement("\\1\\2\\\\\\3");
+  s = boost::regex_replace(s, quote, quote_replacement, boost::match_default | boost::format_sed);
+
+  const boost::regex newline("\\n");
+  const std::string newline_replacement("\\\\n");
+  s = boost::regex_replace(s, newline, newline_replacement, boost::match_default | boost::format_sed);
+
+  // \ -> \\  . 
+  while((p = s.find('\'', p+1)) != std::string::npos) {
+    s = s.substr(0, p) + s.substr(p, s.size());
+  }
+  return "\"" + s + "\"";
 }
 
-void Interpreter::pushWrapperBase(std::string className) {
-  pushInternalTable();
-  getOrCreateAsEmptyTable("wrapperBases");
-  getOrCreateAsEmptyTable(className);
-  makeBase();
 
-  lua_remove(L, -3); // internalTable
-  lua_remove(L, -2); // wrapperBases
-}
-
-void Interpreter::registerFunction(std::string name, lua_CFunction fn) {
-  //lua_getglobal(L, internalTableName.c_str());
-  pushInternalTable();
-  lua_pushcfunction(L, fn);
-  lua_setfield(L, -2, name.c_str());
-  lua_pop(L, 1);
-}
-
-void Interpreter::registerBase(string baseName) {
-  pushWrapperBase(baseName);
-  lua_pop(L, 1);
-}
-
-void Interpreter::registerMethod(string baseName, string name, lua_CFunction fn) {
-  pushWrapperBase(baseName);
-  lua_pushcfunction(L, fn);
-  lua_setfield(L, -2, name.c_str());
-  lua_pop(L, 1);
-}
 

@@ -17,7 +17,6 @@
 #include "lib/viewport.h"
 #include "lua_bindings.h"
 #include "network_interface.h"
-#include "wrappings.h"
 
 Interpreter interpreter;
 int main(int argc, char** argv) {

@@ -16,14 +16,22 @@
 class GameWrapper : public grail::Game {
   private:
     luabind::object initChapterCallback;
-    NetworkInterface network;
+    NetworkInterface *server;
+    boost::asio::io_service ioService;
 
-    GameWrapper() : grail::Game(), network(12345) {
-      network.bindLocal();
-      network.listen();
+    GameWrapper() : grail::Game() /*, network(12345)*/ {
+      //network.bindLocal();
+      //network.listen();
+      server = new NetworkInterface(ioService);
+      //ioService.run_one();
     }
 
+
   public:
+    virtual ~GameWrapper() {
+      delete server;
+    }
+
     static GameWrapper& getInstance() {
       using namespace grail;
       using namespace std;
@@ -44,7 +52,8 @@ class GameWrapper : public grail::Game {
     }
 
     void eachFrame(uint32_t ticks) {
-      network.select();
+      ioService.poll_one();
+      //network.select();
       Game::eachFrame(ticks);
     }
 
