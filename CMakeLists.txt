@@ -13,6 +13,8 @@ find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
 find_package(SDL_image REQUIRED)
 find_package(SDL_ttf REQUIRED)
+set(SDLGFX_LIBRARY "-lSDL_gfx")
+
 find_package(PNG REQUIRED)
 find_package(Luabind REQUIRED)
 find_package(Boost REQUIRED)

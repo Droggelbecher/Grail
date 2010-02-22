@@ -12,6 +12,7 @@
 #include "animation.h"
 #include "event.h"
 #include "actor.h"
+#include "ground.h"
 
 namespace grail {
 
@@ -26,19 +27,24 @@ class Scene {
     }; // Parallax
 
     Animation::Ptr background;
+    VirtualSize size;
     std::list<Parallax*> backgrounds, foregrounds;
     std::list<Actor::Ptr> actors;
     bool _actorsMoved;
-
+    Ground ground;
+    bool _drawWalls;
 
   public:
     typedef boost::shared_ptr<Scene> Ptr;
 
     static const std::string className;
 
-    Scene();
+    //Scene();
+    Scene(VirtualSize sz);
     Scene(Animation::Ptr);
     Scene(const std::string& backgroundPath);
+
+    Ground& getGround() { return ground; }
 
     virtual ~Scene();
 
@@ -55,6 +61,7 @@ class Scene {
     }
 
     void actorsMoved() { _actorsMoved = true; }
+    void enableDrawWalls(bool t=true) { _drawWalls = t; }
 
     void eachFrame(uint32_t ticks);
     void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;

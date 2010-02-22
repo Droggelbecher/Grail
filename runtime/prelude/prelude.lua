@@ -5,6 +5,5 @@ doresource("/prelude/packages.lua")
 
 GAME = Game.getInstance()
 
---VP = VirtualPosition
-function VP(x, y) return { x, y } end
+VP = VirtualPosition
 

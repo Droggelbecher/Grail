@@ -3,7 +3,6 @@
 #define MAINLOOP_H
 
 #include <SDL/SDL.h>
-#include "game.h"
 
 namespace grail {
 

@@ -93,10 +93,7 @@ void Actor::eachFrame(uint32_t ticks) {
     animation->eachFrame(ticks);
   }
 
-  if(walkPath.empty()) {
-    setMode("default");
-  }
-  else {
+  if(!walkPath.empty()) {
     setMode("walk");
     VirtualPosition target = walkPath.front();
     VirtualPosition diff = target - position;
@@ -121,6 +118,9 @@ void Actor::eachFrame(uint32_t ticks) {
 
     if(position == target) {
       walkPath.pop_front();
+      if(walkPath.empty()) {
+        setMode("default");
+      }
     }
   } // if walkPath not empty
 }

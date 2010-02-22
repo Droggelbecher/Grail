@@ -13,9 +13,14 @@ using std::pop_heap;
 
 namespace grail {
 
-const std::string Ground::className = "Ground";
-
 Ground::Ground() {
+}
+
+Ground::~Ground() {
+  list<Waypoint*>::iterator iter;
+  for(iter=waypoints.begin(); iter!=waypoints.end(); ++iter) {
+    delete *iter;
+  }
 }
 
 void Ground::addWall(VirtualPosition a, VirtualPosition b) {
@@ -32,14 +37,14 @@ void Ground::addWalls(const Polygon& polygon) {
 
 Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
   Waypoint *wp = new Waypoint(p);
-  addWaypoint(*wp);
+  waypoints.push_back(wp);
   return *wp;
 }
 
-Ground::Waypoint& Ground::addWaypoint(Waypoint& wp) {
+/*Ground::Waypoint& Ground::addWaypoint(Waypoint& wp) {
   waypoints.push_back(&wp);
   return wp;
-}
+}*/
 
 bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {
   Line line = Line(source, target);

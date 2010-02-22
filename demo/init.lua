@@ -6,7 +6,7 @@ function initChapter(n)
   print("This is initChapter("..n..")")
 
   if n == 0 then
-    local s = Scene(Image("/media/$res/scene1/background.png"))
+    local s = Scene(VP(8000, 3000))
     GAME:registerScene(s, "scene1")
 
     s:addBackground(Image("/media/$res/scene1/static_background.png"), VP(0, 0), 0.0, 1.0)

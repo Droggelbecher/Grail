@@ -15,6 +15,7 @@
 #include "scene.h"
 #include "user_interface.h"
 #include "actor.h"
+#include "mainloop.h"
 
 namespace grail {
 
@@ -28,6 +29,7 @@ class Game {
     UserInterface::Ptr userInterface;
     Actor::Ptr mainCharacter;
     std::map<std::string, Scene::Ptr> scenes;
+    MainLoop loop;
 
     Game();
 
@@ -59,6 +61,8 @@ class Game {
     virtual void eachFrame(uint32_t ticks);
     void renderEverything(uint32_t ticks);
     void handleEvent(const SDL_Event &event, uint32_t ticks);
+
+    void quit();
 };
 
 } // namespace grail

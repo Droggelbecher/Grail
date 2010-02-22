@@ -12,6 +12,9 @@ class Line {
     Line(VirtualPosition a, VirtualPosition b) : a(a), b(b) { }
 
     bool intersects(const Line& other) const;
+
+    VirtualPosition getA() const { return a; }
+    VirtualPosition getB() const { return b; }
 };
 
 } // namespace grail

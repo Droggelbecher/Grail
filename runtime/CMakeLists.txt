@@ -12,7 +12,7 @@ add_executable(grail_runtime
 
 set(LIBS
   grail
-  ${SDLTTF_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY}
+  ${SDLGFX_LIBRARY} ${SDLTTF_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY}
   ${PNG_LIBRARIES}
   ${LUA_LIBRARIES} ${LUABIND_LIBRARY}
   ${BOOST_LIBRARY} -lboost_filesystem-mt -lboost_system-mt -lboost_regex-mt

@@ -18,8 +18,6 @@ namespace grail {
  */
 class Ground {
   public:
-    static const std::string className;
-
     struct Waypoint {
       public:
         typedef list<Waypoint*>::iterator NeighbourIterator;
@@ -32,12 +30,11 @@ class Ground {
         Waypoint(const Waypoint&) { }
         Waypoint& operator=(const Waypoint&) { return *this; }
 
+        Waypoint(VirtualPosition position) : position(position), costSum(0) { }
+
+
       public:
         Waypoint* cheapestParent;
-
-        /**
-         */
-        Waypoint(VirtualPosition position) : position(position), costSum(0) { }
 
         /**
          */
@@ -79,6 +76,7 @@ class Ground {
         NeighbourIterator beginNeighbours() { return neighbours.begin(); }
         NeighbourIterator endNeighbours() { return neighbours.end(); }
 
+        friend class Ground;
     };
 
   private:
@@ -87,6 +85,7 @@ class Ground {
 
   public:
     Ground();
+    ~Ground();
 
     /**
      * Add a wall to this ground reaching from VirtualPosition a to VirtualPosition b.
@@ -102,6 +101,8 @@ class Ground {
      */
     void addWalls(const Polygon& polygon);
 
+    const list<Line>& getWalls() const { return walls; }
+
     /**
      * Add a new waypoint. Note that this will be pretty useless if you
      * dont connect it to at least one other waypoint.
@@ -112,7 +113,7 @@ class Ground {
     Waypoint& addWaypoint(VirtualPosition p);
 
     /// ditto.
-    Waypoint& addWaypoint(Waypoint& wp);
+    ///Waypoint& addWaypoint(Waypoint& wp);
 
     /**
      * Remove a waypoint.

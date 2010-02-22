@@ -35,7 +35,6 @@ void NetworkInterface::Connection::handleRead(const boost::system::error_code& e
 
 
 void NetworkInterface::Connection::handleWrite(const boost::system::error_code& error, size_t bytes_transferred) {
-  grail::cdbg << "Conn:handleWrite\n";
   startRead();
 }
 
@@ -108,9 +107,7 @@ NetworkInterface::Connection::~Connection() {
 }
 
 void NetworkInterface::Connection::start() {
-  grail::cdbg << "Conn::start\n";
   startRead();
-  grail::cdbg << "Conn::start done\n";
 }
 
 void NetworkInterface::Connection::startRead() {
@@ -141,23 +138,18 @@ NetworkInterface::~NetworkInterface() {
 }
 
 void NetworkInterface::startAccept() {
-  cdbg << "NI::startAccept\n";
   Connection::Ptr connection(new Connection(acceptor.io_service()));
-  cdbg << "connection created\n";
   acceptor.async_accept(
       connection->socket(),
       boost::bind(&NetworkInterface::handleAccept, this, connection,
         boost::asio::placeholders::error)
   );
-  cdbg << "NI::startAccept done\n";
 }
 
 void NetworkInterface::handleAccept(Connection::Ptr connection, const boost::system::error_code& error) {
   if(!error) {
-    cdbg << "NI::handleAccept\n";
     connection->start();
     startAccept();
-    cdbg << "NI::handleAccept done\n";
   }
 }
 

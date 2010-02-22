@@ -3,7 +3,6 @@
 #include <SDL/SDL.h>
 #include "game.h"
 #include "utils.h"
-#include "mainloop.h"
 #include "viewport.h"
 #include "resource_manager.h"
 #include "user_interface.h"
@@ -40,7 +39,6 @@ Game& Game::getInstance() {
 
 void Game::runChapter(size_t chapter) {
   initChapter(chapter);
-  MainLoop loop;
   loop.run();
 }
 
@@ -115,6 +113,10 @@ void Game::renderEverything(uint32_t ticks) {
 }
 
 void Game::handleEvent(const SDL_Event &event, uint32_t ticks) {
+}
+
+void Game::quit() {
+  loop.exit();
 }
 
 } // namespace grail

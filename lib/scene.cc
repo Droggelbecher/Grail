@@ -6,6 +6,8 @@ using std::list;
 using std::cerr;
 using std::endl;
 
+#include <SDL/SDL_gfxPrimitives.h>
+
 #include "scene.h"
 #include "game.h"
 #include "viewport.h"
@@ -15,17 +17,20 @@ using std::endl;
 
 namespace grail {
 
-const std::string Scene::className = "Scene";
+//Scene::Scene() : _actorsMoved(false) {
+//}
 
-Scene::Scene() : _actorsMoved(false) {
+Scene::Scene(Animation::Ptr background) :
+  background(background), _actorsMoved(false), _drawWalls(false) {
 }
 
-Scene::Scene(Animation::Ptr background) : _actorsMoved(false) {
-  this->background = background;
-}
-
-Scene::Scene(const std::string& backgroundPath) : _actorsMoved(false) {
+Scene::Scene(const std::string& backgroundPath) :
+  _actorsMoved(false), _drawWalls(false) {
   this->background = Animation::Ptr(new Image(backgroundPath));
+}
+
+Scene::Scene(VirtualSize size) :
+  size(size), _actorsMoved(false), _drawWalls(false) {
 }
 
 Scene::~Scene() {
@@ -39,8 +44,8 @@ Scene::~Scene() {
 }
 
 VirtualSize Scene::getSize() const {
-  if(background) { return background->getSize(); }
-  return VirtualSize(0, 0);
+  if(size == VirtualSize() && background) { return background->getSize(); }
+  return size;
 }
 
 void Scene::setBackground(Animation::Ptr background) {
@@ -97,6 +102,15 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
           p.getY() * (*piter)->scrollFactorY
         ) + (*piter)->offset
     );
+  }
+
+  if(_drawWalls) {
+    list<Line>::const_iterator iter;
+    for(iter = ground.getWalls().begin(); iter != ground.getWalls().end(); iter++) {
+      PhysicalPosition a = conv<VirtualPosition, PhysicalPosition>(iter->getA() + p);
+      PhysicalPosition b = conv<VirtualPosition, PhysicalPosition>(iter->getB() + p);
+      aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xffffffff);
+    }
   }
 
 } // renderAt

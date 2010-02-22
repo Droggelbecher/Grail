@@ -14,6 +14,7 @@
 #include "lib/button.h"
 #include "lib/font.h"
 #include "lib/game.h"
+#include "lib/ground.h"
 #include "lib/image.h"
 #include "lib/resource_manager.h"
 #include "lib/scene.h"
@@ -65,6 +66,7 @@ extern "C" int init(lua_State* L) {
       .def("setMainCharacter", &GameWrapper::setMainCharacter)
       .def("getMainCharacter", &GameWrapper::getMainCharacter)
       .def("runChapter", &GameWrapper::runChapter)
+      .def("quit", &GameWrapper::quit)
       ,
 
     class_<Actor, Actor::Ptr>("Actor")
@@ -119,18 +121,35 @@ extern "C" int init(lua_State* L) {
         .def("setText", &Text::setText)
         ,
 
+    class_<Ground>("Ground")
+      .scope[
+        class_<Ground::Waypoint>("Waypoint")
+          .def("getPosition", &Ground::Waypoint::getPosition)
+          .def("link", &Ground::Waypoint::link)
+          //...
+        ]
+
+      .def("addWall", &Ground::addWall)
+      .def("addWalls", &Ground::addWalls)
+      //.def("getWalls", &Ground::getWalls)
+      .def("addWaypoint", &Ground::addWaypoint)
+      .def("directReachable", &Ground::directReachable)
+      ,
+
     class_<ResourceManager>("ResourceManager")
       ,
 
     class_<Scene, Scene::Ptr>("Scene")
-      .def(constructor<>())
       .def(constructor<Animation::Ptr>())
       .def(constructor<const std::string&>())
+      .def(constructor<VirtualSize>())
       .def("setBackground", &Scene::setBackground)
       .def("addBackground", &Scene::addBackground)
       .def("addForeground", &Scene::addForeground)
       .def("addActor", &Scene::addActor)
       .def("actorsMoved", &Scene::actorsMoved)
+      .def("getGround", &Scene::getGround)
+      .def("enableDrawWalls", &Scene::enableDrawWalls)
       ,
 
     class_<Event>("Event")
