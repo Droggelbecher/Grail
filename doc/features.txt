@@ -1,0 +1,37 @@
+
+.. vim: set ft=rst tw=0:
+
+====================================== =================== ============== ====================
+Feature                                Indiana             Grail planned  Grail implemented %
+====================================== =================== ============== ====================
+Sounds                                  Yes                 Yes               0
+Music                                   Yes                 Yes               0
+Speech output                           Yes                 Yes               0
+
+Parallax backgrounds                    Yes                 Yes             100
+Sprite animations                       Yes                 Yes             100
+Loop animations                         Yes                 Yes               0
+Text animations + Action text           Yes                 Yes             100
+Videos (SDL MPEG)                       No                  Maybe             0
+Autoscaling of character                Yes                 Yes               0
+
+Walkable area                           Yes                 Yes              40
+Regions                                 Yes                 Yes               0
+
+Change mouse cursor                     Yes                 Yes               0
+Actions                                 Yes                 Yes              50
+Dialogs & Menus                         Yes                 Yes               0
+Speech text / bubbles                   Yes                 Yes               0
+Inventory box                           Yes                 Yes               0
+Button-based interface                  Yes                 Yes              80
+Mouse handle based interface            Yes                 Yes               0
+Text input field                        Yes                 Maybe             0
+Boxes (each corner a different image)   Yes                 Maybe             0
+
+Network interface                       No                  Yes              50
+Savegames / Serialization               Yes                 Yes               0
+File support                            Yes                 Yes             100
+(Zip-) Archive support                  Yes                 Yes               0
+Lua scripting                           No                  Yes              80
+====================================== =================== ============== ====================
+
