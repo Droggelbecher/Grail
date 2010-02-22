@@ -1,37 +1,50 @@
 
 .. vim: set ft=rst tw=0:
 
-====================================== =================== ============== ====================
-Feature                                Indiana             Grail planned  Grail implemented %
-====================================== =================== ============== ====================
-Sounds                                  Yes                 Yes               0
-Music                                   Yes                 Yes               0
-Speech output                           Yes                 Yes               0
+====================================== =================== ====================
+Feature / Category                      Indiana             Grail implemented %
+====================================== =================== ====================
+Audio:
+Sounds                                  Yes                 0
+Music                                   Yes                 0
+Speech output                           Yes                 0
 
-Parallax backgrounds                    Yes                 Yes             100
-Sprite animations                       Yes                 Yes             100
-Loop animations                         Yes                 Yes               0
-Text animations + Action text           Yes                 Yes             100
-Videos (SDL MPEG)                       No                  Maybe             0
-Autoscaling of character                Yes                 Yes               0
+Graphics:
+Parallax backgrounds                    Yes                 Yes
+Image Support: PNG,JPEG                 ?                   ?
+Sprite animations                       Yes                 Yes
+Loop animations                         Yes                 0
+Text animations + Action text           Yes                 Yes
+Videos (SDL MPEG)                       No                  Maybe
+Autoscaling of character                Yes                 0
+Scene transition animations             ?                   Maybe
 
-Walkable area                           Yes                 Yes              40
-Regions                                 Yes                 Yes               0
+Areas:
+Walkable area                           Yes                 40
+Regions                                 Yes                 0
 
-Change mouse cursor                     Yes                 Yes               0
-Actions                                 Yes                 Yes              50
-Dialogs & Menus                         Yes                 Yes               0
-Speech text / bubbles                   Yes                 Yes               0
-Inventory box                           Yes                 Yes               0
-Button-based interface                  Yes                 Yes              80
-Mouse handle based interface            Yes                 Yes               0
-Text input field                        Yes                 Maybe             0
-Boxes (each corner a different image)   Yes                 Maybe             0
+Input/GUI:
+Change mouse cursor                     Yes                 0
+Actions                                 Yes                 50
+Dialogs & Menus                         Yes                 0
+Speech text / bubbles                   Yes                 0
+Inventory box                           Yes                 0
+Button-based interface                  Yes                 80
+Mouse handle based interface            Yes                 0
+Text input field                        Yes                 Maybe
+Boxes (each corner a different image)   Yes                 Maybe
 
-Network interface                       No                  Yes              50
-Savegames / Serialization               Yes                 Yes               0
-File support                            Yes                 Yes             100
-(Zip-) Archive support                  Yes                 Yes               0
-Lua scripting                           No                  Yes              80
-====================================== =================== ============== ====================
+Misc:
+Network interface                       No                  50
+Savegames / Serialization               Yes                 0
+File support                            Yes                 Yes
+(Zip-) Archive support                  Yes                 0
+Lua scripting                           No                  80
+
+Editor:
+Scene Editing                           ?                   0
+Resource Manager                        ?                   0
+Sprite Manager                          ?                   Maybe
+
+====================================== =================== ====================
 
