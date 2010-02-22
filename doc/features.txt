@@ -4,14 +4,13 @@
 ====================================== =================== ====================
 Feature / Category                     Indiana             Grail implemented %
 ====================================== =================== ====================
-
-Audio
+**Audio**
 -------------------------------------------------------------------------------
 Sounds                                  Yes                 0
 Music                                   Yes                 0
 Speech output                           Yes                 0
 
-Graphics
+**Graphics**
 -------------------------------------------------------------------------------
 Parallax backgrounds                    Yes                 Yes
 Image Support: PNG,JPEG                 Yes                 Yes
@@ -22,12 +21,12 @@ Videos (SDL MPEG)                       No                  Maybe
 Autoscaling of character                Yes                 0
 Scene transition animations             No                  Maybe
 
-Areas
+**Areas**
 -------------------------------------------------------------------------------
 Walkable area                           Yes                 40
 Regions                                 Yes                 0
 
-User interface elements
+**User interface elements**
 -------------------------------------------------------------------------------
 Change mouse cursor                     Yes                 0
 Actions                                 Yes                 50
@@ -39,7 +38,7 @@ Mouse handle based interface            Yes                 0
 Text input field                        Yes                 Maybe
 Boxes (each corner a different image)   Yes                 Maybe
 
-Misc
+**Misc**
 -------------------------------------------------------------------------------
 Network interface                       No                  50
 Savegames / Serialization               Yes                 0
@@ -47,11 +46,10 @@ File support                            Yes                 Yes
 (Zip-) Archive support                  Yes                 0
 Lua scripting                           No                  80
 
-Editor
+**Editor**
 -------------------------------------------------------------------------------
 Scene Editing                           Yes (Atlantis)      0
 Resource Manager                        No                  0
 Sprite Manager                          No                  Maybe
-
 ====================================== =================== ====================
 
