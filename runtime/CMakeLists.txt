@@ -9,13 +9,13 @@ add_executable(grail_runtime
   main.cc
   network_interface.cc
 )
-
+MESSAGE("ee" ${BOOST_LIBRARY})
 set(LIBS
   grail
   ${SDLGFX_LIBRARY} ${SDLTTF_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY}
   ${PNG_LIBRARIES}
   ${LUA_LIBRARIES} ${LUABIND_LIBRARY}
-  ${BOOST_LIBRARY} -lboost_filesystem-mt -lboost_system-mt -lboost_regex-mt
+  ${Boost_LIBRARIES}
   )
 
 target_link_libraries(grail_runtime ${LIBS})

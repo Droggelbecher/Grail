@@ -17,7 +17,7 @@ set(SDLGFX_LIBRARY "-lSDL_gfx")
 
 find_package(PNG REQUIRED)
 find_package(Luabind REQUIRED)
-find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 
 if(debug)
   set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
