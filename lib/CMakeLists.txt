@@ -37,7 +37,7 @@ include_directories(${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_
 add_executable(run_unittests  run_unittests.cc vector2d_impl.cc)
 set(LIBS
   grail
-  ${BOOST_LIBRARY} -lboost_filesystem-mt -lboost_system-mt -lboost_regex-mt
+  ${Boost_LIBRARIES}
   ${SDLGFX_LIBRARY} ${SDLTTF_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY}
   ${PNG_LIBRARIES}
   ${LUA_LIBRARIES}
