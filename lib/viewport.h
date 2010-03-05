@@ -29,8 +29,6 @@ class Viewport {
     Actor::Ptr cameraTarget;
 
   public:
-    static const std::string className;
-
     Viewport();
     Viewport(uint32_t w, uint32_t h, bool fullscreen = false);
     void setup(uint32_t w, uint32_t h, bool fullscreen = false);
