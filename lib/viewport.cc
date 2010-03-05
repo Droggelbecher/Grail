@@ -8,8 +8,6 @@
 
 namespace grail {
 
-const std::string Viewport::className = "Viewport";
-
 Viewport::Viewport() : screen(0),
   virtualSize(VirtualSize(4000, 3000)), cameraMode(CAMERA_CENTER),
   cameraLimit(LIMIT_SCENE), cameraPosition(VirtualPosition(0, 0)) {
