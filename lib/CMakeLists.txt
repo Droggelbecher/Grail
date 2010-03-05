@@ -4,6 +4,7 @@ set(GRAIL_FILES
   animation.cc
   action_text.cc
   area.cc
+  audio.cc
   blit_cached.cc
   debug.cc
   event.cc
@@ -38,7 +39,7 @@ add_executable(run_unittests  run_unittests.cc vector2d_impl.cc)
 set(LIBS
   grail
   ${Boost_LIBRARIES}
-  ${SDLGFX_LIBRARY} ${SDLTTF_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDL_LIBRARY}
+  ${SDLGFX_LIBRARY} ${SDLTTF_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLMIXER_LIBRARY} ${SDL_LIBRARY}
   ${PNG_LIBRARIES}
   ${LUA_LIBRARIES}
 )

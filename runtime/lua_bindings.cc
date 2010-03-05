@@ -10,6 +10,7 @@
 #include "lib/actor.h"
 #include "lib/action.h"
 #include "lib/animation.h"
+#include "lib/audio.h"
 #include "lib/box.h"
 #include "lib/button.h"
 #include "lib/font.h"
@@ -120,7 +121,10 @@ extern "C" int init(lua_State* L) {
         .def("getText", &Text::getText)
         .def("setText", &Text::setText)
         ,
-
+    class_<Audio>("Audio")
+        .def(constructor<>())
+        .def("playSound", &Audio::playSound)
+	,
     class_<Ground>("Ground")
       .scope[
         class_<Ground::Waypoint>("Waypoint")
