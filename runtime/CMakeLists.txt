@@ -1,6 +1,6 @@
 
 link_directories(${GRAIL_LIBDIR})
-include_directories(.. ${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${LUA_INCLUDE_DIR})
+include_directories(.. ${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDLGFX_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} ${LUA_INCLUDE_DIR})
 
 add_executable(grail_runtime
   ../lib/vector2d_impl.cc
