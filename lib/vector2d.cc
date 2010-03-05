@@ -1,5 +1,5 @@
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <cmath>
 #include <iostream>
 using namespace std;

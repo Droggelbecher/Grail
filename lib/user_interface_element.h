@@ -3,7 +3,7 @@
 #define USER_INTERFACE_ELEMENT_H
 
 #include <boost/shared_ptr.hpp>
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "vector2d.h"
 #include "event.h"
 

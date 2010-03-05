@@ -3,8 +3,8 @@
 #define TEXT_H
 
 #include <string>
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
 #include <boost/shared_ptr.hpp>
 #include "vector2d.h"
 #include "animation.h"

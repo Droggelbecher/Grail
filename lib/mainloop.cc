@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <algorithm>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "mainloop.h"
 #include "game.h"

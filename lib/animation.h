@@ -5,7 +5,7 @@
 #include <string>
 #include <cassert>
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <boost/shared_ptr.hpp>
 
 #include "vector2d.h"

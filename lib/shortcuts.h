@@ -3,7 +3,7 @@
 #define SHORTCUTS_H
 
 #include <string>
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "resource_manager.h"
 
 namespace grail {

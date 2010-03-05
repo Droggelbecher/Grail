@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <stdint.h>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace grail {
 

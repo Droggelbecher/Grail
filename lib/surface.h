@@ -8,8 +8,8 @@
 using std::cerr;
 using std::endl;
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <boost/shared_ptr.hpp>
 
 #include "vector2d.h"

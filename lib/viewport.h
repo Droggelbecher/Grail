@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "scene.h"
 #include "user_interface.h"

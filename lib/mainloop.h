@@ -2,7 +2,7 @@
 #ifndef MAINLOOP_H
 #define MAINLOOP_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace grail {
 

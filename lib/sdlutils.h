@@ -2,7 +2,7 @@
 #ifndef SDLUTILS_H
 #define SDLUTILS_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace grail {
   extern SDL_Color white;

@@ -1,6 +1,6 @@
 
 #include <iostream>
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "game.h"
 #include "utils.h"
 #include "viewport.h"

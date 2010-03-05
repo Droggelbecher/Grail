@@ -6,7 +6,7 @@ using std::list;
 using std::cerr;
 using std::endl;
 
-#include <SDL/SDL_gfxPrimitives.h>
+#include <SDL_gfxPrimitives.h>
 
 #include "scene.h"
 #include "game.h"

@@ -1,5 +1,5 @@
 
-#include <SDL/SDL_video.h>
+#include <SDL_video.h>
 
 #include "utils.h"
 #include "viewport.h"

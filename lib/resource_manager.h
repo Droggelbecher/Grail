@@ -7,7 +7,7 @@
 #include <cassert>
 #include <boost/filesystem.hpp>
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "classes.h"
 

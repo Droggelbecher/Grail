@@ -5,7 +5,7 @@
 #include "animation.h"
 #include "vector2d.h"
 #include "surface.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace grail {
 

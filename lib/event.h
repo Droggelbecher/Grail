@@ -2,7 +2,7 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "vector2d.h"
 #include "actor.h"

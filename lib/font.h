@@ -2,8 +2,8 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
 #include "game.h"
 #include "viewport.h"
 

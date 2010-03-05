@@ -2,7 +2,7 @@
 #ifndef LUA_CONVERTER_H
 #define LUA_CONVERTER_H
 
-#include <SDL/SDL_events.h>
+#include <SDL_events.h>
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 

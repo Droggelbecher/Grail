@@ -2,7 +2,7 @@
 #ifndef BLIT_CACHED_H
 #define BLIT_CACHED_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "vector2d.h"
 #include "surface.h"
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <list>
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <boost/shared_ptr.hpp>
 
 #include "classes.h"

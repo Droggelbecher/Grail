@@ -3,7 +3,7 @@
 
 #include <luabind/luabind.hpp>
 #include <luabind/operator.hpp>
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <lua.hpp>
 
 #include "lib/action_text.h"

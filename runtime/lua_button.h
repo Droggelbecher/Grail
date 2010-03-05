@@ -5,7 +5,7 @@
 #include "lib/button.h"
 #include "lib/animation.h"
 #include <luabind/luabind.hpp>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace grail {
 

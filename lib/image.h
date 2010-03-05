@@ -8,7 +8,7 @@
 using std::cerr;
 using std::endl;
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "surface.h"
 #include "vector2d.h"

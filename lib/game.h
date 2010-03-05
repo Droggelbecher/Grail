@@ -7,7 +7,7 @@
 #include <map>
 
 #include <boost/shared_ptr.hpp>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "classes.h"
 #include "event.h"

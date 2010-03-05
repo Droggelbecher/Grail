@@ -2,7 +2,7 @@
 #ifndef ACTION_TEXT_H
 #define ACTION_TEXT_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "user_interface_element.h"
 #include "vector2d.h"
 #include "text.h"

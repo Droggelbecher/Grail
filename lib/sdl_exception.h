@@ -2,7 +2,7 @@
 #ifndef SDL_EXCEPTION_H
 #define SDL_EXCEPTION_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <exception>
 
 namespace grail {
