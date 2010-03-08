@@ -20,6 +20,7 @@ class Actor : Area, Subject {
   + renderAt(SDL_Surface, uint32_t, VirtualPosition): void
 }
 Actor -> Animation[*]
+Actor <>- State[1]
 
 class ActionText : UserInterfaceElement {
   font: Font
@@ -51,12 +52,13 @@ Button -- Animation[0..*]
 class Game {
 }
 Game -> Scene[0..*]
-Game {}- MainLoop[1..*]
 Game <>- Viewport[1]
 Game <>- ResourceManager[1]
 Game {}- UserInterface
 
 class Ground {
+  --
+  + getPath(VirtualPosition start, VirtualPosition target): VirtualPosition[]
 }
 
 class Image: Animation {
@@ -77,10 +79,12 @@ class InventoryBox: UserInterfaceElement {
 
 class MainLoop {
   --
-  + handleEvent(SDL_Event, uint32_t): EventState
-  + eachFrame(uint32_t): void
-  + renderAt(SDL_Surface, uint32_t, VirtualPosition): void
+  + run(): void
+  + run(Task[] waitForTasks): void
+  + exit(): void
 }
+MainLoop -> Game[1]
+MainLoop -- Task[0..*]
 
 class Menu: UserInterfaceElement {
   --
@@ -98,7 +102,7 @@ class MenuModelEntry {
   action: method*
   --
 }
-MenuModelEntry -> MenuModel[0..*]
+MenuModelEntry {}- MenuModel[0..*]
 
 class MouseHandle : UserInterfaceElement {
   --
@@ -128,9 +132,10 @@ class Scene {
   + eachFrame(uint32_t): void
   + renderAt(SDL_Surface, uint32_t, VirtualPosition): void
 }
-Scene <>- Ground
+Scene <>- Ground[1]
 Scene[1..*] -- Actor[0..*]
 Scene -> Animation[1..*]
+Scene <>- State[1]
 
 class Sprite : Animation {
   --
@@ -144,6 +149,20 @@ class SpeechText: UserInterfaceElement {
 }
 SpeechText <>- Text
 
+class State {
+  variables: StateVariable[string]
+  --
+}
+State {}- StateVariable[0..*]
+
+class StateVariable {
+  name: string
+  type: enum(STRING, NUMBER, TABLE)
+  value: string / number / State*
+  --
+}
+StateVariable {}- State[0..1]
+
 <<Interface>>
 class Subject {
   --
@@ -152,6 +171,12 @@ class Subject {
 
 class Surface {
   --
+}
+
+<<Interface>>
+class Task {
+  --
+  isDone(): bool
 }
 
 class Text: Animation {
