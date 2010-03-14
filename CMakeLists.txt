@@ -1,3 +1,4 @@
+# vim: set noexpandtab:
 # -Ddebug=1 for debug build
 
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
@@ -21,9 +22,9 @@ find_package(Luabind REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 
 if(debug)
-  set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
-  set(CMAKE_CXX_FLAGS "-g -O0 -Wall -pipe")
-  add_definitions(-DDEBUG)
+	set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
+	set(CMAKE_CXX_FLAGS "-g -O0 -Wall -pipe")
+	add_definitions(-DDEBUG)
 endif(debug)
 
 set(GRAIL_LIBDIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")

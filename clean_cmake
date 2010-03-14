@@ -1,6 +1,7 @@
 #!/bin/sh
+# vim: set noexpandtab:
 
 rm -Rf CMakeFiles/ CMakeCache.txt Makefile cmake_install.cmake \
-  lib/CMakeFiles/ lib/CMakeCache.txt lib/Makefile lib/cmake_install.cmake \
-  runtime/CMakeFiles/ runtime/CMakeCache.txt runtime/Makefile runtime/cmake_install.cmake
+	lib/CMakeFiles/ lib/CMakeCache.txt lib/Makefile lib/cmake_install.cmake \
+	runtime/CMakeFiles/ runtime/CMakeCache.txt runtime/Makefile runtime/cmake_install.cmake
 
