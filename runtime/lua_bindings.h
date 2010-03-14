@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #ifndef LUA_BINDINGS_H
 #define LUA_BINDINGS_H
@@ -14,64 +15,63 @@
 #include "network_interface.h"
 
 class GameWrapper : public grail::Game {
-  private:
-    luabind::object initChapterCallback;
-    NetworkInterface *server;
-    boost::asio::io_service ioService;
-
-    GameWrapper() : grail::Game() /*, network(12345)*/ {
-      //network.bindLocal();
-      //network.listen();
-      server = new NetworkInterface(ioService);
-      //ioService.run_one();
-    }
-
-
-  public:
-    virtual ~GameWrapper() {
-      delete server;
-    }
-
-    static GameWrapper& getInstance() {
-      using namespace grail;
-      using namespace std;
-
-      if(!_instance) {
-        _instance = new GameWrapper();
-      }
-      // Just assume, _instance holds a GameWrapper, lets hope that stays
-      // true!
-      GameWrapper& r = *((GameWrapper*)_instance);
-      return r;
-    }
-
-    virtual void initChapter(size_t n) {
-      if(initChapterCallback) {
-        luabind::call_function<size_t>(initChapterCallback, n);
-      }
-    }
-
-    void eachFrame(uint32_t ticks) {
-      ioService.poll_one();
-      //network.select();
-      Game::eachFrame(ticks);
-    }
-
-    void setInitChapterCallback(luabind::object cb) {
-      initChapterCallback = cb;
-    }
+	private:
+		luabind::object initChapterCallback;
+		NetworkInterface *server;
+		boost::asio::io_service ioService;
+		
+		GameWrapper() : grail::Game() /*, network(12345)*/ {
+			//network.bindLocal();
+			//network.listen();
+			server = new NetworkInterface(ioService);
+			//ioService.run_one();
+		}
+		
+	public:
+		virtual ~GameWrapper() {
+			delete server;
+		}
+		
+		static GameWrapper& getInstance() {
+			using namespace grail;
+			using namespace std;
+			
+			if(!_instance) {
+				_instance = new GameWrapper();
+			}
+			// Just assume, _instance holds a GameWrapper, lets hope that stays
+			// true!
+			GameWrapper& r = *((GameWrapper*)_instance);
+			return r;
+		}
+		
+		virtual void initChapter(size_t n) {
+			if(initChapterCallback) {
+				luabind::call_function<size_t>(initChapterCallback, n);
+			}
+		}
+		
+		void eachFrame(uint32_t ticks) {
+			ioService.poll_one();
+			//network.select();
+			Game::eachFrame(ticks);
+		}
+		
+		void setInitChapterCallback(luabind::object cb) {
+			initChapterCallback = cb;
+		}
 }; // class GameWrapper
 
 class UserInterfaceWrapper : public grail::UserInterface, public luabind::wrap_base {
-  public:
-    UserInterfaceWrapper() { }
-    grail::EventState handleEvent(const SDL_Event& event, uint32_t frameDuration) {
-      return call<grail::EventState>("handleEvent", event, frameDuration);
-    }
-
-    static grail::EventState default_handleEvent(UserInterface::Ptr ptr, SDL_Event event, uint32_t frameDuration) {
-      return ptr->UserInterface::handleEvent(event, frameDuration);
-    }
+	public:
+		UserInterfaceWrapper() { }
+		grail::EventState handleEvent(const SDL_Event& event, uint32_t frameDuration) {
+			return call<grail::EventState>("handleEvent", event, frameDuration);
+		}
+		
+		static grail::EventState default_handleEvent(UserInterface::Ptr ptr, SDL_Event event, uint32_t frameDuration) {
+			return ptr->UserInterface::handleEvent(event, frameDuration);
+		}
 }; // class UserInterfaceWrapper
 
 

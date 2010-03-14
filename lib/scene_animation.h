@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #ifndef SCENE_ANIMATION_H
 #define SCENE_ANIMATION_H
@@ -7,13 +8,13 @@
 namespace grail {
 
 class SceneAnimation {
-  protected:
-    Animation *animation;
-    VirtualPositon position;
-
-  public:
-    SceneAnimation(Animation animation) : animation(animation) { }
-
+	protected:
+		Animation *animation;
+		VirtualPositon position;
+		
+	public:
+		SceneAnimation(Animation animation) : animation(animation) { }
+		
 };
 
 } // namespace grail

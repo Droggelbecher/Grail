@@ -1,12 +1,13 @@
+// vim: set noexpandtab:
 
 #include "debug.h"
 
 namespace grail {
 
 #ifdef DEBUG
-  std::ostream &cdbg = std::cerr;
+	std::ostream &cdbg = std::cerr;
 #else
-  NullStream cdbg;
+	NullStream cdbg;
 #endif
 
 } // namespace grail

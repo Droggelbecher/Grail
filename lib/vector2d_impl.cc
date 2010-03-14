@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #include "vector2d.cc"
 

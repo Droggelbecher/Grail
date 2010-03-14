@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #ifndef AUDIO_H
 #define AUDIO_H
@@ -8,15 +9,12 @@
 namespace grail {
 
 class Audio {
-  protected:
-
-
-  public:
-    Audio();
-    ~Audio();
-    void playSound(std::string soundfile);
-  private:
-    Mix_Music *sound;
+	public:
+		Audio();
+		~Audio();
+		void playSound(std::string soundfile);
+	private:
+		Mix_Music *sound;
 };
 
 } // namespace grail

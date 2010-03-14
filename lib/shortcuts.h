@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #ifndef SHORTCUTS_H
 #define SHORTCUTS_H

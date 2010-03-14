@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #ifndef LINE_H
 #define LINE_H
@@ -7,14 +8,14 @@
 namespace grail {
 
 class Line {
-    VirtualPosition a, b;
-  public:
-    Line(VirtualPosition a, VirtualPosition b) : a(a), b(b) { }
-
-    bool intersects(const Line& other) const;
-
-    VirtualPosition getA() const { return a; }
-    VirtualPosition getB() const { return b; }
+		VirtualPosition a, b;
+	public:
+		Line(VirtualPosition a, VirtualPosition b) : a(a), b(b) { }
+		
+		bool intersects(const Line& other) const;
+		
+		VirtualPosition getA() const { return a; }
+		VirtualPosition getB() const { return b; }
 };
 
 } // namespace grail

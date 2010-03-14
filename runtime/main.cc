@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #include <iostream>
 #include <string>
@@ -20,27 +21,27 @@
 
 Interpreter interpreter;
 int main(int argc, char** argv) {
-  using namespace grail;
-  using namespace std;
-  using namespace luabind;
-
-  GameWrapper& g = GameWrapper::getInstance();
-
-  g.getResourceManager().mount(
-      new DirectoryResourceHandler(argv[optind]), "/"
-      );
-
-  g.getResourceManager().mount(
-      new DirectoryResourceHandler(dirName(argv[0]) + pathDelimiter + "prelude"), "/prelude"
-      );
-
-  init(interpreter.L);
-
-  cdbg << "--- Prelude\n";
-  interpreter.loadPrelude("/prelude");
-  cdbg << "--- Game\n";
-  interpreter.loadDirectory("/");
-
-  delete &g;
+	using namespace grail;
+	using namespace std;
+	using namespace luabind;
+	
+	GameWrapper& g = GameWrapper::getInstance();
+	
+	g.getResourceManager().mount(
+		new DirectoryResourceHandler(argv[optind]), "/"
+		);
+	
+	g.getResourceManager().mount(
+		new DirectoryResourceHandler(dirName(argv[0]) + pathDelimiter + "prelude"), "/prelude"
+		);
+	
+	init(interpreter.L);
+	
+	cdbg << "--- Prelude\n";
+	interpreter.loadPrelude("/prelude");
+	cdbg << "--- Game\n";
+	interpreter.loadDirectory("/");
+	
+	delete &g;
 }
 

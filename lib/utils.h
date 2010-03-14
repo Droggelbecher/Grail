@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -12,11 +13,11 @@
 namespace grail {
 
 class Exception : public std::exception {
-  std::string _what;
-  public:
-    Exception(std::string what) throw() : _what(what) { }
-    virtual ~Exception() throw() { }
-    virtual const char* what() const throw() { return _what.c_str(); }
+	std::string _what;
+	public:
+		Exception(std::string what) throw() : _what(what) { }
+		virtual ~Exception() throw() { }
+		virtual const char* what() const throw() { return _what.c_str(); }
 };
 
 //
@@ -52,55 +53,55 @@ std::ostream& operator<<(std::ostream&, SplitIterator&);
  * Iterator over split "words"
  */
 class SplitIterator : public std::iterator<std::input_iterator_tag, std::string> {
-    std::string s;
-    std::string delimiter;
-    size_t pos;
+		std::string s;
+		std::string delimiter;
+		size_t pos;
 
-  public:
-    SplitIterator(std::string s, std::string delimiter, size_t pos=0) : s(s), delimiter(delimiter), pos(pos) {
-    }
-    SplitIterator(const SplitIterator& other) : s(other.s), delimiter(other.delimiter), pos(other.pos) {
-    }
-
-    static SplitIterator end(std::string s, std::string delimiter)  {
-      return SplitIterator(s, delimiter, std::string::npos);
-    }
-
-    SplitIterator end() {
-      return SplitIterator(s, delimiter, std::string::npos);
-    }
-
-    SplitIterator& operator++() {
-      pos = s.find(delimiter, pos);
-      if(pos != std::string::npos) pos++;
-      return *this;
-    }
-
-    SplitIterator& operator++(int) {
-      SplitIterator& r(*this);
-      pos = s.find(delimiter, pos);
-      if(pos != std::string::npos) pos++;
-      return r;
-    }
-
-    bool operator==(const SplitIterator& other) {
-      return s == other.s && delimiter == other.delimiter && pos == other.pos;
-    }
-
-    bool operator!=(const SplitIterator& other) {
-      return !(*this == other);
-    }
-
-    std::string operator*() const {
-      assert(pos != std::string::npos);
-      size_t p = s.find(delimiter, pos);
-      if(p == std::string::npos) {
-        p = s.length();
-      }
-      return s.substr(pos, p-pos);
-    }
-
-    friend std::ostream& operator<<(std::ostream&, SplitIterator&);
+	public:
+		SplitIterator(std::string s, std::string delimiter, size_t pos=0) : s(s), delimiter(delimiter), pos(pos) {
+		}
+		SplitIterator(const SplitIterator& other) : s(other.s), delimiter(other.delimiter), pos(other.pos) {
+		}
+		
+		static SplitIterator end(std::string s, std::string delimiter)	{
+			return SplitIterator(s, delimiter, std::string::npos);
+		}
+		
+		SplitIterator end() {
+			return SplitIterator(s, delimiter, std::string::npos);
+		}
+		
+		SplitIterator& operator++() {
+			pos = s.find(delimiter, pos);
+			if(pos != std::string::npos) pos++;
+			return *this;
+		}
+		
+		SplitIterator& operator++(int) {
+			SplitIterator& r(*this);
+			pos = s.find(delimiter, pos);
+			if(pos != std::string::npos) pos++;
+			return r;
+		}
+		
+		bool operator==(const SplitIterator& other) {
+			return s == other.s && delimiter == other.delimiter && pos == other.pos;
+		}
+		
+		bool operator!=(const SplitIterator& other) {
+			return !(*this == other);
+		}
+		
+		std::string operator*() const {
+			assert(pos != std::string::npos);
+			size_t p = s.find(delimiter, pos);
+			if(p == std::string::npos) {
+				p = s.length();
+			}
+			return s.substr(pos, p-pos);
+		}
+		
+		friend std::ostream& operator<<(std::ostream&, SplitIterator&);
 }; // class SplitIterator
 
 
@@ -112,17 +113,17 @@ bool startsWith(std::string s, std::string prefix);
 
 template <typename T>
 T fromString(std::string s) {
-  std::istringstream ss(s);
-  T r;
-  ss >> r;
-  return r;
+	std::istringstream ss(s);
+	T r;
+	ss >> r;
+	return r;
 }
 
 template <typename T>
 std::string toString(T o) {
-  std::ostringstream ss;
-  ss << o;
-  return ss.str();
+	std::ostringstream ss;
+	ss << o;
+	return ss.str();
 }
 
 //
@@ -130,9 +131,9 @@ std::string toString(T o) {
 //
 
 #ifdef WIN32
-  const char pathDelimiter = '\\';
+	const char pathDelimiter = '\\';
 #else
-  const char pathDelimiter = '/';
+	const char pathDelimiter = '/';
 #endif
 
 /**

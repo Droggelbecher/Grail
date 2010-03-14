@@ -1,3 +1,4 @@
+// vim: set noexpandtab:
 
 #ifndef ACTION_TEXT_H
 #define ACTION_TEXT_H
@@ -11,36 +12,36 @@
 #include "debug.h"
 
 namespace grail {
-
-  class ActionText : public UserInterfaceElement {
-      Text text;
-
-    public:
-      ActionText(Font::Ptr font);
-      virtual ~ActionText() { };
-
-      EventState handleEvent(const SDL_Event& event, uint32_t frameDuration);
-
-      void eachFrame(uint32_t ticks) {
-        std::string s = Game::getInstance().getUserInterface()->getActionText();
-        text.setText(s);
-        text.eachFrame(ticks);
-      }
-
-      void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
-        text.renderAt(target, ticks, p + getUpperLeftCorner());
-      }
-
-      void setOutlineFont(Font::Ptr f, int outline) {
-        text.setOutlineFont(f, outline);
-      }
-
-      VirtualPosition getSize() const {
-        return text.getSize();
-      }
-  };
-
+	
+	class ActionText : public UserInterfaceElement {
+			Text text;
+			
+		public:
+			ActionText(Font::Ptr font);
+			virtual ~ActionText() { };
+			
+			EventState handleEvent(const SDL_Event& event, uint32_t frameDuration);
+			
+			void eachFrame(uint32_t ticks) {
+				std::string s = Game::getInstance().getUserInterface()->getActionText();
+				text.setText(s);
+				text.eachFrame(ticks);
+			}
+			
+			void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+				text.renderAt(target, ticks, p + getUpperLeftCorner());
+			}
+			
+			void setOutlineFont(Font::Ptr f, int outline) {
+				text.setOutlineFont(f, outline);
+			}
+			
+			VirtualPosition getSize() const {
+				return text.getSize();
+			}
+	};
+	
 }
 
-#endif // ACTION_TEXT_ELEMENT_H
+#endif // ACTION_TEXT_H
 

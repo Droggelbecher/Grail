@@ -1,3 +1,4 @@
+// vim : set noexpandtab:
 
 #include "actor.h"
 
@@ -11,123 +12,123 @@ using std::copy;
 namespace grail {
 
 Actor::Actor(std::string name) :
-  mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0) {
+	mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0) {
 }
 
 std::string Actor::getName() const {
-  return name;
+	return name;
 }
 
 bool Actor::hasPoint(VirtualPosition p) const {
-  if(area) {
-    return area->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
-  }
-  else if(animation) {
-    return animation->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
-  }
-  else {
-    return false;
-  }
+	if(area) {
+		return area->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
+	}
+	else if(animation) {
+		return animation->hasPoint(p - (getUpperLeftCorner() + VirtualPosition(0, yOffset)));
+	}
+	else {
+		return false;
+	}
 }
 
 void Actor::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
-  if(animation) {
-    animation->renderAt(target, ticks, getUpperLeftCorner() + p + VirtualPosition(0, yOffset));
-  }
+	if(animation) {
+		animation->renderAt(target, ticks, getUpperLeftCorner() + p + VirtualPosition(0, yOffset));
+	}
 }
 
 void Actor::addAnimation(std::string mode, Animation::Ptr animation) {
-  animationModes[mode] = animation;
-  if(animationModes.count(this->mode)) {
-    this->animation = animationModes[mode];
-  }
+	animationModes[mode] = animation;
+	if(animationModes.count(this->mode)) {
+		this->animation = animationModes[mode];
+	}
 }
 
 void Actor::setMode(std::string mode) {
-  this->mode = mode;
-  if(animationModes.count(mode)) {
-    Animation::Ptr previous = animation;
-    animation = animationModes[mode];
-    animation->makeContinuationOf(*previous);
-  }
+	this->mode = mode;
+	if(animationModes.count(mode)) {
+		Animation::Ptr previous = animation;
+		animation = animationModes[mode];
+		animation->makeContinuationOf(*previous);
+	}
 }
 
 void Actor::setAlignment(double x, double y) {
-  alignmentX = x;
-  alignmentY = y;
+	alignmentX = x;
+	alignmentY = y;
 }
 
 VirtualPosition Actor::getUpperLeftCorner() const {
-  if(animation) {
-    return VirtualPosition(
-        position.getX() - alignmentX * animation->getSize().getX(),
-        position.getY() - alignmentY * animation->getSize().getY()
-        );
-  }
-  else {
-    return position;
-  }
+	if(animation) {
+		return VirtualPosition(
+			position.getX() - alignmentX * animation->getSize().getX(),
+			position.getY() - alignmentY * animation->getSize().getY()
+			);
+	}
+	else {
+		return position;
+	}
 }
 
 void Actor::walkTo(Actor::Ptr actor) {
-  walkTo(actor->getInteractionPosition());
+	walkTo(actor->getInteractionPosition());
 }
 
 void Actor::walkTo(VirtualPosition p) {
-  walkStraight(p);
+	walkStraight(p);
 }
 
 void Actor::walk(const Path& path) {
-  walkPath.clear();
-  copy(path.begin(), path.end(), walkPath.begin());
-  assert(walkPath.size() == path.size());
+	walkPath.clear();
+	copy(path.begin(), path.end(), walkPath.begin());
+	assert(walkPath.size() == path.size());
 }
 
 void Actor::walkStraight(VirtualPosition p) {
-  walkPath.clear();
-  walkPath.push_back(p);
+	walkPath.clear();
+	walkPath.push_back(p);
 }
 
 void Actor::eachFrame(uint32_t ticks) {
-  if(animation) {
-    animation->eachFrame(ticks);
-  }
-
-  if(!walkPath.empty()) {
-    setMode("walk");
-    VirtualPosition target = walkPath.front();
-    VirtualPosition diff = target - position;
-
-    if(animation && diff.length()) {
-      animation->setDirection(diff);
-    }
-
-    if(diff.length() <= (speed * ticks / 1000.0)) {
-      position = target;
-    }
-    else {
-      double steplen = (speed * ticks / (1000.0 * diff.length()));
-      VirtualPosition step = diff * steplen;
-
-      position = position + step;
-    }
-
-    if(diff.length()) {
-      Game::getInstance().getCurrentScene()->actorsMoved();
-    }
-
-    if(position == target) {
-      walkPath.pop_front();
-      if(walkPath.empty()) {
-        setMode("default");
-      }
-    }
-  } // if walkPath not empty
+	if(animation) {
+		animation->eachFrame(ticks);
+	}
+	
+	if(!walkPath.empty()) {
+		setMode("walk");
+		VirtualPosition target = walkPath.front();
+		VirtualPosition diff = target - position;
+		
+		if(animation && diff.length()) {
+			animation->setDirection(diff);
+		}
+		
+		if(diff.length() <= (speed * ticks / 1000.0)) {
+			position = target;
+		}
+		else {
+			double steplen = (speed * ticks / (1000.0 * diff.length()));
+			VirtualPosition step = diff * steplen;
+			
+			position = position + step;
+		}
+		
+		if(diff.length()) {
+			Game::getInstance().getCurrentScene()->actorsMoved();
+		}
+		
+		if(position == target) {
+			walkPath.pop_front();
+			if(walkPath.empty()) {
+				setMode("default");
+			}
+		}
+	} // if walkPath not empty
 }
 
 std::ostream& operator<<(std::ostream& os, const Actor& actor) {
-  os << actor.getName();
-  return os;
+	os << actor.getName();
+	return os;
 }
 
 } // namespace grail
