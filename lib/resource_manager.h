@@ -180,7 +180,7 @@ class ResourceManager {
 					}
 					return false;
 				}
-
+				
 				virtual bool operator!=(const DirectoryIterator& other) const {
 					return !(*this == other);
 				}
@@ -194,7 +194,7 @@ class ResourceManager {
 		 * /media/$res/foo.png -> /media/800x600/foo.png
 		 *
 		 * Supported variables:
-		 * $res		 ->  Physical screen resolution in format "800x600"
+		 * $res -> Physical screen resolution in format "800x600"
 		 */
 		std::string substituteVariables(std::string path);
 		
@@ -232,7 +232,6 @@ class ResourceManager {
  * directories, etc...
  */
 class ResourceHandler {
-	
 	public:
 		
 		ResourceHandler() { }
