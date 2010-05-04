@@ -33,22 +33,22 @@ void Unittest::runAll() {
 		cerr << "\x1b[01;33m" << group_iter->first << "\x1b[m" << endl;
 		for(test_iter = group_iter->second.begin(); test_iter != group_iter->second.end(); test_iter++) {
 			result.clear();
-			cerr <<  "	Test \"" << left << setw(30) << ((*test_iter)->name +"\"... ");
+			cerr <<  "\tTest \"" << left << setw(30) << ((*test_iter)->name +"\"... ");
 			(*test_iter)->run(result);
 			if(result.failed) {
-				cerr << endl << "  \x1b[01;31m" << result.failed << " of " << (result.failed + result.passed) << " failed! :(\x1b[m" << endl;
+				cerr << endl << "\t\t\x1b[01;31m=> " << result.failed << " of " << (result.failed + result.passed) << " failed! :(\x1b[m" << endl << endl;
 			}
 			else {
-				cerr << "  \x1b[01;32mAll " << result.passed << " checks passed. :D\x1b[m" << endl;
+				cerr << "\t\x1b[01;32mAll " << result.passed << " checks passed. :D\x1b[m" << endl;
 			}
 		} // for test
 	} // for group
 } // runAll
 
-void Unittest::checkEqual(bool r, string v1, string s1, string s2, TestResult& result) {
+void Unittest::checkEqual(bool r, string v1, string s1, string s2, TestResult& result, string file, size_t line) {
 	if(!r) {
 		result.failed++;
-		out << endl << "		\x1b[00;31mFAIL:\x1b[m \"" << s2 << "\" expected, but got \"" << v1 << "\" from \"" << s1 << "\"";
+		out << endl << "\t\t\x1b[00;31m" << file << ":" << line << "\x1b[m: \x1b[00;32m" << s2 << "\x1b[m expected, but got >\x1b[00;32m" << v1 << "\x1b[m< from expression: " << s1 << "";
 	}
 	else {
 		result.passed++;

@@ -32,7 +32,7 @@ class Unittest {
 		
 		Unittest(std::string group, std::string name);
 		virtual void run(TestResult& result) = 0;
-		void checkEqual(bool r, std::string v1, std::string s1, std::string s2, TestResult& result);
+		void checkEqual(bool r, std::string v1, std::string s1, std::string s2, TestResult& result, std::string file, size_t line);
 		
 		static void runAll();
 		
@@ -45,7 +45,7 @@ class Unittest {
 	}  unittest ## GROUP ## TEST ## Instance; \
 	void __unittest__ ## GROUP ## __ ## TEST :: run(Unittest::TestResult& result)
 
-#define CHECK_EQUAL(x, y) checkEqual((x) == (y), toString((x)), #x, #y, result)
+#define CHECK_EQUAL(x, y) checkEqual((x) == (y), toString((x)), #x, #y, result, __FILE__, __LINE__)
 
 } // namespace grail
 
