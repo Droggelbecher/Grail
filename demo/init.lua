@@ -48,8 +48,6 @@ GAME:setUserInterface(ui)
 mc = main_character.create()
 GAME:setMainCharacter(mc)
 GAME:getViewport():setFollowing(mc)
-local Audio = Audio()
-Audio:playSound("sounds/20moment.mp3")
 -- Run!
 GAME:runChapter(0)
 
