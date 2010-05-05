@@ -11,6 +11,11 @@
 
 namespace grail {
 
+	/**
+	 * Note: This class (and all its subclasses) *must* be held in a
+	 * shared_ptr after they have been initialized (else you will get a crash
+	 * at start/block)
+	 */
 	class Task : public boost::enable_shared_from_this<Task> {
 		public:
 			typedef boost::shared_ptr<Task> Ptr;
@@ -43,9 +48,10 @@ namespace grail {
 			 */
 			virtual void eachFrame(uint32_t ticks) { }
 
+			Task(Flags flags = DEFAULT);
+
 		
 		public:
-			Task(Flags flags = DEFAULT);
 			virtual ~Task();
 
 			Flags getFlags() { return flags; }

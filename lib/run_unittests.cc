@@ -1,6 +1,7 @@
 // vim: set noexpandtab:
 
 #include <utility>
+#include <boost/shared_ptr.hpp>
 
 #include "unittest.h"
 
@@ -89,6 +90,7 @@ TEST(Utils, split) {
 
 class DummyTask : public Task {
 	public:
+		typedef boost::shared_ptr<DummyTask> Ptr;
 		bool onStart_executed;
 
 		DummyTask() : Task(), onStart_executed(false) {
@@ -98,13 +100,13 @@ class DummyTask : public Task {
 };
 
 TEST(Task, state) {
-	DummyTask t;
-	CHECK_EQUAL(t.getState(), Task::STATE_NEW);
-	t.start();
-	CHECK_EQUAL(t.onStart_executed, true);
-	CHECK_EQUAL(t.getState(), Task::STATE_RUNNING);
-	t.end();
-	CHECK_EQUAL(t.getState(), Task::STATE_COMPLETED);
+	DummyTask::Ptr t = DummyTask::Ptr(new DummyTask);
+	CHECK_EQUAL(t->getState(), Task::STATE_NEW);
+	t->start();
+	CHECK_EQUAL(t->onStart_executed, true);
+	CHECK_EQUAL(t->getState(), Task::STATE_RUNNING);
+	t->end();
+	CHECK_EQUAL(t->getState(), Task::STATE_COMPLETED);
 }
 
 } // namespace grail
