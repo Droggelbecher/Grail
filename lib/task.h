@@ -5,12 +5,13 @@
 
 #include <stdint.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "classes.h"
 
 namespace grail {
 
-	class Task {
+	class Task : public boost::enable_shared_from_this<Task> {
 		public:
 			typedef boost::shared_ptr<Task> Ptr;
 			enum Flags {

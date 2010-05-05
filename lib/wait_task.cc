@@ -15,7 +15,6 @@ namespace grail {
 
 	void WaitTask::eachFrame(uint32_t ticks) {
 		if(SDL_GetTicks() >= expire) {
-			cdbg << "signalling completion! now: " << SDL_GetTicks() << " expire: " << expire << "\n";
 			signalComplete();
 		}
 	}

@@ -27,7 +27,7 @@ namespace grail {
 		assert(state == Task::STATE_NEW);
 		state = STATE_RUNNING;
 		onStart();
-		Task::Ptr ptr(this);
+		Task::Ptr ptr = shared_from_this();
 		Game::getInstance().getMainLoop().addTask(ptr);
 	}
 
@@ -36,7 +36,7 @@ namespace grail {
 		state = STATE_RUNNING;
 		onStart();
 		MainLoop m;
-		Task::Ptr ptr(this);
+		Task::Ptr ptr = shared_from_this();
 		m.addTask(ptr);
 		m.run();
 	}

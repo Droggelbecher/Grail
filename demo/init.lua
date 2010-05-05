@@ -3,7 +3,6 @@
 require 'user_interface'
 require 'main_character'
 
-		w = WaitTask(3000)
 function initChapter(n)
 	print("This is initChapter("..n..")")
 	
@@ -35,12 +34,14 @@ function initChapter(n)
 		
 		GAME:goToScene(s)
 
-		--print("--- Before blocking timer")
-		--WaitTask(3000):block()
-		--print("--- After blocking timer")
-		print("--- Before nonblocking timer")
-		w:start()
+		--- WaitTask test/example ---
+		print("--- Before blocking timer (3s)")
+		WaitTask(3000):block()
+		print("--- After blocking timer")
+		print("--- Before nonblocking timer (3s)")
+		WaitTask(3000):start()
 		print("--- After nonblocking timer")
+		------------------------------
 		
 	end
 end
