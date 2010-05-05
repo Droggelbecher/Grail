@@ -15,16 +15,31 @@ namespace grail {
 				DEFAULT = 0x0,
 				ENDLESS = 0x1,
 			};
+
+			enum State {
+				STATE_NEW, STATE_RUNNING, STATE_COMPLETED
+			};
 			
 		private:
 			Flags flags;
+			State state;
 
 		protected:
-			virtual void eachFrame(uint32_t ticks) { }
+			/**
+			 * Override this and it will be called when the task is being
+			 * started.
+			 */
 			virtual void onStart() { };
+
+			/**
+			 * Override this and it shall be called once each frame, you may
+			 * execute your task piecewise here.
+			 */
+			virtual void eachFrame(uint32_t ticks) { }
+
+			Task(Flags flags = DEFAULT);
 		
 		public:
-			Task(Flags flags);
 			virtual ~Task();
 
 			Flags getFlags() { return flags; }
@@ -38,8 +53,21 @@ namespace grail {
 			 */
 			void signalComplete();
 
+			/**
+			 * Run the task in a non-blocking fashion.
+			 */
 			void start();
+
+			/**
+			 * Run the task in a blocking fashion (won't return before the
+			 * task is done).
+			 */
 			void block();
+
+			/**
+			 * Return the current state of this task.
+			 */
+			State getState() const;
 	};
 }
 
