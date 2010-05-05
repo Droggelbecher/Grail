@@ -18,11 +18,22 @@ using std::max;
 
 namespace grail {
 
+void MainLoop::eachFrame(uint32_t frameDuration) {
+	std::list<Task::Ptr>::iterator iter;
+	for(iter = tasks.begin(); iter != tasks.end(); iter++) {
+		(*iter)->eachFrame(frameDuration);
+	}
+}
+
 void MainLoop::run() {
 	Game &controller = Game::getInstance();
 	
 	uint32_t frameStart, frameEnd, frameDuration = 0;
 	uint32_t statDuration = 0, statCycles = 0;
+
+	// Check right after the first frame in case we were called with an empty
+	// task list (else we would never exit in that case!)
+	scheduleTaskCheck = true;
 	
 	while(!exit_) {
 		frameStart = SDL_GetTicks();
@@ -30,6 +41,12 @@ void MainLoop::run() {
 		
 		// Do something
 		controller.eachFrame(frameDuration);
+		
+		eachFrame(frameDuration);
+		if(scheduleTaskCheck) {
+			checkTasks();
+		}
+		
 		controller.renderEverything(frameDuration);
 		
 		// Handle events until frame end
@@ -74,6 +91,29 @@ void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
 		return;
 	}
 	
+}
+
+void MainLoop::addTask(Task::Ptr task) {
+	tasks.push_back(task);
+	task->setContainingLoop(this);
+}
+
+void MainLoop::notifyCompleted(Task* task) {
+	assert(task->getState() == Task::STATE_COMPLETED);
+	scheduleTaskCheck = true;
+}
+
+void MainLoop::checkTasks() {
+	std::list<Task::Ptr>::iterator iter(tasks.begin());
+	for(; iter != tasks.end(); iter++) {
+		if((*iter)->getState() == Task::STATE_COMPLETED) {
+			iter = tasks.erase(iter);
+		}
+	}
+	scheduleTaskCheck = false;
+	if(tasks.empty() && !master) {
+		exit();
+	}
 }
 
 } // namespace grail

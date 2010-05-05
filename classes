@@ -10,7 +10,7 @@ echo
 echo 'namespace grail {'
 echo '	'
 
-grep -h '^\([ ]*\)class \(.*\)[^;]$' lib/*.h | awk '{ print $2 }' | sort | {
+grep -h '^\([ 	]*\)class \(.*\)[^;]$' lib/*.h | awk '{ print $2 }' | sort | {
 	while read NAME; do
 		if [ "$NAME" != "Vector2d" -a "$NAME" != "Reference" ]; then
 			echo "	class $NAME;"

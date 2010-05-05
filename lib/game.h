@@ -55,6 +55,7 @@ class Game {
 		ResourceManager& getResourceManager();
 		void setUserInterface(UserInterface::Ptr ui);
 		UserInterface::Ptr getUserInterface();
+		MainLoop& getMainLoop() { return loop; }
 		
 		Actor::Ptr getMainCharacter() const;
 		void setMainCharacter(Actor::Ptr actor);

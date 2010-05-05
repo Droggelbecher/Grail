@@ -28,6 +28,7 @@ set(GRAIL_FILES
 	utils.cc
 	vector2d.cc
 	viewport.cc
+	wait_task.cc
 )
 
 # Library

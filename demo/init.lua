@@ -3,6 +3,7 @@
 require 'user_interface'
 require 'main_character'
 
+		w = WaitTask(3000)
 function initChapter(n)
 	print("This is initChapter("..n..")")
 	
@@ -33,6 +34,13 @@ function initChapter(n)
 		s:addActor(mc)
 		
 		GAME:goToScene(s)
+
+		--print("--- Before blocking timer")
+		--WaitTask(3000):block()
+		--print("--- After blocking timer")
+		print("--- Before nonblocking timer")
+		w:start()
+		print("--- After nonblocking timer")
 		
 	end
 end
@@ -48,8 +56,6 @@ GAME:setUserInterface(ui)
 mc = main_character.create()
 GAME:setMainCharacter(mc)
 GAME:getViewport():setFollowing(mc)
-local Audio = Audio()
-Audio:playSound("sounds/20moment.mp3")
 -- Run!
 GAME:runChapter(0)
 

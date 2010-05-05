@@ -3,8 +3,10 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <boost/shared_ptr.hpp>
 #include <stdint.h>
+#include <boost/shared_ptr.hpp>
+
+#include "classes.h"
 
 namespace grail {
 
@@ -23,6 +25,9 @@ namespace grail {
 		private:
 			Flags flags;
 			State state;
+			MainLoop *loop;
+
+			void setContainingLoop(MainLoop* loop);
 
 		protected:
 			/**
@@ -37,9 +42,9 @@ namespace grail {
 			 */
 			virtual void eachFrame(uint32_t ticks) { }
 
-			Task(Flags flags = DEFAULT);
 		
 		public:
+			Task(Flags flags = DEFAULT);
 			virtual ~Task();
 
 			Flags getFlags() { return flags; }
@@ -68,7 +73,10 @@ namespace grail {
 			 * Return the current state of this task.
 			 */
 			State getState() const;
+
+			friend class MainLoop;
 	};
+
 }
 
 #endif // TASK_H
