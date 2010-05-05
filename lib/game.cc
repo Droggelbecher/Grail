@@ -21,7 +21,7 @@ Game* Game::_instance = 0;
 
 const std::string Game::className = "Game";
 
-Game::Game() : viewport(0), resourceManager(0) {
+Game::Game() : viewport(0), resourceManager(0), loop(true) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 }
 

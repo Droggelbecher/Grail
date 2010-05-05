@@ -33,6 +33,15 @@ function initChapter(n)
 		s:addActor(mc)
 		
 		GAME:goToScene(s)
+
+		--- WaitTask test/example ---
+		print("--- Before blocking timer (3s)")
+		WaitTask(3000):block()
+		print("--- After blocking timer")
+		print("--- Before nonblocking timer (3s)")
+		WaitTask(3000):start()
+		print("--- After nonblocking timer")
+		------------------------------
 		
 	end
 end

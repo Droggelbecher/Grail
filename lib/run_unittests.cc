@@ -6,6 +6,7 @@
 
 #include "vector2d.h"
 #include "utils.h"
+#include "task.h"
 
 using std::make_pair;
 
@@ -84,6 +85,26 @@ TEST(Utils, split) {
 	CHECK_EQUAL(*iter, "bang"); iter++;
 	CHECK_EQUAL(*iter, "buff"); iter++;
 	CHECK_EQUAL(iter, iter.end());
+}
+
+class DummyTask : public Task {
+	public:
+		bool onStart_executed;
+
+		DummyTask() : Task(), onStart_executed(false) {
+		}
+		void onStart() { onStart_executed = true; }
+		void end() { signalComplete(); }
+};
+
+TEST(Task, state) {
+	DummyTask t;
+	CHECK_EQUAL(t.getState(), Task::STATE_NEW);
+	t.start();
+	CHECK_EQUAL(t.onStart_executed, true);
+	CHECK_EQUAL(t.getState(), Task::STATE_RUNNING);
+	t.end();
+	CHECK_EQUAL(t.getState(), Task::STATE_COMPLETED);
 }
 
 } // namespace grail

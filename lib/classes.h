@@ -6,9 +6,15 @@
 
 namespace grail {
 	
+	class Action;
+	class ActionText;
+	class Actor;
 	class Animation;
 	class Area;
 	class Audio;
+	class BlitCached;
+	class Box;
+	class Button;
 	class DirectionAnimation;
 	class DirectoryIterator;
 	class DirectoryIteratorImpl;
@@ -32,10 +38,12 @@ namespace grail {
 	class Scene;
 	class SceneAnimation;
 	class SDLException;
+	class SoundTask;
 	class SplitIterator;
 	class Sprite;
 	class StripeSprite;
 	class Surface;
+	class Task;
 	class Text;
 	class Unittest;
 	class UserInterface;

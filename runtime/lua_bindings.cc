@@ -22,6 +22,8 @@
 #include "lib/scene.h"
 #include "lib/sdl_exception.h"
 #include "lib/sprite.h"
+#include "lib/task.h"
+#include "lib/wait_task.h"
 #include "lib/text.h"
 #include "lib/user_interface.h"
 #include "lib/user_interface_animation.h"
@@ -125,7 +127,6 @@ extern "C" int init(lua_State* L) {
 			
 		class_<Audio>("Audio")
 			.def(constructor<>())
-			.def("playSound", &Audio::playSound)
 			,
 		
 		class_<Ground>("Ground")
@@ -238,6 +239,15 @@ extern "C" int init(lua_State* L) {
 			.def("setup", &Viewport::setup)
 			.def("setFollowing", &Viewport::setFollowing)
 			.def("setNoFollowing", &Viewport::setNoFollowing)
+			,
+		
+		class_<Task, Task::Ptr>("Task")
+			.def("start", &Task::start)
+			.def("block", &Task::block)
+			,
+		
+		class_<WaitTask, Task, Task::Ptr>("WaitTask")
+			.def(constructor<uint32_t>())
 	];
 	
 	return 0;
