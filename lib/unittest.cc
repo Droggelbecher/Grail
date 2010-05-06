@@ -55,5 +55,25 @@ void Unittest::checkEqual(bool r, string v1, string s1, string s2, TestResult& r
 	}
 }
 
+void Unittest::checkGreater(bool r, string v1, string s1, string s2, TestResult& result, string file, size_t line) {
+	if(!r) {
+		result.failed++;
+		out << endl << "\t\t\x1b[00;31m" << file << ":" << line << "\x1b[m: Something greater than \x1b[00;32m" << s2 << "\x1b[m expected, but got >\x1b[00;32m" << v1 << "\x1b[m< from expression: " << s1 << "";
+	}
+	else {
+		result.passed++;
+	}
+}
+
+void Unittest::checkLower(bool r, string v1, string s1, string s2, TestResult& result, string file, size_t line) {
+	if(!r) {
+		result.failed++;
+		out << endl << "\t\t\x1b[00;31m" << file << ":" << line << "\x1b[m: Something lower than \x1b[00;32m" << s2 << "\x1b[m expected, but got >\x1b[00;32m" << v1 << "\x1b[m< from expression: " << s1 << "";
+	}
+	else {
+		result.passed++;
+	}
+}
+
 } // namespace grail
 

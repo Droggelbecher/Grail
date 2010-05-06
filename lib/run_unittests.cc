@@ -2,12 +2,14 @@
 
 #include <utility>
 #include <boost/shared_ptr.hpp>
+#include <SDL.h>
 
 #include "unittest.h"
 
 #include "vector2d.h"
 #include "utils.h"
 #include "task.h"
+#include "wait_task.h"
 
 using std::make_pair;
 
@@ -99,7 +101,7 @@ class DummyTask : public Task {
 		void end() { signalComplete(); }
 };
 
-TEST(Task, state) {
+TEST(Task, STATES) {
 	DummyTask::Ptr t = DummyTask::Ptr(new DummyTask);
 	CHECK_EQUAL(t->getState(), Task::STATE_NEW);
 	t->start();
@@ -109,8 +111,25 @@ TEST(Task, state) {
 	CHECK_EQUAL(t->getState(), Task::STATE_COMPLETED);
 }
 
-} // namespace grail
+TEST(Task, WaitTask) {
+	// Blocking
+	WaitTask::Ptr t = WaitTask::Ptr(new WaitTask(200));
+	uint32_t now = SDL_GetTicks();
+	CHECK_EQUAL(t->getState(), Task::STATE_NEW);
+	t->block();
+	CHECK_EQUAL(t->getState(), Task::STATE_COMPLETED);
+	CHECK_GREATER(SDL_GetTicks(), now + 200);
 
+	// Non-Blocking
+	t = WaitTask::Ptr(new WaitTask(200));
+	CHECK_EQUAL(t->getState(), Task::STATE_NEW);
+	now = SDL_GetTicks();
+	t->start();
+	CHECK_EQUAL(t->getState(), Task::STATE_RUNNING);
+	CHECK_LOWER(SDL_GetTicks(), now + 200);
+}
+
+} // namespace grail
 
 int main(int argc, char** argv) {
 	grail::Unittest::runAll();
