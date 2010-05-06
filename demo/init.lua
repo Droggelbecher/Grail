@@ -32,6 +32,9 @@ function initChapter(n)
 		main_character.mc:setPosition(VP(250, 2700))
 		s:addActor(mc)
 		
+		local Audio = Audio()
+		Audio:playSound("sounds/20moment.mp3")
+		
 		GAME:goToScene(s)
 
 		--- WaitTask test/example ---
