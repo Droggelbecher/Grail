@@ -16,6 +16,7 @@ set(LIBS
   ${PNG_LIBRARIES}
   ${LUA_LIBRARIES} ${LUABIND_LIBRARY}
   ${Boost_LIBRARIES}
+  alure #till FindAlure exists
   )
 
 target_link_libraries(grail_runtime ${LIBS})

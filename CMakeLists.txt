@@ -14,12 +14,14 @@ find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
 find_package(SDL_image REQUIRED)
 find_package(SDL_ttf REQUIRED)
-find_package(SDL_mixer REQUIRED)
 find_package(SDL_gfx REQUIRED)
 
 find_package(PNG REQUIRED)
 find_package(Luabind REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem regex)
+
+find_package(OpenAL REQUIRED)
+#find_package(Alure REQUIRED) alure find macro still missing
 
 if(debug)
 	set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
