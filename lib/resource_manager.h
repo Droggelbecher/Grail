@@ -20,6 +20,24 @@ enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
  * A resource is similar to a file, however more general.
  * For example it can as well be something that only exists in RAM like a
  * decompressed gz file.
+ *
+ * This class is intended for use with the RAII pattern. I.e. like:
+ *
+ * ----
+ *
+ * {
+ *   Resource res("/path/to/foo.file");
+ *
+ *   size_t sz;
+ *   char* buffer;
+ *   buffer = res.createBuffer(sz);
+ *
+ *   // ...
+ * }
+ * // res is automatically destroyed at this point, the buffer however is still there
+ * // if you didnt delete it yourself since it is a copy.
+ *
+ * ----
  */
 class Resource {
 		SDL_RWops* rw;
@@ -31,24 +49,11 @@ class Resource {
 		Resource(const Resource& other) { }
 		Resource& operator=(const Resource& other) { return *this; }
 		
-		/**
+		/*
 		 * Copy all data to a newly created buffer.
 		 * Size of that buffer will be written to the size argument.
 		 */
-		const char* createBuffer(size_t &size) {
-			assert(rw);
-			
-			char* buffer;
-			SDL_RWseek(rw, 0, SEEK_END);
-			size = SDL_RWtell(rw);
-			SDL_RWseek(rw, 0, SEEK_SET);
-			buffer = new char[size];
-			size_t read = 0;
-			while(read < size) {
-				read += SDL_RWread(rw, buffer, sizeof(char), size - read);
-			}
-			return buffer;
-		}
+		const char* createBuffer(size_t &size);
 		
 	public:
 		std::string path;
@@ -56,29 +61,34 @@ class Resource {
 		Resource(std::string path, ResourceMode mode);
 		~Resource();
 		
+		///
 		std::string getPath() const { return path; }
 		
 		/**
 		 * Get rwops pointer. DONT delete the returned pointer, we'll do it in our
 		 * d'tor.
 		 */
-		SDL_RWops* getRW() {
-			return rw;
-		}
+		SDL_RWops* getRW() { return rw; }
 		
-		const char* getData() {
-			if(!buffer) {
-				buffer = createBuffer(bufferSize);
-			}
-			return buffer;
-		}
+		/**
+		 * Create a buffer, copy all data of the resource into it and return its
+		 * address. Note that multiple calls to getData() of the same resource
+		 * will return the same address, i.e. the buffer is only allocated once.
+		 * Nevertheless, YOU are responsible for deleting that buffer, use
+		 * ----
+		 * delete[] buffer;
+		 * ----
+		 *
+		 * Use getDataSize() in order to find out the size of the buffer.
+		 */
+		const char* getData();
 		
-		size_t getDataSize() {
-			if(!buffer) {
-				buffer = createBuffer(bufferSize);
-			}
-			return bufferSize;
-		}
+		/**
+		 * This returns the size of the buffer allocated by getDat(). If called
+		 * before getData(), this will allocate the buffer and copy the data to it
+		 * and getData will return its address.
+		 */
+		size_t getDataSize();
 		
 		friend class ResourceManager;
 		friend Resource getResource(std::string, ResourceMode);
@@ -94,9 +104,11 @@ class Resource {
  * system drivers here)
  */
 class ResourceManager {
+	private:
 		std::map<std::string, ResourceHandler*> resourceHandlers;
 		
 	public:
+
 		/**
 		 */
 		class DirectoryIteratorImpl {
@@ -126,68 +138,30 @@ class ResourceManager {
 				 */
 				DirectoryIterator() : _isEnd(true) { }
 				
+				~DirectoryIterator() { };
+				
 				/**
 				 * Takes ownership of impl
 				 */
-				DirectoryIterator(DirectoryIteratorImpl::Ptr impl) : impl(impl), _isEnd(false) {
-					assert(impl);
-				};
+				DirectoryIterator(DirectoryIteratorImpl::Ptr impl);
 				
-				DirectoryIterator(const DirectoryIterator& other) {
-					if(other.impl) { impl = other.impl->copy(); }
-					else { impl = other.impl; }
-					_isEnd = other._isEnd;
-					assert(_isEnd || impl);
-				};
+				///
+				DirectoryIterator(const DirectoryIterator& other);
 				
-				~DirectoryIterator() { };
+				DirectoryIterator& operator=(const DirectoryIterator& other);
 				
-				DirectoryIterator& operator=(const DirectoryIterator& other) {
-					if(other.impl) { impl = other.impl->copy(); }
-					else { impl = other.impl; }
-					_isEnd = other._isEnd;
-					assert(_isEnd || impl);
-					return *this;
-				};
 				
-				DirectoryIterator& operator++() {
-					++(*impl);
-					return *this;
-				};
-				DirectoryIterator operator++(int) {
-					DirectoryIterator r = *this;
-					++(*impl);
-					return r;
-				};
+				static const DirectoryIterator& end();
 				
-				std::string operator*() const { return **impl; }
-				
-				static const DirectoryIterator& end() {
-					_end._isEnd = true;
-					return _end;
-				}
-				
-				virtual bool operator==(const DirectoryIterator& other) const {
-					bool this_is_end = this->_isEnd || this->impl->atEnd();
-					bool other_is_end = other._isEnd || other.impl->atEnd();
-					
-					if(this_is_end && other_is_end) {
-						return true;
-					}
-					
-					if(this->impl && other.impl) {
-						return this->impl == other.impl;
-					}
-					return false;
-				}
-				
-				virtual bool operator!=(const DirectoryIterator& other) const {
-					return !(*this == other);
-				}
+				DirectoryIterator& operator++();
+				DirectoryIterator operator++(int);
+				std::string operator*() const;
+				virtual bool operator==(const DirectoryIterator& other) const;
+				virtual bool operator!=(const DirectoryIterator& other) const;
 		}; // DirectoryIterator
 		
 		ResourceManager() { }
-		~ResourceManager();
+		virtual ~ResourceManager();
 		
 		/**
 		 * Example:
@@ -210,14 +184,17 @@ class ResourceManager {
 		ResourceHandler* findHandler(std::string path, std::string &mountpoint);
 		
 		/**
+		 * Return true if the giver resource exists.
 		 */
 		bool exists(std::string path);
 		
 		/**
+		 * Start directory listing
 		 */
 		DirectoryIterator beginListing(std::string path);
 		
 		/**
+		 * End iterator for directory listing
 		 */
 		DirectoryIterator endListing() { return DirectoryIterator::end(); }
 		

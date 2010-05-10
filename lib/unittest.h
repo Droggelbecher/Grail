@@ -33,6 +33,8 @@ class Unittest {
 		Unittest(std::string group, std::string name);
 		virtual void run(TestResult& result) = 0;
 		void checkEqual(bool r, std::string v1, std::string s1, std::string s2, TestResult& result, std::string file, size_t line);
+		void checkGreater(bool r, std::string v1, std::string s1, std::string s2, TestResult& result, std::string file, size_t line);
+		void checkLower(bool r, std::string v1, std::string s1, std::string s2, TestResult& result, std::string file, size_t line);
 		
 		static void runAll();
 		
@@ -46,6 +48,10 @@ class Unittest {
 	void __unittest__ ## GROUP ## __ ## TEST :: run(Unittest::TestResult& result)
 
 #define CHECK_EQUAL(x, y) checkEqual((x) == (y), toString((x)), #x, #y, result, __FILE__, __LINE__)
+
+#define CHECK_GREATER(x, y) checkGreater((x) > (y), toString((x)), #x, #y, result, __FILE__, __LINE__)
+
+#define CHECK_LOWER(x, y) checkLower((x) < (y), toString((x)), #x, #y, result, __FILE__, __LINE__)
 
 } // namespace grail
 

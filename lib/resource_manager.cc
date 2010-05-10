@@ -19,6 +19,35 @@ using std::endl;
 
 namespace grail {
 
+const char* Resource::createBuffer(size_t &size) {
+	assert(rw);
+	
+	char* buffer;
+	SDL_RWseek(rw, 0, SEEK_END);
+	size = SDL_RWtell(rw);
+	SDL_RWseek(rw, 0, SEEK_SET);
+	buffer = new char[size];
+	size_t read = 0;
+	while(read < size) {
+		read += SDL_RWread(rw, buffer, sizeof(char), size - read);
+	}
+	return buffer;
+}
+
+const char* Resource::getData() {
+	if(!buffer) {
+		buffer = createBuffer(bufferSize);
+	}
+	return buffer;
+}
+
+size_t Resource::getDataSize() {
+	if(!buffer) {
+		buffer = createBuffer(bufferSize);
+	}
+	return bufferSize;
+}
+
 Resource::Resource(string path, ResourceMode mode) : buffer(0), bufferSize(0), path(path) {
 	rw = Game::getInstance().getResourceManager().getRW(path, mode);
 }
@@ -29,10 +58,70 @@ Resource::~Resource() {
 }
 
 //
-// ResourceManager
+// ResourceManager::DirectoryIterator
 //
 
 ResourceManager::DirectoryIterator ResourceManager::DirectoryIterator::_end;
+
+ResourceManager::DirectoryIterator::DirectoryIterator(ResourceManager::DirectoryIteratorImpl::Ptr impl) : impl(impl), _isEnd(false) {
+	assert(impl);
+};
+
+ResourceManager::DirectoryIterator::DirectoryIterator(const ResourceManager::DirectoryIterator& other) {
+	if(other.impl) { impl = other.impl->copy(); }
+	else { impl = other.impl; }
+	_isEnd = other._isEnd;
+	assert(_isEnd || impl);
+};
+
+ResourceManager::DirectoryIterator& ResourceManager::DirectoryIterator::operator=(const ResourceManager::DirectoryIterator& other) {
+	if(other.impl) { impl = other.impl->copy(); }
+	else { impl = other.impl; }
+	_isEnd = other._isEnd;
+	assert(_isEnd || impl);
+	return *this;
+};
+
+ResourceManager::DirectoryIterator& ResourceManager::DirectoryIterator::operator++() {
+	++(*impl);
+	return *this;
+};
+
+ResourceManager::DirectoryIterator ResourceManager::DirectoryIterator::operator++(int) {
+	ResourceManager::DirectoryIterator r = *this;
+	++(*impl);
+	return r;
+};
+
+std::string ResourceManager::DirectoryIterator::operator*() const { return **impl; }
+
+const ResourceManager::DirectoryIterator& ResourceManager::DirectoryIterator::end() {
+	_end._isEnd = true;
+	return _end;
+}
+
+bool ResourceManager::DirectoryIterator::operator==(const ResourceManager::DirectoryIterator& other) const {
+	bool this_is_end = this->_isEnd || this->impl->atEnd();
+	bool other_is_end = other._isEnd || other.impl->atEnd();
+	
+	if(this_is_end && other_is_end) {
+		return true;
+	}
+	
+	if(this->impl && other.impl) {
+		return this->impl == other.impl;
+	}
+	return false;
+}
+
+bool ResourceManager::DirectoryIterator::operator!=(const ResourceManager::DirectoryIterator& other) const {
+	return !(*this == other);
+}
+
+//
+// ResourceManager
+//
+
 
 ResourceManager::~ResourceManager() {
 	map<string, ResourceHandler*>::const_iterator iter;
