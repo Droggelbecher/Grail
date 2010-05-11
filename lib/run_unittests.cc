@@ -90,6 +90,20 @@ TEST(Utils, split) {
 	CHECK_EQUAL(iter, iter.end());
 }
 
+TEST(Utils, normalizePath) {
+	CHECK_EQUAL(normalizePath("/"), "/");
+	CHECK_EQUAL(normalizePath("//"), "/");
+	CHECK_EQUAL(normalizePath("///"), "/");
+	CHECK_EQUAL(normalizePath("foo"), "/foo");
+	CHECK_EQUAL(normalizePath("/foo"), "/foo");
+	CHECK_EQUAL(normalizePath("foo/"), "/foo");
+	CHECK_EQUAL(normalizePath("/foo/"), "/foo");
+	CHECK_EQUAL(normalizePath("//foo/"), "/foo");
+	CHECK_EQUAL(normalizePath(""), "/");
+	CHECK_EQUAL(normalizePath("////foo////bar////"), "/foo/bar");
+}
+
+
 class DummyTask : public Task {
 	public:
 		typedef boost::shared_ptr<DummyTask> Ptr;

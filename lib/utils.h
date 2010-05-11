@@ -154,6 +154,10 @@ bool exists(std::string path);
 bool isAbsolute(std::string path);
 
 /**
+ * Return a version of path that fullfills the following constrains:
+ * - The new path starts with a "/"
+ * - The new path does not end with a "/" (except if it is exactly "/")
+ * - There are no repetitions of "/"s
  */
 std::string normalizePath(std::string path);
 
