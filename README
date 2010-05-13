@@ -8,3 +8,36 @@ and easy to use and to extend.
 
 Read more about what grail is and what it aims to be at http://leetless.de/grail.html
 
+
+Compiling
+=========
+
+Under Linux
+-----------
+
+Change your working directory to the directory that contains this README file
+and type:
+
+cmake -G "Unix Makefiles"
+make
+
+Obviously you need cmake for this to work. For library dependencies refer to
+doc/dependencies.txt
+
+The code should compile and run under Windows as well though due to the lack
+of a package manager its lots more work to collect all the dependencies,
+install a compiler and so on. When the code is mature enough for release we
+will publish ready-to-run binary files for Windows.
+
+
+Running
+=======
+
+The demo application is located in the demo/ folder.
+Change your working directory to the directory that contains the demo folder
+and type (after compiling):
+
+runtime/grail_runtime demo/
+
+Don't expect too much yet, its all still WIP.
+

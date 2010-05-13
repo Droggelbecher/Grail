@@ -26,7 +26,7 @@ class Surface {
 		void loadFromFile(const std::string& filename) {
 			sdlSurface = IMG_Load_RW(getRW(filename, MODE_READ), true);
 			if(!sdlSurface) {
-				throw new SDLException(std::string("Could not load surface '") + filename + "'");
+				throw SDLException(std::string("Could not load surface '") + filename + "'");
 			}
 			SDL_SetColorKey(sdlSurface, SDL_RLEACCEL, sdlSurface->format->colorkey);
 			SDL_Surface* newSurface = SDL_DisplayFormatAlpha(sdlSurface);
@@ -72,7 +72,7 @@ class Surface {
 			
 			sdlSurface = SDL_CreateRGBSurface(flags, size.getX(), size.getY(), 32, rmask, gmask, bmask, amask);
 			if(!sdlSurface) {
-				throw new SDLException("Creation of surface failed");
+				throw SDLException("Creation of surface failed");
 			}
 		}
 		
@@ -119,7 +119,7 @@ class Surface {
 			}
 			
 			if(sdlSurface->format->BitsPerPixel != 32) {
-				throw new Exception("Only 32-Bit-Surfaces are supported atm.");
+				throw Exception("Only 32-Bit-Surfaces are supported atm.");
 			}
 			
 			SDL_LockSurface(sdlSurface);
