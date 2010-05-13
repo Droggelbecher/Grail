@@ -69,6 +69,7 @@ class Audio {
 		void stopPlaylist();
 		void setPlaylistCrossfadingDuration(uint32_t ms);
 		*/
+		//static void alure_callback();
 };
 
 } // namespace grail
