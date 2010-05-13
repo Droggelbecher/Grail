@@ -13,6 +13,8 @@
 #include "lib/user_interface.h"
 #include "lib/debug.h"
 #include "network_interface.h"
+#include "interpreter.h"
+#include "to_lua_table.h"
 
 class GameWrapper : public grail::Game {
 	private:
@@ -52,9 +54,18 @@ class GameWrapper : public grail::Game {
 		}
 		
 		void eachFrame(uint32_t ticks) {
-			ioService.poll_one();
+			ioService.poll();
 			//network.select();
 			Game::eachFrame(ticks);
+		}
+
+		void handleEvent(const SDL_Event &event, uint32_t ticks) {
+			grail::Event e(event);
+
+			luabind::object o = toLuaTable(e);
+
+			//luabind::object o(interpreter.L, e);
+			server->broadcast(o);
 		}
 		
 		void setInitChapterCallback(luabind::object cb) {

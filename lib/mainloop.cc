@@ -75,6 +75,8 @@ void MainLoop::exit() { exit_ = true; }
 
 void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
 	Game &controller = Game::getInstance();
+
+	controller.handleEvent(event, frameDuration);
 	
 	if(event.type == SDL_QUIT) {
 		exit();
@@ -105,9 +107,12 @@ void MainLoop::notifyCompleted(Task* task) {
 
 void MainLoop::checkTasks() {
 	std::list<Task::Ptr>::iterator iter(tasks.begin());
-	for(; iter != tasks.end(); iter++) {
+	while(iter != tasks.end()) {
 		if((*iter)->getState() == Task::STATE_COMPLETED) {
 			iter = tasks.erase(iter);
+		}
+		else {
+			++iter;
 		}
 	}
 	scheduleTaskCheck = false;

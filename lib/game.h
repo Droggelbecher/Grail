@@ -37,8 +37,6 @@ class Game {
 	public:
 		typedef boost::shared_ptr<Game> Ptr;
 		
-		static const std::string className;
-		
 		virtual ~Game();
 		
 		static Game& getInstance();
@@ -61,10 +59,10 @@ class Game {
 		void setMainCharacter(Actor::Ptr actor);
 		
 		virtual void eachFrame(uint32_t ticks);
-		void renderEverything(uint32_t ticks);
-		void handleEvent(const SDL_Event &event, uint32_t ticks);
+		virtual void renderEverything(uint32_t ticks);
+		virtual void handleEvent(const SDL_Event &event, uint32_t ticks);
 		
-		void quit();
+		virtual void quit();
 };
 
 } // namespace grail

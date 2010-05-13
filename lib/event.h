@@ -43,7 +43,7 @@ class Event {
 		SDL_keysym getKeysym() const;
 		
 		static Event* actorClick(Actor::Ptr a, VirtualPosition, uint8_t button);
-		static Event* sceneClick( VirtualPosition, uint8_t button);
+		static Event* sceneClick(VirtualPosition, uint8_t button);
 		
 };
 

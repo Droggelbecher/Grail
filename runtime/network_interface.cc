@@ -38,7 +38,22 @@ void NetworkInterface::Connection::handleWrite(const boost::system::error_code& 
 	startRead();
 }
 
-bool returnTrue(char c) { return true; }
+void NetworkInterface::Connection::send(luabind::object o, std::string type) {
+	std::string s = "{\n	[\"type\"] = \"" + type + "\",\n";
+	s += "	[\"" + type + "\"] = " + interpreter.toLuaString(o, "	") + ",\n";
+  s += "}\n";
+	boost::asio::async_write(
+		_socket,
+		boost::asio::buffer(s),
+		boost::bind(
+			&NetworkInterface::Connection::handleWrite,
+			shared_from_this(),
+			boost::asio::placeholders::error,
+			boost::asio::placeholders::bytes_transferred
+		)
+	);
+	
+}
 
 void NetworkInterface::Connection::executeChunk() {
 	// Load buffer
@@ -62,25 +77,28 @@ void NetworkInterface::Connection::executeChunk() {
 	// Was there a problem with the code?
 	cdbg << "Executed remote lua code with return_code " << error << "\n";
 	
-	std::string answer = "{\n  [\"return_code\"] = " + toString(error) + ",\n";
+	std::string answer = "{\n	[\"type\"] = \"execution_result\",\n";
+	answer += "	[\"execution_result\"] = {\n";
+	answer += "		[\"error_code\"] = " + toString(error) +",\n";
 	
 	if(error) {
 		std::string err(lua_tostring(L, -1));
-		answer += "  [\"error_message\"] = " + interpreter.toLuaString(err) + ",\n";
-		answer += "  [\"return_value\"] = nil,\n";
+		answer += "		[\"error_message\"] = " + interpreter.toLuaString(err) + ",\n";
+		answer += "		[\"return_value\"] = nil,\n";
 	}
 	else {
-		answer += "  [\"error_message\"] = nil,\n";
+		answer += "		[\"error_message\"] = nil,\n";
 		
 		// Fetch return value
 		luabind::object return_value(luabind::from_stack(L, -1));
 		lua_pop(L, 1);
 		
 		// Send answer to client
-		std::string ret = interpreter.toLuaString(return_value, "  ");
-		answer += "  [\"return_value\"] = " + ret + ",\n";
+		std::string ret = interpreter.toLuaString(return_value, "		");
+		answer += "		[\"return_value\"] = " + ret + ",\n";
 		
 	}
+	answer += "	}\n";
 	answer += "}\n";
 	
 	boost::asio::async_write(
@@ -128,7 +146,7 @@ void NetworkInterface::Connection::startRead() {
 }
 
 NetworkInterface::NetworkInterface(io_service& io_service)
-		: acceptor(io_service, tcp::endpoint(tcp::v4(), 12345)) {
+		: ioService(io_service), acceptor(io_service, tcp::endpoint(tcp::v4(), 12345)) {
 	startAccept();
 }
 
@@ -137,6 +155,7 @@ NetworkInterface::~NetworkInterface() {
 
 void NetworkInterface::startAccept() {
 	Connection::Ptr connection(new Connection(acceptor.io_service()));
+	connections.push_back(connection);
 	acceptor.async_accept(
 		connection->socket(),
 		boost::bind(&NetworkInterface::handleAccept, this, connection,
@@ -150,4 +169,16 @@ void NetworkInterface::handleAccept(Connection::Ptr connection, const boost::sys
 		startAccept();
 	}
 }
+
+void NetworkInterface::broadcast(luabind::object o) {
+	std::list<NetworkInterface::Connection::Ptr>::iterator iter(connections.begin());
+	for(;iter != connections.end();++iter) {
+		if((*iter)->socket().is_open()) {
+			(*iter)->send(o, "event");
+			++iter;
+			//ioService.run_one();
+		}
+	} // while
+} // broadcast
+
 

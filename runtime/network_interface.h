@@ -15,10 +15,6 @@
 using boost::asio::ip::tcp;
 
 class NetworkInterface {
-		tcp::acceptor acceptor;
-		
-		void startAccept();
-	
 	public:
 		class Connection : public boost::enable_shared_from_this<Connection> {
 			private:
@@ -43,12 +39,22 @@ class NetworkInterface {
 				tcp::socket& socket() { return _socket; }
 				
 				void start();
+				void send(luabind::object o, std::string type);
 		}; // class Connection
 		
+	private:
+		boost::asio::io_service& ioService;
+		tcp::acceptor acceptor;
+		std::list<NetworkInterface::Connection::Ptr> connections;
+		
+		void startAccept();
+		
+	public:
 		NetworkInterface(boost::asio::io_service&);
 		~NetworkInterface();
 		
 		void handleAccept(Connection::Ptr connection, const boost::system::error_code& error);
+		void broadcast(luabind::object o);
 }; 
 
 #endif // NETWORK_INTERFACE_H

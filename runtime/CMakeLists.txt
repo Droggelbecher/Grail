@@ -8,6 +8,7 @@ add_executable(grail_runtime
   lua_bindings.cc
   main.cc
   network_interface.cc
+	to_lua_table.cc
 )
 
 set(LIBS
