@@ -70,6 +70,8 @@ extern "C" int init(lua_State* L) {
 			.def("setMainCharacter", &GameWrapper::setMainCharacter)
 			.def("getMainCharacter", &GameWrapper::getMainCharacter)
 			.def("runChapter", &GameWrapper::runChapter)
+			.def("registerEarlyEventHandler", &GameWrapper::registerEarlyEventHandler)
+			.def("registerLateEventHandler", &GameWrapper::registerLateEventHandler)
 			.def("quit", &GameWrapper::quit)
 			,
 		

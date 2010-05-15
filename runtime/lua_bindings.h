@@ -19,6 +19,7 @@
 class GameWrapper : public grail::Game {
 	private:
 		luabind::object initChapterCallback;
+		std::list<luabind::object> earlyEventHandlers, lateEventHandlers;
 		NetworkInterface *server;
 		boost::asio::io_service ioService;
 		
@@ -58,14 +59,25 @@ class GameWrapper : public grail::Game {
 			//network.select();
 			Game::eachFrame(ticks);
 		}
-
+		
+		void registerEarlyEventHandler(luabind::object h) {
+			earlyEventHandlers.push_back(h);
+		}
+		void registerLateEventHandler(luabind::object h) {
+			lateEventHandlers.push_back(h);
+		}
+		
 		void handleEvent(const SDL_Event &event, uint32_t ticks) {
+			std::list<luabind::object>::iterator iter(earlyEventHandlers.begin());
 			grail::Event e(event);
-
-			luabind::object o = toLuaTable(e);
-
-			//luabind::object o(interpreter.L, e);
-			server->broadcast(o);
+			for(; iter != earlyEventHandlers.end(); ++iter) {
+				luabind::call_function<grail::Event>(*iter, e);
+			}
+			for(iter = lateEventHandlers.begin(); iter != lateEventHandlers.end(); ++iter) {
+				luabind::call_function<grail::Event>(*iter, e);
+			}
+			//luabind::object o = toLuaTable(e);
+			//server->broadcast(o);
 		}
 		
 		void setInitChapterCallback(luabind::object cb) {

@@ -38,9 +38,6 @@ class Scene {
 	public:
 		typedef boost::shared_ptr<Scene> Ptr;
 		
-		static const std::string className;
-		
-		//Scene();
 		Scene(VirtualSize sz);
 		Scene(Animation::Ptr);
 		Scene(const std::string& backgroundPath);

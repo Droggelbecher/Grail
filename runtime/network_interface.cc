@@ -22,8 +22,8 @@ size_t NetworkInterface::Connection::isReadComplete(const boost::system::error_c
 	chunkSize = bytes_transferred;
 	
 	buffer[chunkSize] = '\0';
-	split = (uint8_t*)strchr((char*)buffer, '\n');
-	if(!split) {
+	split = (uint8_t*)strchr((char*)buffer, '\0');
+	if(!split || split == (buffer+chunkSize)) {
 		split = buffer + chunkSize;
 		return bufferSize - chunkSize;
 	}
@@ -40,8 +40,9 @@ void NetworkInterface::Connection::handleWrite(const boost::system::error_code& 
 
 void NetworkInterface::Connection::send(luabind::object o, std::string type) {
 	std::string s = "{\n	[\"type\"] = \"" + type + "\",\n";
-	s += "	[\"" + type + "\"] = " + interpreter.toLuaString(o, "	") + ",\n";
+	s += "	[\"data\"] = " + interpreter.toLuaString(o, "	") + ",\n";
   s += "}\n";
+	s += '\0';
 	boost::asio::async_write(
 		_socket,
 		boost::asio::buffer(s),
@@ -78,7 +79,7 @@ void NetworkInterface::Connection::executeChunk() {
 	cdbg << "Executed remote lua code with return_code " << error << "\n";
 	
 	std::string answer = "{\n	[\"type\"] = \"execution_result\",\n";
-	answer += "	[\"execution_result\"] = {\n";
+	answer += "	[\"data\"] = {\n";
 	answer += "		[\"error_code\"] = " + toString(error) +",\n";
 	
 	if(error) {
@@ -100,6 +101,7 @@ void NetworkInterface::Connection::executeChunk() {
 	}
 	answer += "	}\n";
 	answer += "}\n";
+	answer += '\0';
 	
 	boost::asio::async_write(
 		_socket,
@@ -116,6 +118,7 @@ void NetworkInterface::Connection::executeChunk() {
 NetworkInterface::Connection::Connection(boost::asio::io_service& ioService) :
 	bufferSize(64 * 1024),
 	_socket(ioService), chunkSize(0), buffer(new uint8_t[bufferSize]), split(buffer) {
+	cdbg << "Incoming connection\n";
 }
 
 NetworkInterface::Connection::~Connection() {
