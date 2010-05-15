@@ -5,6 +5,7 @@
 
 #include <string>
 #include <stdint.h>
+#include <AL/alure.h> //hm, why doesnt <alure.h> work?
 #include "task.h"
 
 namespace grail {
@@ -24,9 +25,13 @@ class Audio {
 		class SoundTask : public Task {
 				size_t loops;
 
+				ALuint src,alBuf;
+				size_t bufsize;
+				const ALubyte* buffer;
+
 			public:
-				SoundTask(size_t loops); // TODO: Probably wants more parameters
-				void onStart() { };
+				SoundTask(std::string resource, size_t loops);
+				void onStart();
 
 				// Sound specific
 				void pause() { };
