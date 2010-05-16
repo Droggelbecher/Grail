@@ -127,9 +127,9 @@ extern "C" int init(lua_State* L) {
 			
 		class_<Audio>("Audio")
 			.def(constructor<>())
-			.def("playSound", &Audio::playSound)
+			.def("prepSound", &Audio::prepSound)
 			,
-		
+
 		class_<Ground>("Ground")
 			.scope[
 				class_<Ground::Waypoint>("Waypoint")

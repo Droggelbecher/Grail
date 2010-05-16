@@ -39,5 +39,8 @@ and type (after compiling):
 
 runtime/grail_runtime demo/
 
+you will need alure with mp3 support enabled http://www.kcat.strangesoft.net/alure.html 
+from git to hear music
+
 Don't expect too much yet, its all still WIP.
 

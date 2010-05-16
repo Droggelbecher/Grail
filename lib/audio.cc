@@ -29,7 +29,6 @@ Audio::SoundTask::SoundTask(std::string resource, size_t loops)
 
 	alSourcei(src, AL_BUFFER, alBuf);
 	//TODO: make this more elegant and think about the api
-	start();
 }
 
 Audio::Audio() {
@@ -42,7 +41,7 @@ Audio::~Audio() {
 		throw Exception("Couldnt shutdown the Sounddevice");
 }
 
-Task::Ptr Audio::playSound(std::string resource, size_t loops, Audio::Volume v) //TODO: implement volume stuff
+Task::Ptr Audio::prepSound(std::string resource, size_t loops, Audio::Volume v) //TODO: implement volume stuff
 {
 	SoundTask::Ptr ptr =  SoundTask::Ptr(new SoundTask(resource,loops));
 	return ptr;

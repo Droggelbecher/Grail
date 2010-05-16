@@ -33,8 +33,9 @@ function initChapter(n)
 		s:addActor(mc)
 		
 		local Audio = Audio()
-		Audio:playSound("sounds/20moment.mp3",2,100)
-		
+		bgmusic = Audio:prepSound("sounds/20moment.mp3",2,100)
+		bgmusic:start()
+
 		GAME:goToScene(s)
 
 		--- WaitTask test/example ---

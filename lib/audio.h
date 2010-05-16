@@ -23,6 +23,7 @@ class Audio {
 		};
 
 		class SoundTask : public Task {
+				//TODO: which variables are really needed? and look further at openal
 				size_t loops;
 
 				ALuint src,alBuf;
@@ -31,6 +32,7 @@ class Audio {
 
 			public:
 				SoundTask(std::string resource, size_t loops);
+				//TODO: free openal resources in destructor
 				void onStart();
 
 				// Sound specific
@@ -60,7 +62,7 @@ class Audio {
 		 * loops=0 --> endless repeat
 		 *
 		 */
-		SoundTask::Ptr playSound(std::string resource, size_t loops = 1, Volume v = defaultVolume);
+		SoundTask::Ptr prepSound(std::string resource, size_t loops = 1, Volume v = defaultVolume);
 
 		/* Playlist stuff
 		void clearPlaylist();
