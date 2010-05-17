@@ -15,6 +15,9 @@ Compiling
 Under Linux
 -----------
 
+First make sure you have all the development libraries listed in
+doc/dependencies.txt installed.
+
 Change your working directory to the directory that contains this README file
 and type:
 
@@ -38,9 +41,6 @@ Change your working directory to the directory that contains the demo folder
 and type (after compiling):
 
 runtime/grail_runtime demo/
-
-you will need alure with mp3 support enabled http://www.kcat.strangesoft.net/alure.html 
-from git to hear music
 
 Don't expect too much yet, its all still WIP.
 
