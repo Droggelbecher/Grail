@@ -43,8 +43,10 @@ function initChapter(n)
 		WaitTask(3000):block()
 		print("--- After blocking timer")
 		print("--- Before nonblocking timer (3s)")
+		bgmusic:pause()
 		WaitTask(3000):start()
 		print("--- After nonblocking timer")
+	--	bgmusic:pause()
 		------------------------------
 		
 	end

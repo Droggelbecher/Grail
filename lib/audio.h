@@ -9,7 +9,26 @@
 #include "task.h"
 
 namespace grail {
+	
+		class SoundTask : public Task {
+				//TODO: which variables are really needed? and look further at openal
+				size_t loops;
 
+				ALuint src,alBuf;
+				size_t bufsize;
+				const ALubyte* buffer;
+
+			public:
+				SoundTask(std::string resource, size_t loops);
+				//~SoundTask();
+				//TODO: free openal resources in destructor
+				void onStart();
+
+				// Sound specific
+				void pause();
+			//	void setVolume(Volume v) { };
+		};
+		
 class Audio {
 	public:
 		typedef uint8_t Volume;
@@ -22,23 +41,7 @@ class Audio {
 			PLAYLIST_CROSSFADING = 0x04  // enable crossfading between tracks
 		};
 
-		class SoundTask : public Task {
-				//TODO: which variables are really needed? and look further at openal
-				size_t loops;
 
-				ALuint src,alBuf;
-				size_t bufsize;
-				const ALubyte* buffer;
-
-			public:
-				SoundTask(std::string resource, size_t loops);
-				//TODO: free openal resources in destructor
-				void onStart();
-
-				// Sound specific
-				void pause() { };
-				void setVolume(Volume v) { };
-		};
 
 		Audio();
 		~Audio();
