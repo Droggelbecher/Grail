@@ -22,7 +22,7 @@ Audio::~Audio() {
 		throw Exception("Couldnt shutdown the Sounddevice");
 }
 
-SoundTask::SoundTask(std::string resource, size_t loops)
+Audio::SoundTask::SoundTask(std::string resource, size_t loops)
 	: Task((loops == 0 ? Task::ENDLESS : Task::DEFAULT)) {
 
 	alGenSources(1, &src);
@@ -48,17 +48,12 @@ Task::Ptr Audio::prepareSound(std::string resource, size_t loops, Audio::Volume 
 }
 
 
-void SoundTask::onStart()
+void Audio::SoundTask::onStart()
 {
 	alSourcePlay(src);
 
 	if(alGetError() != AL_NO_ERROR)
 		std::cout << "Failed to start source! " << alGetError() << std::endl;
-}
-
-void SoundTask::pause()
-{
-	alSourcePause(src);
 }
 
 //for later alure api

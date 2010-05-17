@@ -21,7 +21,6 @@
 #include "lib/resource_manager.h"
 #include "lib/scene.h"
 #include "lib/sdl_exception.h"
-//#include "lib/sound_task.h"
 #include "lib/sprite.h"
 #include "lib/task.h"
 #include "lib/wait_task.h"
@@ -130,10 +129,7 @@ extern "C" int init(lua_State* L) {
 			.def(constructor<>())
 			.def("prepareSound", &Audio::prepareSound)
 			,
-		class_<SoundTask, Task, Task::Ptr>("SoundTask")
-			.def(constructor<std::string, size_t>())
-			.def("pause", &SoundTask::pause)
-			,
+
 		class_<Ground>("Ground")
 			.scope[
 				class_<Ground::Waypoint>("Waypoint")
