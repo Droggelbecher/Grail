@@ -6,9 +6,12 @@ Feature / Category                     Indiana             Grail implemented %
 ====================================== =================== ====================
 **Audio**
 -------------------------------------------------------------------------------
-Sounds                                  Yes                 0
-Music                                   Yes                 0
-Speech output                           Yes                 0
+Sounds/Music/Speech                     Yes                 20
+Adjust Volume dynamically				    0
+Panning	according to pos. in Scene	Yes		    0
+Loop Control						    10
+mp3,ogg,flac,wav					    100
+Adjust playback speed					    Maybe
 
 **Graphics**
 -------------------------------------------------------------------------------
