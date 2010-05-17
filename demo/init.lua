@@ -33,7 +33,7 @@ function initChapter(n)
 		s:addActor(mc)
 		
 		local Audio = Audio()
-		bgmusic = Audio:prepSound("sounds/20moment.mp3",2,100)
+		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2,100)
 		bgmusic:start()
 
 		GAME:goToScene(s)

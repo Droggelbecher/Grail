@@ -127,7 +127,7 @@ extern "C" int init(lua_State* L) {
 			
 		class_<Audio>("Audio")
 			.def(constructor<>())
-			.def("prepSound", &Audio::prepSound)
+			.def("prepareSound", &Audio::prepareSound)
 			,
 
 		class_<Ground>("Ground")

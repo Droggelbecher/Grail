@@ -62,7 +62,7 @@ class Audio {
 		 * loops=0 --> endless repeat
 		 *
 		 */
-		SoundTask::Ptr prepSound(std::string resource, size_t loops = 1, Volume v = defaultVolume);
+		SoundTask::Ptr prepareSound(std::string resource, size_t loops = 1, Volume v = defaultVolume);
 
 		/* Playlist stuff
 		void clearPlaylist();
