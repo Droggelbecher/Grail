@@ -6,6 +6,7 @@
 #include <string>
 #include <stdint.h>
 #include <AL/alure.h> //hm, why doesnt <alure.h> work?
+#include "sound_task.h"
 #include "task.h"
 
 namespace grail {
@@ -20,24 +21,6 @@ class Audio {
 			PLAYLIST_LOOP = 0x01,        // after last track, start with first one again
 			PLAYLIST_LOOP_LAST = 0x02,   // loop last track
 			PLAYLIST_CROSSFADING = 0x04  // enable crossfading between tracks
-		};
-
-		class SoundTask : public Task {
-				//TODO: which variables are really needed? and look further at openal
-				size_t loops;
-
-				ALuint src,alBuf;
-				size_t bufsize;
-				const ALubyte* buffer;
-
-			public:
-				SoundTask(std::string resource, size_t loops);
-				//TODO: free openal resources in destructor
-				void onStart();
-
-				// Sound specific
-				void pause() { };
-				void setVolume(Volume v) { };
 		};
 
 		Audio();
@@ -78,6 +61,8 @@ class Audio {
 		*/
 		//static void alure_callback();
 };
+
+
 
 } // namespace grail
 

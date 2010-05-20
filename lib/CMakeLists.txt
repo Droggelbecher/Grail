@@ -18,6 +18,7 @@ set(GRAIL_FILES
 	resource_manager.cc
 	scene.cc
 	sdlutils.cc
+	sound_task.cc
 	shortcuts.cc
 	sprite.cc
 	task.cc

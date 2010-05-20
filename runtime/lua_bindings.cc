@@ -249,6 +249,10 @@ extern "C" int init(lua_State* L) {
 		
 		class_<WaitTask, Task, Task::Ptr>("WaitTask")
 			.def(constructor<uint32_t>())
+			,
+		class_<SoundTask, Task, Task::Ptr>("SoundTask")
+			.def(constructor<std::string, size_t>())
+			.def("pause", &SoundTask::pause)
 	];
 	
 	return 0;
