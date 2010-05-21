@@ -41,7 +41,7 @@ enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
  */
 class Resource {
 		SDL_RWops* rw;
-		const char* buffer;
+		const void* buffer;
 		size_t bufferSize;
 		
 	private:
@@ -53,7 +53,7 @@ class Resource {
 		 * Copy all data to a newly created buffer.
 		 * Size of that buffer will be written to the size argument.
 		 */
-		const char* createBuffer(size_t &size);
+		const void* createBuffer(size_t &size);
 		
 	public:
 		std::string path;
@@ -81,7 +81,7 @@ class Resource {
 		 *
 		 * Use getDataSize() in order to find out the size of the buffer.
 		 */
-		const char* getData();
+		const void* getData();
 		
 		/**
 		 * This returns the size of the buffer allocated by getDat(). If called
