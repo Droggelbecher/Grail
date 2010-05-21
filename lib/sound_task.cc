@@ -37,7 +37,7 @@ void SoundTask::onStart()
 		std::cout << "Failed to start source! " << alGetError() << std::endl;
 }
 
-void SoundTask::pause(ALuint src)
+void SoundTask::pause()
 {
 	alSourcePause(src);
 }

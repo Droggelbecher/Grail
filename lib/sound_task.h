@@ -25,7 +25,7 @@ class SoundTask : public Task {
 		void onStart();
 
 		// Sound specific
-		void pause(ALuint src);
+		void pause();
 		//void setVolume(Volume v) { };
 };
 
