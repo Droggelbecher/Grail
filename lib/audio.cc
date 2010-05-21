@@ -1,6 +1,5 @@
 // vim: set noexpandtab:
 
-#include <alure.h>
 #include "audio.h"
 #include "debug.h"
 #include "game.h"
@@ -20,12 +19,12 @@ Audio::Audio() {
 
 Audio::~Audio() {
 	if (!alureShutdownDevice())
-		throw Exception("Couldnt shutdown the Sounddevice");
+		throw Exception("Couldnt close the Sounddevice");
 }
 
 Task::Ptr Audio::prepareSound(std::string resource, size_t loops, Audio::Volume v) //TODO: implement volume stuff
 {
-	SoundTask::Ptr ptr =  SoundTask::Ptr(new SoundTask(resource,loops));
+	SoundTask::Ptr ptr = SoundTask::Ptr(new SoundTask(resource,loops));
 	return ptr;
 }
 

@@ -1,6 +1,5 @@
 // vim: set noexpandtab:
 
-#include <alure.h>
 #include "audio.h"
 #include "debug.h"
 #include "game.h"

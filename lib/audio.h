@@ -5,9 +5,7 @@
 
 #include <string>
 #include <stdint.h>
-#include <AL/alure.h> //hm, why doesnt <alure.h> work?
 #include "sound_task.h"
-#include "task.h"
 
 namespace grail {
 
