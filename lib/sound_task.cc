@@ -19,7 +19,7 @@ SoundTask::SoundTask(std::string resource, size_t loops)
 
 	Resource soundChunk(resource,MODE_READ);
 
-	buffer = reinterpret_cast<const ALubyte*>(soundChunk.getData()); //fixme: static_cast doesnt work
+	buffer = static_cast<const ALubyte*>(soundChunk.getData());
 	bufsize = soundChunk.getDataSize();
 
 	alBuf = alureCreateBufferFromMemory(buffer,bufsize);
