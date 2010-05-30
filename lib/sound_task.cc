@@ -1,6 +1,5 @@
 // vim: set noexpandtab:
 
-#include "audio.h"
 #include "debug.h"
 #include "game.h"
 #include "resource_manager.h"
@@ -28,9 +27,15 @@ SoundTask::SoundTask(std::string resource, size_t loops)
 	//TODO: make this more elegant and think about the api
 }
 
+
+static void eos_callback(void *unused, ALuint unused2)
+{
+		cdbg << "callback";
+}
+
 void SoundTask::onStart()
 {
-	alSourcePlay(src);
+	alurePlaySource(src,eos_callback,NULL);
 
 	if(alGetError() != AL_NO_ERROR)
 		std::cout << "Failed to start source! " << alGetError() << std::endl;
@@ -38,7 +43,12 @@ void SoundTask::onStart()
 
 void SoundTask::pause()
 {
-	alSourcePause(src);
+	alurePauseSource(src);
+}
+
+void SoundTask::setVolume()
+{
+	
 }
 
 }

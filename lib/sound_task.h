@@ -11,6 +11,7 @@
 namespace grail {
 
 class SoundTask : public Task {
+		
 		//TODO: which variables are really needed? and look further at openal
 		size_t loops;
 
@@ -25,7 +26,9 @@ class SoundTask : public Task {
 
 		// Sound specific
 		void pause();
-		//void setVolume(Volume v) { };
+		void setVolume();
+		typedef uint8_t Volume;
+		static const Volume defaultVolume;
 };
 
 }
