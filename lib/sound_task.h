@@ -29,6 +29,8 @@ class SoundTask : public Task {
 		void setVolume();
 		typedef uint8_t Volume;
 		static const Volume defaultVolume;
+
+		void eachFrame(uint32_t ticks);
 };
 
 }
