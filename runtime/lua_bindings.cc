@@ -125,10 +125,7 @@ extern "C" int init(lua_State* L) {
 				.def("setText", &Text::setText)
 				,
 			
-		class_<Audio>("Audio")
-			.def(constructor<>())
-			.def("prepareSound", &Audio::prepareSound)
-			,
+
 
 		class_<Ground>("Ground")
 			.scope[
@@ -253,6 +250,10 @@ extern "C" int init(lua_State* L) {
 		class_<SoundTask, Task, Task::Ptr>("SoundTask")
 			.def(constructor<std::string, size_t>())
 			.def("pause", &SoundTask::pause)
+			,
+		class_<Audio>("Audio")
+			.def(constructor<>())
+			.def("prepareSound", &Audio::prepareSound)
 	];
 	
 	return 0;
