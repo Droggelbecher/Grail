@@ -18,5 +18,14 @@ set(LIBS
   ${Boost_LIBRARIES}
   )
 
+if(OPENGL_FOUND)
+	set(LIBS ${LIBS} ${OPENGL_LIBRARIES})
+	message("OpenGL found")
+	message("  Include dir: ${OPENGL_INCLUDE_DIR}")
+	message("  Libraries: ${OPENGL_LIBRARIES}")
+else(OPENGL_FOUND)
+	message("OpenGL not found, building without!")
+endif(OPENGL_FOUND)
+
 target_link_libraries(grail_runtime ${LIBS})
 
