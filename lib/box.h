@@ -16,8 +16,7 @@ namespace grail {
 			VirtualSize size;
 			
 		public:
-			Box(VirtualSize size, SDL_Color color = black) : surface(conv<VirtualSize, PhysicalSize>(size)), size(size) {
-				SDL_FillRect(surface.getSDL(), 0, SDL_MapRGB(surface.getSDL()->format, color.r, color.g, color.b));
+			Box(VirtualSize size, SDL_Color color = black) : surface(conv<VirtualSize, PhysicalSize>(size), color), size(size) {
 			}
 			
 			void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {

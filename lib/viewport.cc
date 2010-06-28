@@ -46,6 +46,8 @@ void Viewport::setup(uint32_t w, uint32_t h, bool fullscreen) {
 		glViewport(0, 0, w, h);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		// Additive blending, nice for debugging
+		//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		glEnable(GL_BLEND);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();

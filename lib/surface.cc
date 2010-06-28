@@ -1,59 +1,11 @@
 
 #include "surface.h"
+#include "utils.h"
+#include "debug.h"
 
 namespace grail {
 
-void Surface::loadFromFile(const std::string& filename) {
-	sdlSurface = IMG_Load_RW(getRW(filename, MODE_READ), true);
-	if(!sdlSurface) {
-		throw SDLException(std::string("Could not load surface '") + filename + "'");
-	}
-	SDL_SetColorKey(sdlSurface, SDL_RLEACCEL, sdlSurface->format->colorkey);
-	SDL_Surface* newSurface = SDL_DisplayFormatAlpha(sdlSurface);
-	SDL_FreeSurface(sdlSurface);
-	sdlSurface = newSurface;
-
-	buildGLTexture();
-}
-
-void Surface::buildGLTexture() {
-	#if WITH_OPENGL
-		// TODO: Check if sdlSurface->w and sdlSurface->h are powers of 2
-		// See http://gpwiki.org/index.php/SDL:Tutorials:Using_SDL_with_OpenGL)
-		// TODO: Check if we really need to keep the sdlSurface around
-		GLenum textureFormat;
-		switch(sdlSurface->format->BytesPerPixel) {
-			case 4: // with alpha channel
-				if(sdlSurface->format->Rmask == 0x000000ff) { textureFormat = GL_RGBA; }
-				else { textureFormat = GL_BGRA; }
-				break;
-			case 3: // without alpha channel
-				if(sdlSurface->format->Rmask == 0x000000ff) { textureFormat = GL_RGB; }
-				else { textureFormat = GL_BGR; }
-				break;
-			default:
-				assert(false);
-				break;
-		}
-
-		glGenTextures(1, &glTexture);
-		glBindTexture(GL_TEXTURE_2D, glTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sdlSurface->w, sdlSurface->h,
-				0, textureFormat, GL_UNSIGNED_BYTE, sdlSurface->pixels);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		//SDL_FreeSurface(sdlSurface);
-		//sdlSurface = 0;
-	#endif
-}
-
-Surface::Surface(const std::string &path) : sdlSurface(0) {
-	loadFromFile(path);
-	assert(sdlSurface);
-	buildGLTexture();
-}
-
-Surface::Surface(PhysicalSize size, uint32_t flags) {
+SDL_Surface* Surface::createSDLSurface(uint16_t w, uint16_t h, uint32_t flags) {
 	uint32_t rmask, gmask, bmask, amask;
 	
 	// Stolen from: http://www.libsdl.org/cgi/docwiki.cgi/SDL_CreateRGBSurface
@@ -71,15 +23,103 @@ Surface::Surface(PhysicalSize size, uint32_t flags) {
 		amask = 0xff000000;
 	#endif
 	
-	sdlSurface = SDL_CreateRGBSurface(flags, size.getX(), size.getY(), 32, rmask, gmask, bmask, amask);
-	if(!sdlSurface) {
+	SDL_Surface *s = SDL_CreateRGBSurface(flags, w, h, 32, rmask, gmask, bmask, amask);
+	if(!s) {
 		throw SDLException("Creation of surface failed");
 	}
-	buildGLTexture();
+	return s;
+}
+
+void Surface::loadFromFile(const std::string& filename) {
+	#ifdef WITH_OPENGL
+		sdlSurface = IMG_Load_RW(getRW(filename, MODE_READ), true);
+		if(!sdlSurface) {
+			throw SDLException(std::string("Could not load surface '") + filename + "'");
+		}
+		SDL_SetColorKey(sdlSurface, SDL_RLEACCEL, sdlSurface->format->colorkey);
+		buildGLTexture(sdlSurface);
+	#else
+		SDL_Surface* image = IMG_Load_RW(getRW(filename, MODE_READ), true);
+		if(!sdlSurface) {
+			throw SDLException(std::string("Could not load surface '") + filename + "'");
+		}
+		SDL_SetColorKey(image, SDL_RLEACCEL, image->format->colorkey);
+		sdlSurface = SDL_DisplayFormatAlpha(image);
+		SDL_FreeSurface(image); image = 0;
+	#endif
+
+}
+
+
+#if WITH_OPENGL
+void Surface::buildGLTexture(SDL_Surface* surface) {
+	uint16_t w = sdlSurface->w, h = sdlSurface->h;
+	uint16_t w2 = nextPower2(w), h2 = nextPower2(h);
+	textureWidth = (float)w / (float)w2;
+	textureHeight = (float)h / (float)h2;
+
+	SDL_Surface *padded;
+
+	if(w != w2 || h != h2) {
+		// Padding necessary
+		padded = createSDLSurface(w2, h2, SDL_SWSURFACE | SDL_SRCALPHA);
+		if(!padded) {
+			throw SDLException(std::string("Could not allocate helper surface for OpenGL (low ram?)"));
+		}
+		SDL_SetColorKey(padded, SDL_RLEACCEL, padded->format->colorkey);
+		SDL_SetAlpha(surface, 0, 255); // Make a "dumb" copy (ignore alpha during blit)
+		SDL_BlitSurface(surface, 0, padded, 0);
+	}
+	else {
+		padded = surface;
+	}
+
+	GLenum textureFormat;
+	switch(padded->format->BytesPerPixel) {
+		case 4: // with alpha channel
+			if(padded->format->Rmask == 0x000000ff) { textureFormat = GL_RGBA; }
+			else { textureFormat = GL_BGRA; }
+			break;
+		case 3: // without alpha channel
+			if(padded->format->Rmask == 0x000000ff) { textureFormat = GL_RGB; }
+			else { textureFormat = GL_BGR; }
+			break;
+		default:
+			assert(false);
+			break;
+	}
+
+	glGenTextures(1, &glTexture);
+	glBindTexture(GL_TEXTURE_2D, glTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, padded->w, padded->h,
+			0, textureFormat, GL_UNSIGNED_BYTE, padded->pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	if(padded != surface) {
+		SDL_FreeSurface(padded); padded = 0;
+	}
+}
+#endif
+
+Surface::Surface(const std::string &path) : sdlSurface(0) {
+	loadFromFile(path);
+}
+
+Surface::Surface(PhysicalSize size, uint32_t flags) {
+	sdlSurface = createSDLSurface(size.getX(), size.getY(), flags);
+	buildGLTexture(sdlSurface);
+}
+
+Surface::Surface(PhysicalSize size, SDL_Color color, uint32_t flags) {
+	sdlSurface = createSDLSurface(size.getX(), size.getY(), flags);
+	SDL_FillRect(sdlSurface, 0, SDL_MapRGB(sdlSurface->format, color.r, color.g, color.b));
+
+	buildGLTexture(sdlSurface);
 }
 
 Surface::Surface(SDL_Surface* s) : sdlSurface(s) {
-	buildGLTexture();
+	buildGLTexture(sdlSurface);
 }
 
 Surface::~Surface() {
@@ -102,13 +142,14 @@ PhysicalSize Surface::getSize() const {
 
 void Surface::blit(SDL_Rect* from, SDL_Surface* target, SDL_Rect* to) const {
 	#ifdef WITH_OPENGL
+		uint16_t w = sdlSurface->w, h = sdlSurface->h;
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glBindTexture(GL_TEXTURE_2D, glTexture);
 		glBegin(GL_QUADS);
-		glTexCoord2i(0, 0); glVertex3i(to->x, to->y, 0);
-		glTexCoord2i(1, 0); glVertex3i(to->x + sdlSurface->w, to->y, 0);
-		glTexCoord2i(1, 1); glVertex3i(to->x + sdlSurface->w, to->y + sdlSurface->h, 0);
-		glTexCoord2i(0, 1); glVertex3i(to->x, to->y + sdlSurface->h, 0);
+		glTexCoord2f(0.0, 0.0); glVertex3i(to->x, to->y, 0);
+		glTexCoord2f(textureWidth, 0.0); glVertex3i(to->x + w, to->y, 0);
+		glTexCoord2f(textureWidth, textureHeight); glVertex3i(to->x + w, to->y + h, 0);
+		glTexCoord2f(0.0, textureHeight); glVertex3i(to->x, to->y + h, 0);
 		glEnd();
 	#else
 		if(sdlSurface) {
@@ -145,9 +186,9 @@ uint8_t Surface::getAlpha(PhysicalPosition p) const {
 	return a;
 }
 
-SDL_Surface* Surface::getSDL() {
+/*SDL_Surface* Surface::getSDL() {
 	return sdlSurface;
-}
+}*/
 
 } // namespace grail
 

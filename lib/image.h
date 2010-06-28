@@ -1,4 +1,4 @@
-// vim: set ft=noexpandtab:
+// vim: set noexpandtab:
 
 #ifndef IMAGE_H
 #define IMAGE_H

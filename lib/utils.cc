@@ -115,6 +115,29 @@ bool isParentOrEqualPath(string path1, string path2) {
 	return path1 == path2.substr(0, path1.length());
 }
 
+uint16_t nextPower2(uint16_t n) {
+	uint8_t l = 0;
+	uint16_t n2 = n;
+	if(n == 0) {
+		return 0;
+	}
+
+	// Find the leftmost 1-bit
+	while(n2 != 1) {
+		n2 >>= 1;
+		++l;
+	}
+
+	// Is that 1-bit the only bit set?
+	uint16_t l2 = 1 << l;
+	if(n == l2) {
+		return l2;
+	}
+	else {
+		return l2 << 1;
+	}
+}
+
 } // namespace grail
 
 
