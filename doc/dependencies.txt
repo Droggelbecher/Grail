@@ -1,8 +1,8 @@
 
 Development versions of the following are required for compiling:
 
-libboost, boost-filesystem, boost-system
-libsdl, libsdl-ttf, libsdl-image, libsdl-mixer
+libboost, boost-filesystem, boost-system, boost-regex
+libsdl, libsdl-ttf, libsdl-image, libsdl-gfx, libsdl-mixer
 liblua>=5.1
 libluabind >=0.8.1
 libpng
