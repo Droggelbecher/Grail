@@ -28,10 +28,6 @@ class Surface {
 		SDL_Surface* sdlSurface;
 	#ifdef WITH_OPENGL
 		GLuint glTexture;
-
-		// When using OpenGL we destroy the sdl surface as soon as possible
-		// and thus need to save some information about it
-		//uint16_t w, h;
 		float textureWidth, textureHeight;
 	#endif
 		
