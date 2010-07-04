@@ -164,9 +164,11 @@ ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
 	
 	for(iter = resourceHandlers.begin(); iter != resourceHandlers.end(); iter++) {
 		mountpoint = normalizePath(iter->first);
-		sub = path.substr(mountpoint.length());
-		if(isParentOrEqualPath(iter->first, path) && iter->second->fileExists(sub)) {
-			return iter->second;
+		if(mountpoint.length() <= path.length()) {
+			sub = path.substr(mountpoint.length());
+			if(isParentOrEqualPath(iter->first, path) && iter->second->fileExists(sub)) {
+				return iter->second;
+			}
 		}
 	}
 	return 0;

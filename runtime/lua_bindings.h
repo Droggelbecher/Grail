@@ -74,6 +74,22 @@ class UserInterfaceWrapper : public grail::UserInterface, public luabind::wrap_b
 		}
 }; // class UserInterfaceWrapper
 
+class TaskWrapper : public grail::Task, public luabind::wrap_base {
+	public:
+		TaskWrapper(grail::Task::Flags flags = Task::DEFAULT) : grail::Task(flags) { }
+		void eachFrame(uint32_t ticks) {
+			call<void>("eachFrame", ticks);
+		}
+		static void default_eachFrame(Task::Ptr ptr, uint32_t ticks) {
+			ptr->Task::eachFrame(ticks);
+		}
+		void onStart() {
+			call<void>("onStart");
+		}
+		static void default_onStart(Task::Ptr ptr) {
+			ptr->Task::onStart();
+		}
+}; // class TaskWrapper
 
 extern "C" int init(lua_State* L);
 
