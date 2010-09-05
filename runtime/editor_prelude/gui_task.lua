@@ -1,29 +1,30 @@
 
+local print_old = print
 require("wx")
+local print = print_old
 
 -- module('gui_task', package.seeall)
 
 class 'GUITask' (Task)
 
 function GUITask:__init()
-	print("aaaaaaa")
 	Task.__init(self, TASK_ENDLESS)
-	print("aaaaaaa-----")
 
-	self.frame = wx.wxFrame(
-		wx.NULL, wx.wxID_ANY, "wx Test",
-		wx.wxDefaultPosition, wx.wxSize(450, 450),
-		wx.wxDEFAULT_FRAME_STYLE
-		)
-	self.frame:Show(true)
+	local xml = wx.wxXmlResource()
+	xml:InitAllHandlers()
+	local r = xml:Load('runtime/editor_prelude/gui.xrc')
+	local dialog = wx.wxDialog()
+	xml:LoadDialog(dialog, wx.NULL, "Grail")
+	dialog:Show(true)
 
 	self.app = wx.wxGetApp()
-	print("aaaaaaax")
+	self:eachFrame(0)
 end
 
 function GUITask:eachFrame(ticks)
-	--print("tach")
-	if self.app:Pending() then
+	wx.wxYield()
+	
+	while self.app:Pending() do
 		self.app:Dispatch()
 	end
 end
