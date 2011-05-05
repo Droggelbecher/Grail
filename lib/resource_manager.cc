@@ -35,19 +35,19 @@ const void* Resource::createBuffer(size_t &size) {
 	return buffer;
 }
 
-const void* Resource::getData() {
+/*const void* Resource::getData() {
 	if(!buffer) {
 		buffer = createBuffer(bufferSize);
 	}
 	return buffer;
-}
+}*/
 
-size_t Resource::getDataSize() {
+/*size_t Resource::getDataSize() {
 	if(!buffer) {
 		buffer = createBuffer(bufferSize);
 	}
 	return bufferSize;
-}
+}*/
 
 Resource::Resource(string path, ResourceMode mode) : buffer(0), bufferSize(0), path(path) {
 	rw = Game::getInstance().getResourceManager().getRW(path, mode);
