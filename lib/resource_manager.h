@@ -242,7 +242,7 @@ class DirectoryResourceHandler : public ResourceHandler {
 				}
 				
 				DirectoryIteratorImpl& operator++();
-				std::string operator*() const { return iter->leaf(); }
+				std::string operator*() const { return iter->path().filename().string(); }
 				bool operator==(const ResourceManager::DirectoryIteratorImpl& other) const;
 				bool atEnd() const { return iter == boost::filesystem::directory_iterator(); }
 		};
