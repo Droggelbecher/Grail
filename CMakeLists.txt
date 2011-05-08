@@ -22,6 +22,8 @@ if(OPENGL_FOUND)
 endif(OPENGL_FOUND)
 find_package(PNG REQUIRED)
 find_package(Luabind REQUIRED)
+
+set(Boost_USE_MULTITHREADED OFF)
 find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 
 if(debug)
