@@ -11,6 +11,7 @@ using std::push_heap;
 using std::pop_heap;
 
 #include "ground.h"
+#include "debug.h"
 
 namespace grail {
 
@@ -42,23 +43,62 @@ Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
 	return *wp;
 }
 
-/*Ground::Waypoint& Ground::addWaypoint(Waypoint& wp) {
-	waypoints.push_back(&wp);
-	return wp;
-}*/
-
 bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {
 	Line line = Line(source, target);
 	list<Line>::iterator iter;
+	bool found_intersection = false;
 	for(iter = walls.begin(); iter != walls.end(); iter++) {
+		// It is always ok to walk along walls (Waypoint::likes will take care
+		// that we do not cross them)
+		if(
+				(iter->getA() == source && iter->getB() == target) ||
+				(iter->getB() == source && iter->getA() == target)) {
+			return true;
+		}
+		
 		if(line.intersects(*iter)) {
-			return false;
+			found_intersection = true;
 		}
 	}
-	return true;
+	
+	return !found_intersection;
 }
 
+void Ground::generateMap() {
+	for(list<Line>::iterator iter = walls.begin(); iter != walls.end(); iter++) {
+		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(), -1));
+		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(),  1));
+		waypoints.push_back(new WallWaypoint(iter->getB(), iter->getA(), -1));
+		waypoints.push_back(new WallWaypoint(iter->getB(), iter->getA(),  1));
+	}
+	
+	// Now mesh-connect all waypoints
+	for(list<Waypoint*>::iterator i = waypoints.begin(); i != waypoints.end(); ++i) {
+		for(list<Waypoint*>::iterator j = waypoints.begin(); j != waypoints.end(); ++j) {
+			if(directReachable((*i)->getPosition(), (*j)->getPosition())) {
+				(*i)->linkBidirectional(**j);
+			}
+		} // for j
+	} // for i
+}
+	
+
 void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path) {
+	generateMap();
+	
+	// In this class, paths directly from/to wall endpoints are generally
+	// allowed (internally), since the optimal (non-trivial) path always is along walls.
+	// This means however the user could "break out" by walking exactly onto a
+	// wall intersection and from there he could chose any side of the wall to
+	// continue. In order to avoid this, we forbid the target to be at such a
+	// position.
+	list<Waypoint*>::iterator iter;
+	for(iter = waypoints.begin(); iter != waypoints.end(); iter++) {
+		if(target == (*iter)->getPosition()) {
+			return;
+		}
+	}
+	
 	if(directReachable(source, target)) {
 		path.push_back(target);
 		return;
@@ -70,30 +110,30 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 	waypoints.push_back(s);
 	waypoints.push_back(t);
 	
+	
 	// Now connect them to all other reachable points
-	list<Waypoint*>::iterator iter;
 	for(iter = waypoints.begin(); iter != waypoints.end(); iter++) {
 		if(*iter != t && directReachable(t->getPosition(), (*iter)->getPosition())) {
-			t->link(**iter);
-			(*iter)->link(*t);
+			t->linkBidirectional(**iter);
 		}
 		if(*iter != s && directReachable(s->getPosition(), (*iter)->getPosition())) {
-			s->link(**iter);
-			(*iter)->link(*s);
+			s->linkBidirectional(**iter);
 		}
 	}
-
+	
 	getPath(*s, *t, path);
-
+	
 	waypoints.pop_back();
 	waypoints.pop_back();
+	
+	delete s;
+	delete t;
 }
 
 void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 	bool foundPath = false;
 	vector<Waypoint*> border;
 	set<Waypoint*> inner;
-	//double cheapest = numeric_limits<double>::infinity();
 	Waypoint* cheapestNode;
 	
 	source.setCostSum(0);
@@ -102,15 +142,16 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 	push_heap(border.begin(), border.end(), Waypoint::comparePointer);
 	
 	while(!border.empty()) {
-		cheapestNode = border[0];
 		pop_heap(border.begin(), border.end(), Waypoint::comparePointer);
+		cheapestNode = border.back();
+		border.pop_back();
 		
 		Waypoint::NeighbourIterator iter;
 		for(iter = cheapestNode->beginNeighbours(); iter != cheapestNode->endNeighbours(); iter++) {
 			double cost = cheapestNode->costTo(*iter);
 			double newCost = cheapestNode->getCostSum() + cost;
 			
-			// Node is totally new to us
+			// Node is totally new to us (neither in 'inner' or in 'border')
 			if(inner.count(*iter) < 1 && count(border.begin(), border.end(), *iter) < 1) {
 				(*iter)->setCostSum(newCost);
 				(*iter)->cheapestParent = cheapestNode;
@@ -124,7 +165,7 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 				(*iter)->setCostSum(newCost);
 				(*iter)->cheapestParent = cheapestNode;
 				border.push_back(*iter);
-				//push_heap(border.begin(), border.end(), Waypoint::comparePointer);
+				push_heap(border.begin(), border.end(), Waypoint::comparePointer);
 				make_heap(border.begin(), border.end(), Waypoint::comparePointer);
 			}
 		} // for

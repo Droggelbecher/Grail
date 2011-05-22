@@ -10,6 +10,8 @@
 #include "utils.h"
 #include "task.h"
 #include "wait_task.h"
+#include "ground.h"
+#include "actor.h"
 
 using std::make_pair;
 
@@ -156,6 +158,34 @@ TEST(Task, WaitTask) {
 	CHECK_LOWER(SDL_GetTicks(), now + 200);
 }
 
+TEST(Ground, Pathfinding) {
+	Ground g;
+	g.addWall(VirtualPosition(100, 100), VirtualPosition(200, 100));
+	g.addWall(VirtualPosition(200, 100), VirtualPosition(200, 200));
+	g.addWall(VirtualPosition(200, 200), VirtualPosition(100, 200));
+	g.addWall(VirtualPosition(100, 200), VirtualPosition(100, 100));
+	
+	CHECK_EQUAL(g.directReachable(VirtualPosition(50, 150), VirtualPosition(250, 150)), false);
+	CHECK_EQUAL(g.directReachable(VirtualPosition(40, 150), VirtualPosition(250, 140)), false);
+	
+	// find a path around the square obstacle
+	Path p;
+	g.getPath(VirtualPosition(50, 140), VirtualPosition(250, 140), p);
+	CHECK_EQUAL(p.size(), 3);
+	CHECK_EQUAL(p.back(), VirtualPosition(250, 140));
+	
+	// now find a path to a wall-intersection point
+	// (that should be disallowed and thus return an empty path)
+	p.clear();
+	g.getPath(VirtualPosition(50, 140), VirtualPosition(100, 100), p);
+	CHECK_EQUAL(p.size(), 0);
+	
+	// However it is allowed to have a waypoint as starting point
+	p.clear();
+	g.getPath(VirtualPosition(100, 100), VirtualPosition(150, 150), p);
+	CHECK_EQUAL(p.size(), 1);
+}
+	
 } // namespace grail
 
 int main(int argc, char** argv) {

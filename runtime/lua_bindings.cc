@@ -133,8 +133,7 @@ extern "C" int init(lua_State* L) {
 			.scope[
 				class_<Ground::Waypoint>("Waypoint")
 					.def("getPosition", &Ground::Waypoint::getPosition)
-					.def("link", &Ground::Waypoint::link)
-					//...
+					.def("linkBidirectional", &Ground::Waypoint::linkBidirectional)
 				]
 			
 			.def("addWall", &Ground::addWall)

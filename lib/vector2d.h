@@ -55,6 +55,9 @@ class Vector2d {
 			return _x <= other._x && _y <= other._y;
 		}
 		
+		//T operator*(const Vector2d<T, N> other) { return _x * other._x + _y * other._y; }
+		T cross(const Vector2d<T, N> other) { return _x * other._y - _y * other._x; }
+		
 		friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
 		friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);
 		friend bool operator==<T, N>(Vector2d<T, N>, Vector2d<T, N>);
