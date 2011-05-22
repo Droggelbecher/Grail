@@ -1,9 +1,9 @@
 # vim: set noexpandtab:
 
 set(GRAIL_FILES
+	action_text.cc
 	actor.cc
 	animation.cc
-	action_text.cc
 	area.cc
 	audio.cc
 	blit_cached.cc
@@ -20,6 +20,7 @@ set(GRAIL_FILES
 	sdlutils.cc
 	shortcuts.cc
 	sprite.cc
+	surface.cc
 	task.cc
 	text.cc
 	unittest.cc
@@ -37,7 +38,7 @@ add_library(grail SHARED ${GRAIL_FILES})
 
 # Unit tests for library
 
-include_directories(${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} ${BOOST_INCLUDE_DIR} ${LUA_INCLUDE_DIR})
+include_directories(${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} ${BOOST_INCLUDE_DIR} ${LUA_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 add_executable(run_unittests	run_unittests.cc vector2d_impl.cc)
 set(LIBS
 	grail
@@ -46,5 +47,15 @@ set(LIBS
 	${PNG_LIBRARIES}
 	${LUA_LIBRARIES}
 )
+
+if(OPENGL_FOUND)
+	set(LIBS ${LIBS} ${OPENGL_LIBRARIES})
+	message("OpenGL found")
+	message("  Include dir: ${OPENGL_INCLUDE_DIR}")
+	message("  Libraries: ${OPENGL_LIBRARIES}")
+else(OPENGL_FOUND)
+	message("OpenGL not found, building without!")
+endif(OPENGL_FOUND)
+
 target_link_libraries(run_unittests ${LIBS})
 

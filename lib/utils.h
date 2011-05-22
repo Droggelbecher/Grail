@@ -3,12 +3,13 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <string>
-#include <list>
-#include <exception>
 #include <cassert>
+#include <exception>
 #include <iostream>
+#include <list>
 #include <sstream>
+#include <stdint.h>
+#include <string>
 
 namespace grail {
 
@@ -167,6 +168,15 @@ std::string normalizePath(std::string path);
  * path2
  */
 bool isParentOrEqualPath(std::string path1, std::string path2);
+
+//
+// Math stuff
+//
+
+/**
+ * Given an integer n, return the next power of 2  that is >= n.
+ */
+uint16_t nextPower2(uint16_t n);
 
 } // namespace grail
 

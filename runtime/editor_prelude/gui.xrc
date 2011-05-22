@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- This is actually handwritten :) -->
+
+<resource version="2.5.3.0" xmlns="http://www.wxwidgets.org/wxxrc">
+	<object class="wxDialog" name="Grail">
+		<style>wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU</style>
+		<object class="wxGridSizer">
+			<cols>4</cols>
+			<rows>0</rows>
+			<vgap>0</vgap>
+			<hgap>0</hgap>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxGROW|wxALL</flag>
+				<border>5</border>
+				<object class="wxButton" name="bt_select">
+					<label>Select</label>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxGROW|wxALL</flag>
+				<border>5</border>
+				<object class="wxButton" name="bt_walkable">
+					<label>(+) Walkable area</label>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxGROW|wxALL</flag>
+				<border>5</border>
+				<object class="wxButton" name="bt_standing_point">
+					<label>(+) Standing point</label>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxGROW|wxALL</flag>
+				<border>5</border>
+				<object class="wxButton" name="bt_region">
+					<label>(+) Region</label>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxGROW|wxALL</flag>
+				<border>5</border>
+				<object class="wxButton" name="bt_point">
+					<label>(+) Point</label>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxGROW|wxALL</flag>
+				<border>5</border>
+				<object class="wxButton" name="bt_path">
+					<label>(+) Path</label>
+				</object>
+			</object>
+		</object>
+	</object>
+</resource>
+			

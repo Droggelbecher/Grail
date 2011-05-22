@@ -35,23 +35,8 @@ namespace grail {
 
 			void setContainingLoop(MainLoop* loop);
 
-		protected:
-			/**
-			 * Override this and it will be called when the task is being
-			 * started.
-			 */
-			virtual void onStart() { };
-
-			/**
-			 * Override this and it shall be called once each frame, you may
-			 * execute your task piecewise here.
-			 */
-			virtual void eachFrame(uint32_t ticks) { }
-
-			Task(Flags flags = DEFAULT);
-
-		
 		public:
+			Task(Flags flags = DEFAULT);
 			virtual ~Task();
 
 			Flags getFlags() { return flags; }
@@ -81,8 +66,25 @@ namespace grail {
 			 */
 			State getState() const;
 
+			/**
+			 * Override this and it will be called when the task is being
+			 * started.
+			 * You usually don't want to call this directly.
+			 */
+			virtual void onStart() { };
+
+			/**
+			 * Override this and it shall be called once each frame, you may
+			 * execute your task piecewise here.
+			 * You usually don't want to call this directly.
+			 */
+			virtual void eachFrame(uint32_t ticks) { }
+
+
 			friend class MainLoop;
 	};
+
+	std::ostream& operator<<(std::ostream& os, const Task& ui);
 
 }
 

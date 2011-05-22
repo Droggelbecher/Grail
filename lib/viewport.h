@@ -44,6 +44,7 @@ class Viewport {
 		
 		void renderScene(Scene::Ptr scene, uint32_t ticks);
 		void renderUserInterface(UserInterface::Ptr userInterface, uint32_t ticks);
+		void startRendering();
 		void finishRendering();
 		
 		void setFollowing(Actor::Ptr actor) {

@@ -64,7 +64,7 @@ class Text : public Animation, public BlitCached {
 		}
 		
 		void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
-			return BlitCached::renderAt(target, ticks, p);
+			BlitCached::renderAt(target, ticks, p);
 		}
 		
 		void eachFrame(uint32_t ticks) {

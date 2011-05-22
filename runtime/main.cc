@@ -17,6 +17,7 @@
 #include "lib/utils.h"
 #include "lib/viewport.h"
 #include "lua_bindings.h"
+#include "lib/mainloop.h"
 #include "network_interface.h"
 #include "lib/version.h"
 
@@ -27,8 +28,14 @@ void exitSyntax(char* self, int code) {
 	cerr << endl << "Grail Adventure Game Engine v" VERSION << endl << endl
 	    << "Usage: " << self << " [-h] [-v] [-p PRELUDEPATH] GAMEPATH" << endl << endl
 			<< "  -p PRELUDEPATH   Load lua prelude from given path. Only use when you know what you are doing." << endl
-			<< "  -v               Show version number and exit" << endl
-			<< "  -h               Show this help and exit" << endl
+			<< "  -v               Show version number and exit." << endl
+			<< "  -h               Show this help and exit." << endl
+			<< "  -f FPS           Try to run at this many frames per second." << endl
+		#if WITH_OPENGL
+			<< "                   Default is 60." << endl
+		#else
+			<< "                   Default is 50." << endl
+		#endif
 			<< "  GAMEPATH         Path to directory of game to run. Try passing the 'demo' directory." << endl;
 
 	exit(code);
@@ -42,7 +49,7 @@ int main(int argc, char** argv) {
 	string preludePath = dirName(argv[0]) + pathDelimiter + "prelude";
 
 	int opt;
-	while((opt = getopt(argc, argv, "hvp:")) != -1) {
+	while((opt = getopt(argc, argv, "f:hvp:")) != -1) {
 		switch(opt) {
 			case 'p':
 				preludePath = string(optarg);
@@ -50,11 +57,20 @@ int main(int argc, char** argv) {
 
 			case 'v':
 				cout << "Grail Adventure Game Engine v" VERSION << endl;
+				#ifdef WITH_OPENGL
+					cout << "Compiled with OpenGL support." << endl;
+				#else
+					cout << "Compiled without OpenGL support." << endl;
+				#endif
 				exit(0);
 				break;
 
 			case 'h':
 				exitSyntax(argv[0], 0);
+				break;
+
+			case 'f':
+				MainLoop::setTargetFPS(fromString<double>(optarg));
 				break;
 				
 			default:

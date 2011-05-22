@@ -103,6 +103,19 @@ TEST(Utils, normalizePath) {
 	CHECK_EQUAL(normalizePath("////foo////bar////"), "/foo/bar");
 }
 
+TEST(Utils, math) {
+	CHECK_EQUAL(nextPower2(0), 0);
+	CHECK_EQUAL(nextPower2(1), 1);
+	CHECK_EQUAL(nextPower2(2), 2);
+	CHECK_EQUAL(nextPower2(3), 4);
+	CHECK_EQUAL(nextPower2(4), 4);
+	CHECK_EQUAL(nextPower2(5), 8);
+	CHECK_EQUAL(nextPower2(6), 8);
+	CHECK_EQUAL(nextPower2(7), 8);
+	CHECK_EQUAL(nextPower2(8), 8);
+	CHECK_EQUAL(nextPower2(800), 1024);
+}
+
 
 class DummyTask : public Task {
 	public:
@@ -115,7 +128,7 @@ class DummyTask : public Task {
 		void end() { signalComplete(); }
 };
 
-TEST(Task, STATES) {
+TEST(Task, States) {
 	DummyTask::Ptr t = DummyTask::Ptr(new DummyTask);
 	CHECK_EQUAL(t->getState(), Task::STATE_NEW);
 	t->start();

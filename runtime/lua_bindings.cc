@@ -145,6 +145,7 @@ extern "C" int init(lua_State* L) {
 			,
 		
 		class_<ResourceManager>("ResourceManager")
+			.def("exists", &ResourceManager::exists)
 			,
 		
 		class_<Scene, Scene::Ptr>("Scene")
@@ -241,9 +242,14 @@ extern "C" int init(lua_State* L) {
 			.def("setNoFollowing", &Viewport::setNoFollowing)
 			,
 		
-		class_<Task, Task::Ptr>("Task")
+		class_<Task, TaskWrapper, Task::Ptr>("Task")
+			.def(constructor<>())
+			.def(constructor<Task::Flags>())
 			.def("start", &Task::start)
 			.def("block", &Task::block)
+			.def("eachFrame", &Task::eachFrame, &TaskWrapper::default_eachFrame)
+			.def("onStart", &Task::onStart, &TaskWrapper::default_onStart)
+			.def(tostring(self))
 			,
 		
 		class_<WaitTask, Task, Task::Ptr>("WaitTask")

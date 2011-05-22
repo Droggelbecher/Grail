@@ -1,4 +1,4 @@
-// vim : set noexpandtab:
+// vim: set noexpandtab:
 
 #include "actor.h"
 

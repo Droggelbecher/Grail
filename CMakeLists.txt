@@ -16,9 +16,14 @@ find_package(SDL_image REQUIRED)
 find_package(SDL_ttf REQUIRED)
 find_package(SDL_mixer REQUIRED)
 find_package(SDL_gfx REQUIRED)
-
+find_package(OpenGL)
+if(OPENGL_FOUND)
+	add_definitions(-DWITH_OPENGL)
+endif(OPENGL_FOUND)
 find_package(PNG REQUIRED)
 find_package(Luabind REQUIRED)
+
+set(Boost_USE_MULTITHREADED OFF)
 find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 
 if(debug)

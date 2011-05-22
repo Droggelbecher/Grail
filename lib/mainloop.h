@@ -12,7 +12,7 @@ namespace grail {
 
 class MainLoop {
 		bool exit_; // exit "signal"
-		double targetFPS;
+		static double targetFPS;
 		bool scheduleTaskCheck; // true when tasks have to be checked for completion
 		bool master;
 		std::list<Task::Ptr> tasks;
@@ -21,7 +21,7 @@ class MainLoop {
 		void checkTasks();
 		
 	public:
-		MainLoop(bool master=false) : exit_(false), targetFPS(50.0), master(master) { };
+		MainLoop(bool master=false) : exit_(false), master(master) { };
 		virtual ~MainLoop() { };
 		
 		virtual void run();
@@ -42,6 +42,11 @@ class MainLoop {
 		 * you to call it manually.
 		 */
 		void notifyCompleted(Task* task);
+
+		/**
+		 * Set target FPS value for all main loops.
+		 */
+		static void setTargetFPS(double fps) { targetFPS = fps; }
 };
 
 } // namespace grail
