@@ -76,6 +76,8 @@ class Vector2d {
 		uint16_t nearestDirection(uint16_t directions, double offset=0) const;
 		
 		double length() const;
+		
+		Vector2d<T, N> getPosition() const { return *this; }
 };
 
 typedef Vector2d<int32_t, 0> VirtualPosition;

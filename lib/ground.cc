@@ -25,23 +25,23 @@ Ground::~Ground() {
 	}
 }
 
-void Ground::addWall(VirtualPosition a, VirtualPosition b) {
-	walls.push_back(Line(a, b));
-}
-
-void Ground::addWalls(const Polygon& polygon) {
-	Polygon::LineIterator iter;
-	
-	for(iter = polygon.beginLines(); iter != polygon.endLines(); iter++) {
-		walls.push_back(*iter);
+void Ground::addWalls(const Polygon<VirtualPosition, IsPosition>& polygon) {
+	WaypointPolygon *inner = new WaypointPolygon(), *outer = new WaypointPolygon();
+	for(Polygon<VirtualPosition, IsPosition>::ConstNodeIterator iter = polygon.beginNodes(); iter != polygon.endNodes(); ++iter) {
+		inner->push_back(new Waypoint(*iter));
+		outer->push_back(new Waypoint(*iter));
 	}
+	innerPolygons.push_back(inner);
+	outerPolygons.push_back(outer);
 }
 
+/*
 Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
 	Waypoint *wp = new Waypoint(p);
 	waypoints.push_back(wp);
 	return *wp;
 }
+*/
 
 bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {
 	Line line = Line(source, target);
@@ -65,6 +65,7 @@ bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {
 }
 
 void Ground::generateMap() {
+	/*
 	for(list<Line>::iterator iter = walls.begin(); iter != walls.end(); iter++) {
 		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(), -1));
 		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(),  1));
@@ -80,6 +81,7 @@ void Ground::generateMap() {
 			}
 		} // for j
 	} // for i
+	*/
 }
 	
 
@@ -178,12 +180,30 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 	
 	if(foundPath) {
 		Waypoint* p = &target;
+		cdbg << "found path:\n";
 		do {
+			cdbg << *p << "\n";
 			path.push_front(p->getPosition());
 			p = p->cheapestParent;
 		} while(p && *p != source);
 	}
 } // getPath
 
+#ifdef DEBUG
+std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp) {
+	/*
+	const Ground::WallWaypoint* wwp = dynamic_cast<const Ground::WallWaypoint*>(&wp);
+	if(wwp) {
+		os << "WallWaypoint(" << wwp->position << "," << wwp->wallEnd << "," << wwp->side << ")";
+	}
+	else {
+		os << "Waypoint(" << wp.position << ")";
+	}
+	*/
+	return os;
 }
+#endif // DEBUG
+
+
+} // namespace
 

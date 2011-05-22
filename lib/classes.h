@@ -30,7 +30,7 @@ namespace grail {
 	class Line;
 	class LineIterator;
 	class MainLoop;
-	class Polygon;
+	template<typename Node, typename GetPosition> class Polygon;
 	class Rect;
 	class Resource;
 	class ResourceHandler;

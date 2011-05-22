@@ -6,6 +6,7 @@
 #include <string>
 #include <list>
 using std::list;
+#include <iostream>
 
 #include "vector2d.h"
 #include "polygon.h"
@@ -22,6 +23,10 @@ namespace grail {
  * (e.g. we don't use A*, only dijkstra, we don't pre-calculate a
  * shortest-path map, etc...) However for the expected number of waypoints
  * this will handle, this should be more than suffcient.
+ * 
+ * TODO: Don't allow users to place individual walls but only polygons.
+ * After polygons have been placed, create one point for each side of a
+ * corner.
  * 
  * TODO: Usability: Currently a potential user needs to be careful when to add
  * walls, when to add waypoints and when to generate the map. (E.g. adding
@@ -57,6 +62,10 @@ class Ground {
 			public:
 				Waypoint* cheapestParent;
 				
+				struct GetPosition {
+					static VirtualPosition getPosition(const Waypoint *wp) { return wp->getPosition(); }
+				};
+				
 				void reset() {
 					cheapestParent = 0;
 					NeighbourIterator iter;
@@ -83,37 +92,39 @@ class Ground {
 				NeighbourIterator beginNeighbours() { return neighbours.begin(); }
 				NeighbourIterator endNeighbours() { return neighbours.end(); }
 				friend class Ground;
+				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
 		};
 		
 		class WallWaypoint : public Waypoint {
 			private:
-				VirtualPosition wallEnd;
+				WallWaypoint *next, *prev;
 				int side; // -1=left, 1=right
 				
-				WallWaypoint(VirtualPosition position, VirtualPosition wallEnd, int side) :
-					Waypoint(position), wallEnd(wallEnd), side(side) {
-				}
+				WallWaypoint(VirtualPosition position, int side) :
+					Waypoint(position), next(0), prev(0), side(side) { }
+				
+				void setNext(WallWaypoint *n) { next = n; }
+				void setPrev(WallWaypoint *p) { prev = p; }
 				
 				bool likes(const Waypoint& other) {
-					if(!Waypoint::likes(other)) { return false; }
-					
-					if(sgn((wallEnd - position).cross(other.position - position)) == side) {
-						return true;
-					}
+					return true;
 					/*
-					const WallWaypoint& wwp = dynamic_cast<const WallWaypoint&>(other);
-					if(&wwp != 0) {
-						cdbg << "WWP\n";
-						if((wwp.position == wallEnd) && (wwp.side == -side)) { return true; }
-					}*/
-					return false;
+					if(!Waypoint::likes(other)) { return false; }
+					return
+						(sgn((next.position - position).cross(other.position - position)) == side) &&
+						(sgn((prev.position - position).cross(other.position - position
+					*/
 				}
 				friend class Ground;
+				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
 		};
 		
 	private:
 		list<Line> walls;
 		list<Waypoint*> waypoints;
+		
+		typedef Polygon<Waypoint*, Waypoint::GetPosition> WaypointPolygon;
+		list<WaypointPolygon*> innerPolygons, outerPolygons;
 		
 		
 	public:
@@ -121,18 +132,9 @@ class Ground {
 		~Ground();
 		
 		/**
-		 * Add a wall to this ground reaching from VirtualPosition a to VirtualPosition b.
-		 * If there is already a connections between to nodes crossing the
-		 * new wall it will still be possible to walk along this connection walking
-		 * through the wall.
-		 * (Rule of thumb: Connections have always priority over walls)
-		 */
-		void addWall(VirtualPosition a, VirtualPosition b);
-		
-		/**
 		 * Add walls from the edges of the given polygon.
 		 */
-		void addWalls(const Polygon& polygon);
+		void addWalls(const Polygon<VirtualPosition, IsPosition>& polygon);
 		
 		const list<Line>& getWalls() const { return walls; }
 		
@@ -151,12 +153,11 @@ class Ground {
 		 * You might want to use waypoint.linkBidirectional(other_wp)
 		 * to create a bidirectional link.
 		 */
-		Waypoint& addWaypoint(VirtualPosition p);
+		//Waypoint& addWaypoint(VirtualPosition p);
 		
 		/**
 		 * Returns true if point target can be reached in a direct line from source,
 		 * ie there are no walls between them.
-		 * (This totally ignores any possible "help" from nodes)
 		 */
 		bool directReachable(VirtualPosition source, VirtualPosition target);
 		
@@ -164,8 +165,16 @@ class Ground {
 		 * Returns a points of nodes that discribe a path from source to target.
 		 */
 		void getPath(VirtualPosition source, VirtualPosition target, Path& path);
+		
+		/// ditto.
 		void getPath(Waypoint& source, Waypoint& target, Path& path);
 };
+
+
+#ifdef DEBUG
+std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp);
+#endif // DEBUG
+
 
 } // namespace grail
 

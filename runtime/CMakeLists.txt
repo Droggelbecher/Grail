@@ -4,6 +4,7 @@ include_directories(.. ${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLU
 
 add_executable(grail_runtime
   ../lib/vector2d_impl.cc
+  ../lib/polygon_impl.cc
   interpreter.cc
   lua_bindings.cc
   main.cc

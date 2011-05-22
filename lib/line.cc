@@ -30,7 +30,6 @@ bool Line::intersects(const Line& other) const {
 	
 	// lines intersect at exactly one end point,
 	// we count this as not intersecting
-	int s = 0;
 	if((abs(d1) == 1) && (abs(d2) == 1) && (abs(d3) == 1) && (abs(d4) == 1)) {
 		return false;
 	}

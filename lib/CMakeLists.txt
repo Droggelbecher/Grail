@@ -39,7 +39,7 @@ add_library(grail SHARED ${GRAIL_FILES})
 # Unit tests for library
 
 include_directories(${SDLTTF_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} ${BOOST_INCLUDE_DIR} ${LUA_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
-add_executable(run_unittests	run_unittests.cc vector2d_impl.cc)
+add_executable(run_unittests	run_unittests.cc vector2d_impl.cc polygon_impl.cc)
 set(LIBS
 	grail
 	${Boost_LIBRARIES}

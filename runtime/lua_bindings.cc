@@ -136,10 +136,10 @@ extern "C" int init(lua_State* L) {
 					.def("linkBidirectional", &Ground::Waypoint::linkBidirectional)
 				]
 			
-			.def("addWall", &Ground::addWall)
+			//.def("addWall", &Ground::addWall)
 			.def("addWalls", &Ground::addWalls)
 			//.def("getWalls", &Ground::getWalls)
-			.def("addWaypoint", &Ground::addWaypoint)
+			//.def("addWaypoint", &Ground::addWaypoint)
 			.def("directReachable", &Ground::directReachable)
 			,
 		

@@ -78,7 +78,7 @@ TEST(Utils, split) {
 	CHECK_EQUAL(split2("foo bar", "=").second, "");
 	CHECK_EQUAL(split2("foo = bar = baz", "=").first, "foo ");
 	CHECK_EQUAL(split2("foo = bar = baz", "=").second, " bar = baz");
-
+	
 	std::string s = "  foo bar baz  bang buff";
 	SplitIterator iter = SplitIterator(s, " ");
 	CHECK_EQUAL(*iter, ""); iter++;
@@ -123,7 +123,7 @@ class DummyTask : public Task {
 	public:
 		typedef boost::shared_ptr<DummyTask> Ptr;
 		bool onStart_executed;
-
+		
 		DummyTask() : Task(), onStart_executed(false) {
 		}
 		void onStart() { onStart_executed = true; }
@@ -148,7 +148,7 @@ TEST(Task, WaitTask) {
 	t->block();
 	CHECK_EQUAL(t->getState(), Task::STATE_COMPLETED);
 	CHECK_GREATER(SDL_GetTicks(), now + 200);
-
+	
 	// Non-Blocking
 	t = WaitTask::Ptr(new WaitTask(200));
 	CHECK_EQUAL(t->getState(), Task::STATE_NEW);
@@ -160,10 +160,13 @@ TEST(Task, WaitTask) {
 
 TEST(Ground, Pathfinding) {
 	Ground g;
-	g.addWall(VirtualPosition(100, 100), VirtualPosition(200, 100));
-	g.addWall(VirtualPosition(200, 100), VirtualPosition(200, 200));
-	g.addWall(VirtualPosition(200, 200), VirtualPosition(100, 200));
-	g.addWall(VirtualPosition(100, 200), VirtualPosition(100, 100));
+	
+	Polygon<VirtualPosition, IsPosition> poly;
+	poly.push_back(VirtualPosition(100, 100));
+	poly.push_back(VirtualPosition(100, 200));
+	poly.push_back(VirtualPosition(200, 200));
+	poly.push_back(VirtualPosition(200, 100));
+	g.addWalls(poly);
 	
 	CHECK_EQUAL(g.directReachable(VirtualPosition(50, 150), VirtualPosition(250, 150)), false);
 	CHECK_EQUAL(g.directReachable(VirtualPosition(40, 150), VirtualPosition(250, 140)), false);
@@ -184,8 +187,21 @@ TEST(Ground, Pathfinding) {
 	p.clear();
 	g.getPath(VirtualPosition(100, 100), VirtualPosition(150, 150), p);
 	CHECK_EQUAL(p.size(), 1);
-}
 	
+	p.clear();
+	g.getPath(VirtualPosition(50, 150), VirtualPosition(150, 150), p);
+	CHECK_EQUAL(p.size(), 0);
+	
+	p.clear();
+	g.getPath(VirtualPosition(50, 50), VirtualPosition(150, 150), p);
+	CHECK_EQUAL(p.size(), 0);
+	
+	p.clear();
+	g.getPath(VirtualPosition(100, 150), VirtualPosition(101, 150), p);
+	CHECK_EQUAL(p.size(), 0);
+}
+
+
 } // namespace grail
 
 int main(int argc, char** argv) {
