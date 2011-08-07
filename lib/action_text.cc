@@ -6,6 +6,7 @@
 namespace grail {
 	
 	ActionText::ActionText(Font::Ptr fnt) : text(fnt) {
+		// TODO
 		text.setText("Go to blah");
 	}
 	

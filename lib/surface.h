@@ -24,6 +24,9 @@ using std::endl;
 
 namespace grail {
 
+/**
+ * An SDL Surface.
+ */
 class Surface {
 		SDL_Surface* sdlSurface;
 	#ifdef WITH_OPENGL

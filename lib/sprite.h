@@ -11,6 +11,9 @@
 
 namespace grail {
 
+/**
+ * Common (abstract) base class for all sprite types.
+ */
 class Sprite : public Animation {
 	protected:
 		std::vector<uint32_t> frameDurations;
@@ -42,6 +45,10 @@ class Sprite : public Animation {
 		virtual void renderCurrentFrameAt(SDL_Surface* target, VirtualPosition p) const = 0;
 };
 
+/**
+ * Sprite based on a single image file which contains the sprites frames
+ * in a horizontal alignment (first frame is the leftmost)
+ */
 class StripeSprite : public Sprite {
 	protected:
 		Surface* surface;
@@ -62,6 +69,10 @@ class StripeSprite : public Sprite {
 		}
 };
 
+/**
+ * Sprite based on image files in a directory.
+ * Frame order is determined by lexicographical order of file names.
+ */
 class ImageSprite : public Sprite {
 	protected:
 		std::vector<Surface::Ptr> surfaces;

@@ -13,6 +13,11 @@
 
 namespace grail {
 	
+	/**
+	 * User interface element that displays the currently chosen action in
+	 * text form.
+	 * TODO: Not complete yet!
+	 */
 	class ActionText : public UserInterfaceElement {
 			Text text;
 			
