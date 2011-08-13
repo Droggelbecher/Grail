@@ -1,11 +1,12 @@
 
 Development versions of the following are required for compiling:
 
-libboost, boost-filesystem, boost-system, boost-regex
-(tested with boost version 1.46)
-
-libsdl, libsdl-ttf, libsdl-image, libsdl-gfx, libsdl-mixer
-liblua>=5.1
-libluabind >=0.8.1
-libpng
+* libboost, boost-filesystem, boost-system, boost-regex
+  (tested with boost version 1.46)
+* libsdl, libsdl-ttf, libsdl-image, libsdl-gfx, libsdl-mixer
+* liblua>=5.1
+* libluabind >=0.8.1
+* libpng
+* alure
+  source: http://www.kcat.strangesoft.net/alure.html
 

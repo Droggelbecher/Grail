@@ -36,7 +36,6 @@ namespace grail {
 	class ResourceHandler;
 	class ResourceManager;
 	class Scene;
-	class SceneAnimation;
 	class SDLException;
 	class SoundTask;
 	class SplitIterator;
@@ -51,6 +50,9 @@ namespace grail {
 	class UserInterfaceElement;
 	class ValueNotSet;
 	class Viewport;
+	class WaitTask;
+	class WallWaypoint;
+	class Waypoint;
 	
 } // namespace grail
 

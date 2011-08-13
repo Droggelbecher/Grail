@@ -28,6 +28,12 @@ Ground::~Ground() {
 void Ground::addWalls(const Polygon<VirtualPosition, IsPosition>& polygon) {
 	WaypointPolygon *inner = new WaypointPolygon(), *outer = new WaypointPolygon();
 	for(Polygon<VirtualPosition, IsPosition>::ConstNodeIterator iter = polygon.beginNodes(); iter != polygon.endNodes(); ++iter) {
+		// TODO: Alter directReachable so that points in inner are
+		// only reachable by points inside the polygon (inside/outside test)
+		// and points in outer are only reachable by points outside the
+		// polygon.
+		// This way this method can be used to add an enclosing outside
+		// polygon as well as for obstacles (or even obstacles with holes)
 		inner->push_back(new Waypoint(*iter));
 		outer->push_back(new Waypoint(*iter));
 	}

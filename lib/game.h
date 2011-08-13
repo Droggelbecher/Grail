@@ -37,8 +37,6 @@ class Game {
 	public:
 		typedef boost::shared_ptr<Game> Ptr;
 		
-		static const std::string className;
-		
 		virtual ~Game();
 		
 		static Game& getInstance();

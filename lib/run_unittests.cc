@@ -162,6 +162,7 @@ TEST(Ground, Pathfinding) {
 	Ground g;
 	
 	Polygon<VirtualPosition, IsPosition> poly;
+	
 	poly.push_back(VirtualPosition(100, 100));
 	poly.push_back(VirtualPosition(100, 200));
 	poly.push_back(VirtualPosition(200, 200));

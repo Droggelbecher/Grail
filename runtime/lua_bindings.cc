@@ -125,10 +125,8 @@ extern "C" int init(lua_State* L) {
 				.def("setText", &Text::setText)
 				,
 			
-		class_<Audio>("Audio")
-			.def(constructor<>())
-			,
-		
+
+
 		class_<Ground>("Ground")
 			.scope[
 				class_<Ground::Waypoint>("Waypoint")
@@ -253,6 +251,14 @@ extern "C" int init(lua_State* L) {
 		
 		class_<WaitTask, Task, Task::Ptr>("WaitTask")
 			.def(constructor<uint32_t>())
+			,
+		class_<SoundTask, Task, Task::Ptr>("SoundTask")
+			.def(constructor<std::string, size_t>())
+			.def("pause", &SoundTask::pause)
+			,
+		class_<Audio>("Audio")
+			.def(constructor<>())
+			.def("prepareSound", &Audio::prepareSound)
 	];
 	
 	return 0;
