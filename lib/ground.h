@@ -5,6 +5,7 @@
 
 #include <string>
 #include <list>
+#include <vector>
 using std::list;
 #include <iostream>
 
@@ -50,14 +51,8 @@ class Ground {
 				Waypoint(VirtualPosition position) : position(position), costSum(0) { }
 				virtual ~Waypoint() { reset(); }
 				
-				void link(Waypoint& other) { if(likes(other.getPosition())) neighbours.push_back(&other); }
+				void link(Waypoint& other) { neighbours.push_back(&other); }
 				void unlink(Waypoint& other) { neighbours.remove(&other); }
-				
-				// Due to walls overlapping at their endpoints and waypoint
-				// doubling for reflecting both sides of a wall, we have
-				// waypoint duplicates. Disallowing connections between those
-				// avoids that they show up in pathfinding results
-				bool likes(const Waypoint& other) { return other.position != position; }
 				
 			public:
 				Waypoint* cheapestParent;
@@ -79,10 +74,8 @@ class Ground {
 				bool operator!=(const Waypoint& other) const { return position != other.position; }
 				
 				void linkBidirectional(Waypoint& other) {
-					if(likes(other.getPosition()) && other.likes(position)) {
-						link(other);
-						other.link(*this);
-					}
+					link(other);
+					other.link(*this);
 				}
 				
 				void setCostSum(double s) { costSum = s; }
@@ -98,45 +91,52 @@ class Ground {
 		class WallWaypoint : public Waypoint {
 			private:
 				WallWaypoint *next, *prev;
-				int side; // -1=left, 1=right
+				//int side; // -1=left, 1=right
 				
-				WallWaypoint(VirtualPosition position, int side) :
-					Waypoint(position), next(0), prev(0), side(side) { }
+				WallWaypoint(VirtualPosition position/*, int side*/) :
+					Waypoint(position), next(0), prev(0) /*, side(side)*/ { }
 				
 				void setNext(WallWaypoint *n) { next = n; }
 				void setPrev(WallWaypoint *p) { prev = p; }
 				
-				bool likes(const Waypoint& other) {
-					return true;
-					/*
-					if(!Waypoint::likes(other)) { return false; }
-					return
-						(sgn((next.position - position).cross(other.position - position)) == side) &&
-						(sgn((prev.position - position).cross(other.position - position
-					*/
-				}
 				friend class Ground;
 				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
 		};
 		
-	private:
-		list<Line> walls;
-		list<Waypoint*> waypoints;
+		class PolygonTreeNode {
+			public:
+				typedef Polygon<VirtualPosition, IsPosition> polygon_t;
+				typedef std::vector<PolygonTreeNode*>::iterator iterator_t;
+				PolygonTreeNode(const polygon_t& polygon) : polygon(polygon) {
+				}
+				void addChild(PolygonTreeNode* node) { childs.push_back(node); }
+				iterator_t beginChilds() { return childs.begin(); }
+				iterator_t endChilds() { return childs.end(); }
+				const polygon_t& getPolygon() { return polygon; }
+			private:
+				const polygon_t &polygon;
+				std::vector<PolygonTreeNode*> childs;
+				std::vector<Waypoint> waypoints;
+		};
 		
-		typedef Polygon<Waypoint*, Waypoint::GetPosition> WaypointPolygon;
-		list<WaypointPolygon*> innerPolygons, outerPolygons;
-		
-		
-	public:
 		Ground();
 		~Ground();
 		
 		/**
 		 * Add walls from the edges of the given polygon.
+		 * 
+		 * @pre {
+		 * 	@ref polygon does not intersect any polygon added before. (Else
+		 * 	the behaviour is undefined)
+		 * }
+		 * 
+		 * @param polygon The polygon to add.
+		 * @param node Only used internally, leave at 0.
 		 */
-		void addWalls(const Polygon<VirtualPosition, IsPosition>& polygon);
+		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygon(polygon, 0) }
+		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, PolygonTreeNode* node);
 		
-		const list<Line>& getWalls() const { return walls; }
+//		const list<Line>& getWalls() const { return walls; }
 		
 		/**
 		 * Call this after having added all needed walls.
@@ -144,7 +144,8 @@ class Ground {
 		 * appropriately to allow pathfinding.
 		 * Only call once or you will get unecessary waypoints.
 		 */
-		void generateMap();
+		void generateMap() { generateMap(0); }
+		void generateMap(PolygonTreeNode* node);
 		
 		/**
 		 * Add a new waypoint. Note that this will be pretty useless if you
@@ -168,6 +169,18 @@ class Ground {
 		
 		/// ditto.
 		void getPath(Waypoint& source, Waypoint& target, Path& path);
+		
+		
+	private:
+		//list<Line> walls;
+		//list<Waypoint*> waypoints;
+		
+		typedef Polygon<Waypoint*, Waypoint::GetPosition> WaypointPolygon;
+		//list<WaypointPolygon*> innerPolygons, outerPolygons;
+		
+		//PolygonTree<WaypointPolygon> polygons;
+		PolygonTreeNode *root;
+		
 };
 
 

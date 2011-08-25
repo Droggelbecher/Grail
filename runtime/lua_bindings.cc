@@ -135,7 +135,7 @@ extern "C" int init(lua_State* L) {
 				]
 			
 			//.def("addWall", &Ground::addWall)
-			.def("addWalls", &Ground::addWalls)
+			//.def("addWalls", &Ground::addWalls)
 			//.def("getWalls", &Ground::getWalls)
 			//.def("addWaypoint", &Ground::addWaypoint)
 			.def("directReachable", &Ground::directReachable)

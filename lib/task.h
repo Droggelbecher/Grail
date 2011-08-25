@@ -26,7 +26,7 @@ namespace grail {
 			typedef boost::shared_ptr<Task> Ptr;
 			enum Flags {
 				DEFAULT = 0x0,
-				ENDLESS = 0x1,
+				ENDLESS = 0x1
 			};
 			
 			enum State {

@@ -16,6 +16,12 @@ class Line {
 		
 		VirtualPosition getA() const { return a; }
 		VirtualPosition getB() const { return b; }
+		
+		bool operator==(const Line& other) {
+			return (a == other.a && b == other.b) ||
+				(a == other.b && b == other.a);
+		}
+		bool operator!=(const Line& other) { return !(*this == other); }
 };
 
 } // namespace grail

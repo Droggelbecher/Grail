@@ -158,6 +158,7 @@ TEST(Task, WaitTask) {
 	CHECK_LOWER(SDL_GetTicks(), now + 200);
 }
 
+/*
 TEST(Ground, Pathfinding) {
 	Ground g;
 	
@@ -201,6 +202,7 @@ TEST(Ground, Pathfinding) {
 	g.getPath(VirtualPosition(100, 150), VirtualPosition(101, 150), p);
 	CHECK_EQUAL(p.size(), 0);
 }
+*/
 
 
 } // namespace grail

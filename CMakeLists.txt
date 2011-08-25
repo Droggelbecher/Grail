@@ -29,8 +29,8 @@ find_package(OpenAL REQUIRED)
 #find_package(Alure REQUIRED) alure find macro still missing
 
 if(debug)
-	set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
-	set(CMAKE_CXX_FLAGS "-g -O0 -Wall -pipe")
+	set(CMAKE_C_FLAGS "-g -O0 -Wall -ansi -pedantic -pipe")
+	set(CMAKE_CXX_FLAGS "-g -O0 -Wall -ansi -pedantic -pipe")
 	add_definitions(-DDEBUG)
 endif(debug)
 

@@ -15,16 +15,38 @@ using std::pop_heap;
 
 namespace grail {
 
-Ground::Ground() {
+Ground::Ground() : root(0) {
 }
 
 Ground::~Ground() {
+	/*
 	list<Waypoint*>::iterator iter;
 	for(iter=waypoints.begin(); iter!=waypoints.end(); ++iter) {
 		delete *iter;
 	}
+	*/
 }
 
+void Ground::addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, PolygonTreeNode* node) {
+	if(!node && !root) {
+		root = new PolygonTreeNode(polygon);
+	}
+	else if(!node) {
+		addPolygon(polygon, root);
+	}
+	else {
+		VirtualPosition pos = *(polygon.beginNodes());
+		for(PolygonTreeNode::iterator_t iter = node->beginChilds(); iter != node->endChilds(); ++iter) {
+			if((*iter)->getPolygon().hasPoint(pos)) {
+				addPolygon(polygon, *iter);
+				return;
+			}
+		}
+		node->addChild(new PolygonTreeNode(polygon));
+	}
+} // addPolygon
+
+/*
 void Ground::addWalls(const Polygon<VirtualPosition, IsPosition>& polygon) {
 	WaypointPolygon *inner = new WaypointPolygon(), *outer = new WaypointPolygon();
 	for(Polygon<VirtualPosition, IsPosition>::ConstNodeIterator iter = polygon.beginNodes(); iter != polygon.endNodes(); ++iter) {
@@ -40,6 +62,7 @@ void Ground::addWalls(const Polygon<VirtualPosition, IsPosition>& polygon) {
 	innerPolygons.push_back(inner);
 	outerPolygons.push_back(outer);
 }
+*/
 
 /*
 Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
@@ -50,6 +73,7 @@ Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
 */
 
 bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {
+	/*
 	Line line = Line(source, target);
 	list<Line>::iterator iter;
 	bool found_intersection = false;
@@ -68,9 +92,59 @@ bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {
 	}
 	
 	return !found_intersection;
+	*/
+	return false;
 }
 
-void Ground::generateMap() {
+void Ground::generateMap(PolygonTreeNode* node) {
+	if(!node) {
+		clearMap();
+		if(root) {
+			generateMap(root);
+		}
+		return;
+	}
+	
+	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
+	
+	std::vector<const polygon_t*> polygons;
+	polygons.push_back(&(node->getPolygon()));
+	for(PolygonTreeNode::iterator_t iter = node->beginChilds(); iter != node->endChilds(); ++iter) {
+		polygons.push_back(&((*iter)->getPolygon()));
+	}
+	
+	// TODO: First, create waypoints for all polygon nodes, then iterate over
+	// those!
+	
+	// First polygon node (niter)
+	for(std::vector<const polygon_t*>::iterator piter = polygons.begin(); piter != polygons.end(); ++piter) {
+		for(polygon_t::ConstNodeIterator niter = niter->beginNodes(); niter != piter->endNodes();  ++niter) {
+			
+			// Second polygon node (niter2)
+			for(std::vector<const polygon_t*>::iterator piter2 = polygons.begin(); piter2 != polygons.end(); ++piter2) {
+				for(polygon_t::ConstNodeIterator niter2 = niter2->beginNodes(); niter2 != piter2->endNodes();  ++niter2) {
+					Line l(*niter, *niter2);
+					
+					//bool intersects = false;
+					
+					// Polygon lines (liter)
+					for(std::vector<const polygon_t*>::iterator piter3 = polygons.begin(); piter3 != polygons.end(); ++piter3) {
+						for(polygon_t::LineIterator liter = piter3->beginLines(); liter != piter3->endLines(); ++liter) {
+							if(l != *liter && l.intersects(*liter)) {
+					//			intersects = true;
+								goto intersection_found;
+							}
+						}
+					}
+					
+					wp1.linkBidirectional(wp2);
+					
+					intersection_found:
+				} // niter2
+			} // piter2
+		} // niter
+	} // piter
+	
 	/*
 	for(list<Line>::iterator iter = walls.begin(); iter != walls.end(); iter++) {
 		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(), -1));
@@ -78,6 +152,12 @@ void Ground::generateMap() {
 		waypoints.push_back(new WallWaypoint(iter->getB(), iter->getA(), -1));
 		waypoints.push_back(new WallWaypoint(iter->getB(), iter->getA(),  1));
 	}
+	
+	// two points A,B will be connected iff:
+	// - they are directReachable() (ie. the line between them doesn't cross a
+	//   polygon edge
+	// - i
+	
 	
 	// Now mesh-connect all waypoints
 	for(list<Waypoint*>::iterator i = waypoints.begin(); i != waypoints.end(); ++i) {
@@ -100,6 +180,8 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 	// wall intersection and from there he could chose any side of the wall to
 	// continue. In order to avoid this, we forbid the target to be at such a
 	// position.
+	
+	/*
 	list<Waypoint*>::iterator iter;
 	for(iter = waypoints.begin(); iter != waypoints.end(); iter++) {
 		if(target == (*iter)->getPosition()) {
@@ -136,6 +218,8 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 	
 	delete s;
 	delete t;
+	
+	*/
 }
 
 void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {

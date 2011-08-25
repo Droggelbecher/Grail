@@ -74,7 +74,7 @@ std::ostream& operator<<(std::ostream& os, Vector2d<T, N> v) {
 
 
 template <typename A, typename B>
-B conv(A a) { assert("Couldnt convert types" && false); };
+B conv(A a) { assert("Couldnt convert types" && false); }
 
 template <>
 SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p) {
