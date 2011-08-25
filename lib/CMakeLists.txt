@@ -67,10 +67,10 @@ target_link_libraries(run_unittests ${LIBS})
 
 execute_process(COMMAND run_unittests)
 
-enable_testing()
-add_test(
-	NAME unittests
-	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-	COMMAND run_unittests
-)
+#enable_testing()
+#add_test(
+#	NAME unittests
+#	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+#	COMMAND run_unittests
+#)
 
