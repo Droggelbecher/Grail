@@ -185,6 +185,12 @@ template<typename T>
 int sgn(const T v) { return v < 0 ? -1 : (v > 0); }
 
 
+//double fepsilon;
+bool fequal(double a, double b);
+
+// Return equivalent engle in range [0, 2pi)
+double normalizeAngle(double a);
+
 } // namespace grail
 
 #endif // UTILS_H

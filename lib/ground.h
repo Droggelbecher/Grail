@@ -46,6 +46,7 @@ class Ground {
 				list<Waypoint*> neighbours;
 				double costSum;
 				
+			public:
 				Waypoint(const Waypoint&) { }
 				Waypoint& operator=(const Waypoint&) { return *this; }
 				Waypoint(VirtualPosition position) : position(position), costSum(0) { }
@@ -54,7 +55,6 @@ class Ground {
 				void link(Waypoint& other) { neighbours.push_back(&other); }
 				void unlink(Waypoint& other) { neighbours.remove(&other); }
 				
-			public:
 				Waypoint* cheapestParent;
 				
 				struct GetPosition {
@@ -88,34 +88,14 @@ class Ground {
 				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
 		};
 		
-		class WallWaypoint : public Waypoint {
-			private:
-				WallWaypoint *next, *prev;
-				//int side; // -1=left, 1=right
-				
-				WallWaypoint(VirtualPosition position/*, int side*/) :
-					Waypoint(position), next(0), prev(0) /*, side(side)*/ { }
-				
-				void setNext(WallWaypoint *n) { next = n; }
-				void setPrev(WallWaypoint *p) { prev = p; }
-				
-				friend class Ground;
-				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
-		};
-		
-		class PolygonTreeNode {
+		struct Component {
 			public:
 				typedef Polygon<VirtualPosition, IsPosition> polygon_t;
-				typedef std::vector<PolygonTreeNode*>::iterator iterator_t;
-				PolygonTreeNode(const polygon_t& polygon) : polygon(polygon) {
-				}
-				void addChild(PolygonTreeNode* node) { childs.push_back(node); }
-				iterator_t beginChilds() { return childs.begin(); }
-				iterator_t endChilds() { return childs.end(); }
-				const polygon_t& getPolygon() { return polygon; }
-			private:
-				const polygon_t &polygon;
-				std::vector<PolygonTreeNode*> childs;
+				typedef std::vector<Component*>::iterator hole_iter_t;
+				typedef std::vector<Waypoint>::iterator waypoint_iter_t;
+				Component(const polygon_t& ob) : outerBoundary(ob) { }
+				const polygon_t &outerBoundary;
+				std::vector<Component*> holes;
 				std::vector<Waypoint> waypoints;
 		};
 		
@@ -133,8 +113,8 @@ class Ground {
 		 * @param polygon The polygon to add.
 		 * @param node Only used internally, leave at 0.
 		 */
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygon(polygon, 0) }
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, PolygonTreeNode* node);
+		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygon(polygon, 0); }
+		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
 		
 //		const list<Line>& getWalls() const { return walls; }
 		
@@ -145,7 +125,7 @@ class Ground {
 		 * Only call once or you will get unecessary waypoints.
 		 */
 		void generateMap() { generateMap(0); }
-		void generateMap(PolygonTreeNode* node);
+		void generateMap(Component* component);
 		
 		/**
 		 * Add a new waypoint. Note that this will be pretty useless if you
@@ -157,10 +137,8 @@ class Ground {
 		//Waypoint& addWaypoint(VirtualPosition p);
 		
 		/**
-		 * Returns true if point target can be reached in a direct line from source,
-		 * ie there are no walls between them.
 		 */
-		bool directReachable(VirtualPosition source, VirtualPosition target);
+		bool directReachable(Component*, Waypoint, Waypoint);
 		
 		/**
 		 * Returns a points of nodes that discribe a path from source to target.
@@ -171,7 +149,12 @@ class Ground {
 		void getPath(Waypoint& source, Waypoint& target, Path& path);
 		
 		
+	#if DEBUG
+	public:
+	#else
 	private:
+	#endif
+		
 		//list<Line> walls;
 		//list<Waypoint*> waypoints;
 		
@@ -179,7 +162,7 @@ class Ground {
 		//list<WaypointPolygon*> innerPolygons, outerPolygons;
 		
 		//PolygonTree<WaypointPolygon> polygons;
-		PolygonTreeNode *root;
+		Component *rootComponent;
 		
 };
 

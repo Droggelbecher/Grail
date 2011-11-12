@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <SDL.h>
+#include <cmath>
 
 namespace grail {
 
@@ -13,6 +14,7 @@ template <typename T, int N> class Vector2d;
 
 template <typename T, int N> Vector2d<T, N> operator*(double scalar, Vector2d<T, N> v);
 template <typename T, int N> Vector2d<T, N> operator*(Vector2d<T, N> v, double scalar);
+template <typename T, int N> T operator*(Vector2d<T, N> v, Vector2d<T, N> w);
 template <typename T, int N> bool operator==(Vector2d<T, N> a, Vector2d<T, N> b);
 template <typename T, int N> bool operator!=(Vector2d<T, N> a, Vector2d<T, N> b);
 template <typename T, int N> std::ostream& operator<<(std::ostream&, Vector2d<T, N>);
@@ -33,6 +35,7 @@ class Vector2d {
 	public:
 		typedef T X;
 		typedef T Y;
+		typedef T Scalar;
 		
 	private:
 		X _x; Y _y;
@@ -55,13 +58,16 @@ class Vector2d {
 			return _x <= other._x && _y <= other._y;
 		}
 		
-		//T operator*(const Vector2d<T, N> other) { return _x * other._x + _y * other._y; }
-		T cross(const Vector2d<T, N> other) { return _x * other._y - _y * other._x; }
+		//Scalar operator*(const Vector2d<T, N> other) { return _x * other._x + _y * other._y; }
+		Scalar cross(const Vector2d<T, N> other) { return _x * other._y - _y * other._x; }
 		
 		friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
 		friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);
+		friend Scalar operator*<T, N>(Vector2d<T, N>, Vector2d<T, N>);
 		friend bool operator==<T, N>(Vector2d<T, N>, Vector2d<T, N>);
 		friend bool operator!=<T, N>(Vector2d<T, N>, Vector2d<T, N>);
+		
+		double getAngle() { return atan2(_x, _y); }
 		
 		/**
 		 * Partition the unit circle into $directions equal pie slices,

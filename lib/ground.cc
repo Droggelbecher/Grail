@@ -15,7 +15,7 @@ using std::pop_heap;
 
 namespace grail {
 
-Ground::Ground() : root(0) {
+Ground::Ground() : rootComponent(0) {
 }
 
 Ground::~Ground() {
@@ -27,22 +27,22 @@ Ground::~Ground() {
 	*/
 }
 
-void Ground::addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, PolygonTreeNode* node) {
-	if(!node && !root) {
-		root = new PolygonTreeNode(polygon);
+void Ground::addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node) {
+	if(!node && !rootComponent) {
+		rootComponent = new Component(polygon);
 	}
 	else if(!node) {
-		addPolygon(polygon, root);
+		addPolygon(polygon, rootComponent);
 	}
 	else {
 		VirtualPosition pos = *(polygon.beginNodes());
-		for(PolygonTreeNode::iterator_t iter = node->beginChilds(); iter != node->endChilds(); ++iter) {
-			if((*iter)->getPolygon().hasPoint(pos)) {
+		for(Component::hole_iter_t iter = node->holes.begin(); iter != node->holes.end(); ++iter) {
+			if((*iter)->outerBoundary.hasPoint(pos)) {
 				addPolygon(polygon, *iter);
 				return;
 			}
 		}
-		node->addChild(new PolygonTreeNode(polygon));
+		node->holes.push_back(new Component(polygon));
 	}
 } // addPolygon
 
@@ -72,47 +72,122 @@ Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
 }
 */
 
-bool Ground::directReachable(VirtualPosition source, VirtualPosition target) {
-	/*
-	Line line = Line(source, target);
-	list<Line>::iterator iter;
-	bool found_intersection = false;
-	for(iter = walls.begin(); iter != walls.end(); iter++) {
-		// It is always ok to walk along walls (Waypoint::likes will take care
-		// that we do not cross them)
-		if(
-				(iter->getA() == source && iter->getB() == target) ||
-				(iter->getB() == source && iter->getA() == target)) {
-			return true;
-		}
-		
-		if(line.intersects(*iter)) {
-			found_intersection = true;
+bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
+	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
+	
+	// Waypoints outside of the component are not reachable
+	if(!component->outerBoundary.hasPoint(wp1.getPosition())) { cdbg << "wp1 outside\n"; return false; }
+	if(!component->outerBoundary.hasPoint(wp2.getPosition())) { return false; }
+	
+	if(wp1 == wp2) { return true; }
+	
+	Line l(wp1.getPosition(), wp2.getPosition());
+	
+	// Even though no point is outside of the outer boundary (checked above),
+	// the line between them might cross the boundary (e.g. if the boundary
+	// is)
+	
+	// If at least one point is not on the $outerBoundary, that means $l
+	// crosses $outerBoundary.
+	polygon_t o = component->outerBoundary; 
+	for(polygon_t::LineIterator li = o.beginLines(); li != o.endLines(); ++li) {
+		if(l != *li && l.intersects(*li)) { return false; }
+	}
+	
+	// Also, if $l crosses a hole, wp2 is not directly reachable from wp1.
+	for(Component::hole_iter_t hi = component->holes.begin(); hi != component->holes.end(); ++hi) {
+		polygon_t p = (*hi)->outerBoundary;
+		for(polygon_t::LineIterator li = p.beginLines(); li != p.endLines(); ++li) {
+			if(l != *li && l.intersects(*li)) { return false; }
 		}
 	}
 	
-	return !found_intersection;
-	*/
-	return false;
+	// Also, it might happen that both lie directly on the outer boundary
+	// and/or holes (we assume in that case they are polygon vertices), but $l
+	// is not (completely) inside the $outerBoundary polygon (because that is
+	// non-convex).  -> Check whether $l extends to the inside of the polygon
+	// or not.  (it's enough to check from one side (if it would behave
+	// different on the other, it would cross a polygon edge)!)
+	
+	polygon_t::LineDirection dir = component->outerBoundary.getLineDirection(l);
+	if(dir == polygon_t::IN) { return true; }
+	else if(dir == polygon_t::OUT) { return false; }
+		
+	for(Component::hole_iter_t hi = component->holes.begin(); hi != component->holes.end(); ++hi) {
+		polygon_t::LineDirection dir = (*hi)->outerBoundary.getLineDirection(l);
+		if(dir == polygon_t::IN) { return false; }
+		else if(dir == polygon_t::OUT) { return true; }
+	}
+	
+	// Both points must be inner points now that are directly reachable from
+	// each other.
+	// TODO: ...or they may be located on a polygon edge but not on a polygon
+	// node, which is a case we ignore for now)
+	return true;
 }
 
-void Ground::generateMap(PolygonTreeNode* node) {
-	if(!node) {
-		clearMap();
-		if(root) {
-			generateMap(root);
+void Ground::generateMap(Component* component) {
+	if(!component) {
+		//clearMap();
+		if(rootComponent) {
+			generateMap(rootComponent);
 		}
 		return;
 	}
 	
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
+	// $polygons := all polygons that bound the current component
+	
 	std::vector<const polygon_t*> polygons;
-	polygons.push_back(&(node->getPolygon()));
-	for(PolygonTreeNode::iterator_t iter = node->beginChilds(); iter != node->endChilds(); ++iter) {
-		polygons.push_back(&((*iter)->getPolygon()));
+	polygons.push_back(&(component->outerBoundary));
+	for(Component::hole_iter_t iter = component->holes.begin(); iter != component->holes.end(); ++iter) {
+		polygons.push_back(&((*iter)->outerBoundary));
 	}
 	
+	// find out waypoints
+	
+	component->waypoints.clear();
+	for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
+		for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
+			component->waypoints.push_back(Waypoint(*ni));
+		}
+	}
+	
+	for(Component::waypoint_iter_t wi = component->waypoints.begin(); wi != component->waypoints.end(); ++wi) {
+		for(Component::waypoint_iter_t wj = wi; wj != component->waypoints.end(); ++wj) {
+			if(directReachable(component, *wi, *wj)) {
+				// TODO: connect
+			}
+			
+		} // for wj
+	} // for wi
+	
+	
+	// connect waypoints
+	
+		// connect iff
+		// - connecting edge extends to inner of outerBoundary or outer of a hole
+		// - connecting edge does not cross any boundary edge
+	
+	
+	
+	//------------------
+	
+	
+	// Let component hold all its waypoints
+	/*
+	component->waypoints.clear();
+	for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
+		for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
+			component->waypoints.push_back(Waypoint(*ni));
+		}
+	}
+	*/
+	
+//	for(Component::waypoint_iter_t wi = component
+	
+/*	
 	// TODO: First, create waypoints for all polygon nodes, then iterate over
 	// those!
 	
@@ -144,7 +219,7 @@ void Ground::generateMap(PolygonTreeNode* node) {
 			} // piter2
 		} // niter
 	} // piter
-	
+	*/
 	/*
 	for(list<Line>::iterator iter = walls.begin(); iter != walls.end(); iter++) {
 		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(), -1));
