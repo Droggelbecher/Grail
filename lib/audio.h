@@ -5,37 +5,21 @@
 
 #include <string>
 #include <stdint.h>
-#include "task.h"
+#include "sound_task.h"
 
 namespace grail {
 
 class Audio {
 	public:
-		typedef uint8_t Volume;
-
-		static const Volume defaultVolume;
 		enum PlaylistFlags {
 			PLAYLIST_DEFAULT = 0x00,
 			PLAYLIST_LOOP = 0x01,        // after last track, start with first one again
 			PLAYLIST_LOOP_LAST = 0x02,   // loop last track
 			PLAYLIST_CROSSFADING = 0x04  // enable crossfading between tracks
 		};
-
-		class SoundTask : public Task {
-				size_t loops;
-
-			public:
-				SoundTask(size_t loops); // TODO: Probably wants more parameters
-				void onStart() { };
-
-				// Sound specific
-				void pause() { };
-				void setVolume(Volume v) { };
-		};
-
 		Audio();
 		~Audio();
-
+		
 		/**
 		 * Audio a;
 		 *
@@ -55,7 +39,7 @@ class Audio {
 		 * loops=0 --> endless repeat
 		 *
 		 */
-		SoundTask::Ptr playSound(std::string resource, size_t loops = 1, Volume v = defaultVolume);
+		SoundTask::Ptr prepareSound(std::string resource, size_t loops = 1);
 
 		/* Playlist stuff
 		void clearPlaylist();
@@ -69,7 +53,10 @@ class Audio {
 		void stopPlaylist();
 		void setPlaylistCrossfadingDuration(uint32_t ms);
 		*/
+		//static void alure_callback();
 };
+
+
 
 } // namespace grail
 

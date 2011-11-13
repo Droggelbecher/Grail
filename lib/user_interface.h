@@ -17,6 +17,9 @@
 
 namespace grail {
 	
+	/**
+	 * Game user interface.
+	 */
 	class UserInterface {
 			std::list<UserInterfaceElement::Ptr> elements;
 			std::list<Actor::Ptr> currentActors;
@@ -26,18 +29,36 @@ namespace grail {
 		public:
 			typedef boost::shared_ptr<UserInterface> Ptr;
 			
+			///
 			UserInterface() : hovering(false) { }
+			
+			///
 			virtual ~UserInterface() { }
 			
+			///
 			void addElement(UserInterfaceElement::Ptr element);
+			
+			///
 			void addAnimation(Animation::Ptr animation);
 			
+			/**
+			 * Inform the user interface that the given actor is currently
+			 * hovered with the mouse.
+			 */
 			void setHovering(Actor::Ptr actor);
+			
+			/// Return currently hovered actor
 			Actor::Ptr getHovering() const;
 			
+			/**
+			 * Inform the user interface about the currently chosen action.
+			 */
 			void setAction(Action::Ptr action) { currentAction = action; }
+			
+			/// Return currently chosen action
 			Action::Ptr getAction() const { return currentAction; }
 			
+			/// Return text of currently chosen action or the empty string
 			std::string getActionText() const {
 				if(currentAction) {
 					return currentAction->getWording(currentActors);

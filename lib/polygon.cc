@@ -6,10 +6,12 @@
 
 namespace grail {
 
-Polygon::Polygon() {
+template<typename Node, typename GetPosition>
+Polygon<Node, GetPosition>::Polygon() {
 }
 
-bool Polygon::hasPoint(VirtualPosition p) const {
+template<typename Node, typename GetPosition>
+bool Polygon<Node, GetPosition>::hasPoint(VirtualPosition p) const {
 	// If there is an uneven number of intersections
 	// in both directions, the Offset is inside the
 	// polygon
@@ -18,18 +20,19 @@ bool Polygon::hasPoint(VirtualPosition p) const {
 	
 	// Consider all lines from one point to the next one
 	// plus one line from the last one to the first
-	list<VirtualPosition>::const_iterator iter, iter2;
+	typename list<Node>::const_iterator iter, iter2;
 	for(iter = nodes.begin(); iter != nodes.end(); iter++) {
 		iter2 = iter;
 		iter2++;
 		if(iter2 == nodes.end()) { iter2 = nodes.begin(); }
-		unevenIntersectionsRight ^= intersects(p, *iter, *iter2, true);
-		unevenIntersectionsLeft ^= intersects(p, *iter, *iter2, false);
+		unevenIntersectionsRight ^= intersects(p, GetPosition::getPosition(*iter), GetPosition::getPosition(*iter2), true);
+		unevenIntersectionsLeft ^= intersects(p, GetPosition::getPosition(*iter), GetPosition::getPosition(*iter2), false);
 	}
 	return unevenIntersectionsRight && unevenIntersectionsLeft;
 }
 
-bool Polygon::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition pb, bool right) {
+template<typename Node, typename GetPosition>
+bool Polygon<Node, GetPosition>::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition pb, bool right) {
 	// Think a horizontal line drawn from q to the right and look
 	// for an intersection.
 	VirtualPosition::Y dy = pb.getY() - pa.getY();
@@ -71,5 +74,5 @@ bool Polygon::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition 
 	}
 } // intersects()
 
-}
+} // namespace
 

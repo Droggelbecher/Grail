@@ -14,6 +14,9 @@
 
 namespace grail {
 
+/**
+ * Base class for all animations
+ */
 class Animation : public Area {
 	
 	public:
@@ -38,6 +41,14 @@ class Animation : public Area {
 		}
 };
 
+/**
+ * Animations that have a direction.
+ * E.g. a character walking left looks different than the same character
+ * walking right.
+ * 
+ * Essentially this grophs together a bunch of animations and associates each
+ * with a direction.
+ */
 class DirectionAnimation : public Animation {
 		uint16_t currentDirection;
 		uint16_t directions;

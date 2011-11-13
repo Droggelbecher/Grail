@@ -125,22 +125,19 @@ extern "C" int init(lua_State* L) {
 				.def("setText", &Text::setText)
 				,
 			
-		class_<Audio>("Audio")
-			.def(constructor<>())
-			,
-		
+
+
 		class_<Ground>("Ground")
 			.scope[
 				class_<Ground::Waypoint>("Waypoint")
 					.def("getPosition", &Ground::Waypoint::getPosition)
-					.def("link", &Ground::Waypoint::link)
-					//...
+					.def("linkBidirectional", &Ground::Waypoint::linkBidirectional)
 				]
 			
-			.def("addWall", &Ground::addWall)
-			.def("addWalls", &Ground::addWalls)
+			//.def("addWall", &Ground::addWall)
+			//.def("addWalls", &Ground::addWalls)
 			//.def("getWalls", &Ground::getWalls)
-			.def("addWaypoint", &Ground::addWaypoint)
+			//.def("addWaypoint", &Ground::addWaypoint)
 			.def("directReachable", &Ground::directReachable)
 			,
 		
@@ -254,6 +251,14 @@ extern "C" int init(lua_State* L) {
 		
 		class_<WaitTask, Task, Task::Ptr>("WaitTask")
 			.def(constructor<uint32_t>())
+			,
+		class_<SoundTask, Task, Task::Ptr>("SoundTask")
+			.def(constructor<std::string, size_t>())
+			.def("pause", &SoundTask::pause)
+			,
+		class_<Audio>("Audio")
+			.def(constructor<>())
+			.def("prepareSound", &Audio::prepareSound)
 	];
 	
 	return 0;

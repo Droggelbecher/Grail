@@ -20,6 +20,9 @@ namespace grail {
 	
 	typedef std::list<VirtualPosition> Path;
 	
+	/**
+	 * Anything in the game that can walk around (e.g. people)
+	 */
 	class Actor : public Area {
 			Animation::Ptr animation;
 			std::map<std::string, Animation::Ptr> animationModes;
@@ -48,15 +51,30 @@ namespace grail {
 			
 			Actor(std::string name);
 			
+			/**
+			 * Name of the actor as displayed by user interface elements
+			 */
 			std::string getName() const;
 			
+			/**
+			 * Overriden from Area. Returns true if the given point belongs to
+			 * the actor.
+			 */
 			bool hasPoint(VirtualPosition p) const;
 			
 			void eachFrame(uint32_t ticks);
 			void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
 			
+			/**
+			 * Add animation for the given mode
+			 */
 			void addAnimation(std::string mode, Animation::Ptr animation);
 			void setAlignment(double x, double y);
+			
+			/**
+			 * Set the animation mode of the character e.g. "walking",
+			 * "bored", etc...
+			 */
 			void setMode(std::string mode);
 			
 			VirtualPosition getPosition() const { return position; }

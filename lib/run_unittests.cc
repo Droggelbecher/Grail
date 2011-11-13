@@ -10,6 +10,8 @@
 #include "utils.h"
 #include "task.h"
 #include "wait_task.h"
+#include "ground.h"
+#include "actor.h"
 
 using std::make_pair;
 
@@ -76,7 +78,7 @@ TEST(Utils, split) {
 	CHECK_EQUAL(split2("foo bar", "=").second, "");
 	CHECK_EQUAL(split2("foo = bar = baz", "=").first, "foo ");
 	CHECK_EQUAL(split2("foo = bar = baz", "=").second, " bar = baz");
-
+	
 	std::string s = "  foo bar baz  bang buff";
 	SplitIterator iter = SplitIterator(s, " ");
 	CHECK_EQUAL(*iter, ""); iter++;
@@ -121,7 +123,7 @@ class DummyTask : public Task {
 	public:
 		typedef boost::shared_ptr<DummyTask> Ptr;
 		bool onStart_executed;
-
+		
 		DummyTask() : Task(), onStart_executed(false) {
 		}
 		void onStart() { onStart_executed = true; }
@@ -146,7 +148,7 @@ TEST(Task, WaitTask) {
 	t->block();
 	CHECK_EQUAL(t->getState(), Task::STATE_COMPLETED);
 	CHECK_GREATER(SDL_GetTicks(), now + 200);
-
+	
 	// Non-Blocking
 	t = WaitTask::Ptr(new WaitTask(200));
 	CHECK_EQUAL(t->getState(), Task::STATE_NEW);
@@ -155,6 +157,53 @@ TEST(Task, WaitTask) {
 	CHECK_EQUAL(t->getState(), Task::STATE_RUNNING);
 	CHECK_LOWER(SDL_GetTicks(), now + 200);
 }
+
+/*
+TEST(Ground, Pathfinding) {
+	Ground g;
+	
+	Polygon<VirtualPosition, IsPosition> poly;
+	
+	poly.push_back(VirtualPosition(100, 100));
+	poly.push_back(VirtualPosition(100, 200));
+	poly.push_back(VirtualPosition(200, 200));
+	poly.push_back(VirtualPosition(200, 100));
+	g.addWalls(poly);
+	
+	CHECK_EQUAL(g.directReachable(VirtualPosition(50, 150), VirtualPosition(250, 150)), false);
+	CHECK_EQUAL(g.directReachable(VirtualPosition(40, 150), VirtualPosition(250, 140)), false);
+	
+	// find a path around the square obstacle
+	Path p;
+	g.getPath(VirtualPosition(50, 140), VirtualPosition(250, 140), p);
+	CHECK_EQUAL(p.size(), 3);
+	CHECK_EQUAL(p.back(), VirtualPosition(250, 140));
+	
+	// now find a path to a wall-intersection point
+	// (that should be disallowed and thus return an empty path)
+	p.clear();
+	g.getPath(VirtualPosition(50, 140), VirtualPosition(100, 100), p);
+	CHECK_EQUAL(p.size(), 0);
+	
+	// However it is allowed to have a waypoint as starting point
+	p.clear();
+	g.getPath(VirtualPosition(100, 100), VirtualPosition(150, 150), p);
+	CHECK_EQUAL(p.size(), 1);
+	
+	p.clear();
+	g.getPath(VirtualPosition(50, 150), VirtualPosition(150, 150), p);
+	CHECK_EQUAL(p.size(), 0);
+	
+	p.clear();
+	g.getPath(VirtualPosition(50, 50), VirtualPosition(150, 150), p);
+	CHECK_EQUAL(p.size(), 0);
+	
+	p.clear();
+	g.getPath(VirtualPosition(100, 150), VirtualPosition(101, 150), p);
+	CHECK_EQUAL(p.size(), 0);
+}
+*/
+
 
 } // namespace grail
 

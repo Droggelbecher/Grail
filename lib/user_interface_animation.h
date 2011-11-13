@@ -8,6 +8,10 @@
 
 namespace grail {
 	
+	/**
+	 * Wrapper that allows using any animation as part of the game user
+	 * interface.
+	 */
 	class UserInterfaceAnimation : public UserInterfaceElement {
 		private:
 			Animation::Ptr animation;

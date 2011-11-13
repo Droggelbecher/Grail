@@ -136,7 +136,7 @@ NetworkInterface::~NetworkInterface() {
 }
 
 void NetworkInterface::startAccept() {
-	Connection::Ptr connection(new Connection(acceptor.io_service()));
+	Connection::Ptr connection(new Connection(acceptor.get_io_service()));
 	acceptor.async_accept(
 		connection->socket(),
 		boost::bind(&NetworkInterface::handleAccept, this, connection,
