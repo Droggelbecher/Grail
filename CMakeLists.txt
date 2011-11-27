@@ -9,6 +9,7 @@ project(grail)
 
 set(CMAKE_C_FLAGS $ENV{CFLAGS})
 set(CMAKE_CXX_FLAGS $ENV{CXXFLAGS})
+set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed")
 
 find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
