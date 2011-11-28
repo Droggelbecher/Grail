@@ -4,6 +4,12 @@
 <resource version="2.5.3.0" xmlns="http://www.wxwidgets.org/wxxrc">
 	<object class="wxDialog" name="Grail">
 		<style>wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU</style>
+
+		<object class="wxTreeCtrl">
+		</object>
+			
+		
+		<!--
 		<object class="wxGridSizer">
 			<cols>4</cols>
 			<rows>0</rows>
@@ -58,6 +64,7 @@
 				</object>
 			</object>
 		</object>
+		-->
 	</object>
 </resource>
 			
