@@ -7,8 +7,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Mo
 
 project(grail)
 
-set(CMAKE_C_FLAGS $ENV{CFLAGS})
-set(CMAKE_CXX_FLAGS $ENV{CXXFLAGS})
+set(CMAKE_C_FLAGS "$ENV{CFLAGS} -Wl,--no-as-needed")
+set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -Wl,--no-as-needed")
 
 find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
@@ -29,8 +29,8 @@ find_package(OpenAL REQUIRED)
 #find_package(Alure REQUIRED) alure find macro still missing
 
 if(debug)
-	set(CMAKE_C_FLAGS "-g -O0 -Wall -ansi -pedantic -pipe")
-	set(CMAKE_CXX_FLAGS "-g -O0 -Wall -ansi -pedantic -pipe")
+	set(CMAKE_C_FLAGS "$ENV{CFLAGS} -g -O0 -Wall -ansi -pedantic -pipe -Wl,--no-as-needed")
+	set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -g -O0 -Wall -ansi -pedantic -pipe -Wl,--no-as-needed")
 	add_definitions(-DDEBUG)
 endif(debug)
 
