@@ -7,9 +7,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Mo
 
 project(grail)
 
-set(CMAKE_C_FLAGS $ENV{CFLAGS})
-set(CMAKE_CXX_FLAGS $ENV{CXXFLAGS})
-set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed")
+set(CMAKE_C_FLAGS "$ENV{CFLAGS} -Wl,--no-as-needed")
+set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -Wl,--no-as-needed")
 
 find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
@@ -28,8 +27,8 @@ set(Boost_USE_MULTITHREADED OFF)
 find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 
 if(debug)
-	set(CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
-	set(CMAKE_CXX_FLAGS "-g -O0 -Wall -pipe")
+	set(CMAKE_C_FLAGS "$ENV{CFLAGS} -g -O0 -Wall -pipe -Wl,--no-as-needed")
+	set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -g -O0 -Wall -pipe -Wl,--no-as-needed")
 	add_definitions(-DDEBUG)
 endif(debug)
 
