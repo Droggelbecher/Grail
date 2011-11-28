@@ -17,6 +17,7 @@ class Audio {
 			PLAYLIST_LOOP_LAST = 0x02,   // loop last track
 			PLAYLIST_CROSSFADING = 0x04  // enable crossfading between tracks
 		};
+		
 		Audio();
 		~Audio();
 		
