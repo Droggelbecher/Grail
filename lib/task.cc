@@ -45,6 +45,10 @@ namespace grail {
 		return state;
 	}
 
+	std::ostream& operator<<(std::ostream& os, const Task& ui) {
+		os << "Task";
+		return os;
+	}
 }
 
 

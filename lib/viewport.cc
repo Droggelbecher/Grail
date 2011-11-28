@@ -7,6 +7,10 @@
 #include "scene.h"
 #include "game.h"
 
+#ifdef WITH_OPENGL
+	#include <GL/gl.h>
+#endif
+
 namespace grail {
 
 Viewport::Viewport() : screen(0),
@@ -19,8 +23,38 @@ Viewport::Viewport(uint32_t w, uint32_t h, bool fullscreen) : screen(0) {
 }
 
 void Viewport::setup(uint32_t w, uint32_t h, bool fullscreen) {
-	screen = SDL_SetVideoMode(w, h, 32, SDL_SWSURFACE | (fullscreen ? SDL_FULLSCREEN : 0));
+	const SDL_VideoInfo *video = SDL_GetVideoInfo();
+	int flags = SDL_HWPALETTE | (fullscreen ? SDL_FULLSCREEN : 0) | SDL_SWSURFACE;
+	if(video) {
+		if(video->hw_available) { flags |= SDL_HWSURFACE; }
+		else { flags |= SDL_SWSURFACE; }
+		if(video->blit_hw) { flags |= SDL_HWACCEL; }
+	}
+
+	#ifdef WITH_OPENGL
+		flags |= SDL_OPENGL | SDL_GL_DOUBLEBUFFER;
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		screen = SDL_SetVideoMode(w, h, 32, flags | (fullscreen ? SDL_FULLSCREEN : 0));
+	#endif
+	screen = SDL_SetVideoMode(w, h, 32, flags);
 	assert(screen != NULL);
+
+	#ifdef WITH_OPENGL
+		glEnable(GL_TEXTURE_2D);
+		glShadeModel(GL_SMOOTH);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glViewport(0, 0, w, h);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		// Additive blending, nice for debugging
+		//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+		glEnable(GL_BLEND);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, w, h, 0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	#endif
 }
 
 VirtualSize Viewport::getVirtualSize() const { return virtualSize; }
@@ -69,8 +103,19 @@ void Viewport::renderUserInterface(UserInterface::Ptr userInterface, uint32_t ti
 	userInterface->renderAt(screen, ticks, VirtualPosition(0, 0));
 }
 
+void Viewport::startRendering() {
+	#if WITH_OPENGL
+		glClear(GL_COLOR_BUFFER_BIT);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	#endif
+}
+
 void Viewport::finishRendering() {
-	SDL_Flip(screen);
+	#ifdef WITH_OPENGL
+		SDL_GL_SwapBuffers();
+	#else
+		SDL_Flip(screen);
+	#endif
 }
 
 } // namespace grail

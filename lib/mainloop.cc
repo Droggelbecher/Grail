@@ -18,6 +18,12 @@ using std::max;
 
 namespace grail {
 
+#ifdef WITH_OPENGL
+	double MainLoop::targetFPS = 60.0;
+#else
+	double MainLoop::targetFPS = 50.0;
+#endif
+
 void MainLoop::eachFrame(uint32_t frameDuration) {
 	std::list<Task::Ptr>::iterator iter;
 	for(iter = tasks.begin(); iter != tasks.end(); iter++) {
@@ -35,9 +41,10 @@ void MainLoop::run() {
 	// task list (else we would never exit in that case!)
 	scheduleTaskCheck = true;
 	
+	double targetFrameDuration = static_cast<uint32_t>(1000.0 / targetFPS);
 	while(!exit_) {
 		frameStart = SDL_GetTicks();
-		frameEnd = frameStart + static_cast<uint32_t>(1000.0 / targetFPS);
+		frameEnd = frameStart + targetFrameDuration;
 		
 		// Do something
 		controller.eachFrame(frameDuration);

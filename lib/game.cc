@@ -101,6 +101,7 @@ void Game::eachFrame(uint32_t ticks) {
 
 void Game::renderEverything(uint32_t ticks) {
 	if(viewport) {
+		viewport->startRendering();
 		if(currentScene) {
 			viewport->renderScene(currentScene, ticks);
 		}

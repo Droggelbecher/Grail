@@ -157,7 +157,7 @@ NetworkInterface::~NetworkInterface() {
 }
 
 void NetworkInterface::startAccept() {
-	Connection::Ptr connection(new Connection(acceptor.io_service()));
+	Connection::Ptr connection(new Connection(acceptor.get_io_service()));
 	connections.push_back(connection);
 	acceptor.async_accept(
 		connection->socket(),

@@ -12,6 +12,9 @@
 
 namespace grail {
 
+/**
+ * Representation of the users screen.
+ */
 class Viewport {
 		SDL_Surface* screen;
 		VirtualSize virtualSize;
@@ -30,8 +33,14 @@ class Viewport {
 		Actor::Ptr cameraTarget;
 		
 	public:
+		///
 		Viewport();
+		///
 		Viewport(uint32_t w, uint32_t h, bool fullscreen = false);
+		
+		/**
+		 * Same as constructor with same signature for late initialization.
+		 */
 		void setup(uint32_t w, uint32_t h, bool fullscreen = false);
 		
 		VirtualSize getVirtualSize() const;
@@ -44,6 +53,7 @@ class Viewport {
 		
 		void renderScene(Scene::Ptr scene, uint32_t ticks);
 		void renderUserInterface(UserInterface::Ptr userInterface, uint32_t ticks);
+		void startRendering();
 		void finishRendering();
 		
 		void setFollowing(Actor::Ptr actor) {

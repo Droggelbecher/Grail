@@ -15,6 +15,9 @@ Compiling
 Under Linux
 -----------
 
+First make sure you have all the development libraries listed in
+doc/dependencies.txt installed.
+
 Change your working directory to the directory that contains this README file
 and type:
 

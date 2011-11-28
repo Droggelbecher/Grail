@@ -67,8 +67,12 @@ int Interpreter::l_doresource(lua_State* L) {
 void Interpreter::runLuaFromResource(string path) {
 	Resource r(path, MODE_READ);
 	
-	luaL_loadbuffer(L, r.getData(), r.getDataSize(), r.path.c_str());
+	size_t sz;
+	const char* buffer = static_cast<const char*>(r.createBuffer(sz));
+	luaL_loadbuffer(L, buffer, sz, r.path.c_str());
 	int error = lua_pcall(L, 0, LUA_MULTRET, 0);
+	
+	delete[] buffer;
 	
 	if(error) {
 		throw LuaException(L);

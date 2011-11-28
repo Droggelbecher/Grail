@@ -55,6 +55,9 @@ class Vector2d {
 			return _x <= other._x && _y <= other._y;
 		}
 		
+		//T operator*(const Vector2d<T, N> other) { return _x * other._x + _y * other._y; }
+		T cross(const Vector2d<T, N> other) { return _x * other._y - _y * other._x; }
+		
 		friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
 		friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);
 		friend bool operator==<T, N>(Vector2d<T, N>, Vector2d<T, N>);
@@ -73,6 +76,8 @@ class Vector2d {
 		uint16_t nearestDirection(uint16_t directions, double offset=0) const;
 		
 		double length() const;
+		
+		Vector2d<T, N> getPosition() const { return *this; }
 };
 
 typedef Vector2d<int32_t, 0> VirtualPosition;

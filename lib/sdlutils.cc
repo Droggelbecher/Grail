@@ -22,5 +22,6 @@ namespace grail {
 		c.b = b;
 		return c;
 	}
+
 }
 

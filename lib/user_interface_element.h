@@ -10,6 +10,10 @@
 
 namespace grail {
 	
+	/**
+	 * User interface elements base class (e.g. buttons, state displayes,
+	 * inventory lists, etc...)
+	 */
 	class UserInterfaceElement {
 			double alignmentX, alignmentY;
 			VirtualPosition position;

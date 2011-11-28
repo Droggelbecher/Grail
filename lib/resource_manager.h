@@ -17,7 +17,7 @@ namespace grail {
 enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
 
 /**
- * A resource is similar to a file, however more general.
+ * A resource is similar to a file, but more general.
  * For example it can as well be something that only exists in RAM like a
  * decompressed gz file.
  *
@@ -41,7 +41,7 @@ enum ResourceMode { MODE_READ = 'r', MODE_WRITE = 'w' };
  */
 class Resource {
 		SDL_RWops* rw;
-		const char* buffer;
+		const void* buffer;
 		size_t bufferSize;
 		
 	private:
@@ -49,13 +49,18 @@ class Resource {
 		Resource(const Resource& other) { }
 		Resource& operator=(const Resource& other) { return *this; }
 		
-		/*
+	public:
+		/**
 		 * Copy all data to a newly created buffer.
 		 * Size of that buffer will be written to the size argument.
+		 * The caller is responsible for freeing the allocated buffer.
+		 * Do this with:
+		 * ----
+		 * delete[] buffer;
+		 * ----
 		 */
-		const char* createBuffer(size_t &size);
+		const void* createBuffer(size_t &size);
 		
-	public:
 		std::string path;
 		
 		Resource(std::string path, ResourceMode mode);
@@ -74,21 +79,20 @@ class Resource {
 		 * Create a buffer, copy all data of the resource into it and return its
 		 * address. Note that multiple calls to getData() of the same resource
 		 * will return the same address, i.e. the buffer is only allocated once.
-		 * Nevertheless, YOU are responsible for deleting that buffer, use
-		 * ----
-		 * delete[] buffer;
-		 * ----
 		 *
 		 * Use getDataSize() in order to find out the size of the buffer.
+		 * 
+		 * The internal buffer will be freed when the corresponding resource
+		 * object ceases to exist, i.e. you might want to copy the data.
 		 */
-		const char* getData();
+	//	const void* getData();
 		
 		/**
 		 * This returns the size of the buffer allocated by getDat(). If called
 		 * before getData(), this will allocate the buffer and copy the data to it
 		 * and getData will return its address.
 		 */
-		size_t getDataSize();
+	//	size_t getDataSize();
 		
 		friend class ResourceManager;
 		friend Resource getResource(std::string, ResourceMode);
@@ -242,7 +246,7 @@ class DirectoryResourceHandler : public ResourceHandler {
 				}
 				
 				DirectoryIteratorImpl& operator++();
-				std::string operator*() const { return iter->leaf(); }
+				std::string operator*() const { return iter->path().filename().string(); }
 				bool operator==(const ResourceManager::DirectoryIteratorImpl& other) const;
 				bool atEnd() const { return iter == boost::filesystem::directory_iterator(); }
 		};

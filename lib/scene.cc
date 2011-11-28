@@ -103,12 +103,14 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	}
 	
 	if(_drawWalls) {
+		/*
 		list<Line>::const_iterator iter;
 		for(iter = ground.getWalls().begin(); iter != ground.getWalls().end(); iter++) {
 			PhysicalPosition a = conv<VirtualPosition, PhysicalPosition>(iter->getA() + p);
 			PhysicalPosition b = conv<VirtualPosition, PhysicalPosition>(iter->getB() + p);
 			aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xffffffff);
 		}
+		*/
 	}
 	
 } // renderAt

@@ -19,34 +19,35 @@ using std::endl;
 
 namespace grail {
 
-const char* Resource::createBuffer(size_t &size) {
+const void* Resource::createBuffer(size_t &size) {
 	assert(rw);
+	assert(sizeof(unsigned char) == sizeof(signed char));
 	
-	char* buffer;
+	unsigned char* buffer;
 	SDL_RWseek(rw, 0, SEEK_END);
 	size = SDL_RWtell(rw);
 	SDL_RWseek(rw, 0, SEEK_SET);
-	buffer = new char[size];
+	buffer = new unsigned char[size];
 	size_t read = 0;
 	while(read < size) {
-		read += SDL_RWread(rw, buffer, sizeof(char), size - read);
+		read += SDL_RWread(rw, buffer, sizeof(unsigned char), size - read);
 	}
 	return buffer;
 }
 
-const char* Resource::getData() {
+/*const void* Resource::getData() {
 	if(!buffer) {
 		buffer = createBuffer(bufferSize);
 	}
 	return buffer;
-}
+}*/
 
-size_t Resource::getDataSize() {
+/*size_t Resource::getDataSize() {
 	if(!buffer) {
 		buffer = createBuffer(bufferSize);
 	}
 	return bufferSize;
-}
+}*/
 
 Resource::Resource(string path, ResourceMode mode) : buffer(0), bufferSize(0), path(path) {
 	rw = Game::getInstance().getResourceManager().getRW(path, mode);
@@ -54,7 +55,7 @@ Resource::Resource(string path, ResourceMode mode) : buffer(0), bufferSize(0), p
 
 Resource::~Resource() {
 	SDL_RWclose(rw);
-	delete[] buffer;
+	delete[] static_cast<const unsigned char*>(buffer);
 }
 
 //
@@ -65,14 +66,14 @@ ResourceManager::DirectoryIterator ResourceManager::DirectoryIterator::_end;
 
 ResourceManager::DirectoryIterator::DirectoryIterator(ResourceManager::DirectoryIteratorImpl::Ptr impl) : impl(impl), _isEnd(false) {
 	assert(impl);
-};
+}
 
 ResourceManager::DirectoryIterator::DirectoryIterator(const ResourceManager::DirectoryIterator& other) {
 	if(other.impl) { impl = other.impl->copy(); }
 	else { impl = other.impl; }
 	_isEnd = other._isEnd;
 	assert(_isEnd || impl);
-};
+}
 
 ResourceManager::DirectoryIterator& ResourceManager::DirectoryIterator::operator=(const ResourceManager::DirectoryIterator& other) {
 	if(other.impl) { impl = other.impl->copy(); }
@@ -80,18 +81,18 @@ ResourceManager::DirectoryIterator& ResourceManager::DirectoryIterator::operator
 	_isEnd = other._isEnd;
 	assert(_isEnd || impl);
 	return *this;
-};
+}
 
 ResourceManager::DirectoryIterator& ResourceManager::DirectoryIterator::operator++() {
 	++(*impl);
 	return *this;
-};
+}
 
 ResourceManager::DirectoryIterator ResourceManager::DirectoryIterator::operator++(int) {
 	ResourceManager::DirectoryIterator r = *this;
 	++(*impl);
 	return r;
-};
+}
 
 std::string ResourceManager::DirectoryIterator::operator*() const { return **impl; }
 
@@ -163,9 +164,11 @@ ResourceHandler* ResourceManager::findHandler(string path, string& mountpoint) {
 	
 	for(iter = resourceHandlers.begin(); iter != resourceHandlers.end(); iter++) {
 		mountpoint = normalizePath(iter->first);
-		sub = path.substr(mountpoint.length());
-		if(isParentOrEqualPath(iter->first, path) && iter->second->fileExists(sub)) {
-			return iter->second;
+		if(mountpoint.length() <= path.length()) {
+			sub = path.substr(mountpoint.length());
+			if(isParentOrEqualPath(iter->first, path) && iter->second->fileExists(sub)) {
+				return iter->second;
+			}
 		}
 	}
 	return 0;
