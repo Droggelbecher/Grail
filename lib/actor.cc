@@ -93,6 +93,14 @@ void Actor::eachFrame(uint32_t ticks) {
 	if(animation) {
 		animation->eachFrame(ticks);
 	}
+
+	if (isSpeaking())
+	{
+		getDialogLine()->eachFrame();
+		if (getDialogLine()->isComplete()) {
+			dialogLines.pop();
+		}
+	}
 	
 	if(!walkPath.empty()) {
 		setMode("walk");
@@ -124,6 +132,19 @@ void Actor::eachFrame(uint32_t ticks) {
 			}
 		}
 	} // if walkPath not empty
+}
+
+void Actor::say(std::string statement, uint32_t displayTime) {
+	boost::shared_ptr<DialogLine> line(new DialogLine(statement,displayTime));
+	dialogLines.push(line);
+}
+
+bool Actor::isSpeaking() {
+	return !(dialogLines.empty());
+}
+
+DialogLine::Ptr Actor::getDialogLine() {
+	return dialogLines.front();
 }
 
 std::ostream& operator<<(std::ostream& os, const Actor& actor) {
