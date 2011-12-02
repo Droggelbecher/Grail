@@ -10,8 +10,7 @@ namespace grail {
 
 	void DialogLine::eachFrame() {
 		uint32_t timeNow = SDL_GetTicks();
-		if (timeNow > (timeStarted + timeToLive))
-		{
+		if (timeNow > (timeStarted + timeToLive)) {
 			complete = true;
 		}
 	}

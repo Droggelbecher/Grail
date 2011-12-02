@@ -94,8 +94,7 @@ void Actor::eachFrame(uint32_t ticks) {
 		animation->eachFrame(ticks);
 	}
 
-	if (isSpeaking())
-	{
+	if (isSpeaking()) {
 		getDialogLine()->eachFrame();
 		if (getDialogLine()->isComplete()) {
 			dialogLines.pop();
