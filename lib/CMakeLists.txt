@@ -8,6 +8,7 @@ set(GRAIL_FILES
 	audio.cc
 	blit_cached.cc
 	debug.cc
+	dialog_line.cc
 	event.cc
 	font.cc
 	game.cc

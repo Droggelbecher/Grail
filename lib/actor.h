@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <list>
+#include <queue>
 
 #include <boost/shared_ptr.hpp>
 
@@ -15,6 +16,7 @@
 #include "animation.h"
 #include "area.h"
 #include "debug.h"
+#include "dialog_line.h"
 
 namespace grail {
 	
@@ -33,6 +35,8 @@ namespace grail {
 			double speed; ///< Unit is virtual pixels / second
 			
 			Path walkPath;
+
+			std::queue<DialogLine::Ptr> dialogLines;
 			
 		protected:
 			VirtualPosition getUpperLeftCorner() const;
@@ -68,6 +72,10 @@ namespace grail {
 			void walkTo(Actor::Ptr actor);
 			void walkTo(VirtualPosition p);
 			void walkStraight(VirtualPosition p);
+
+			void say(std::string, uint32_t);
+			bool isSpeaking();
+			DialogLine::Ptr getDialogLine();
 	};
 	
 	std::ostream& operator<<(std::ostream& os, const Actor& actor);

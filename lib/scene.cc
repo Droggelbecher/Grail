@@ -91,6 +91,10 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	list<Actor::Ptr>::const_iterator iter;
 	for(iter = actors.begin(); iter != actors.end(); ++iter) {
 		(*iter)->renderAt(target, ticks, p);
+		if ((*iter)->isSpeaking()) {
+			// render the speech bubble
+			printf("%s\n", (*iter)->getDialogLine()->getText().c_str());
+		}
 	}
 	
 	for(piter = foregrounds.begin(); piter != foregrounds.end(); ++piter) {

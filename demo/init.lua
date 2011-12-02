@@ -21,6 +21,7 @@ function initChapter(n)
 		local scarecrow = Actor("Scarecrow")
 		scarecrow:addAnimation("default", Image("/media/$res/scarecrow.png"))
 		scarecrow:setPosition(VP(6000, 2700))
+		scarecrow:say("hello world!", 3000)
 		s:addActor(scarecrow)
 		
 		local pumpkin = Actor("Pumpkin")
