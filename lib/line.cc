@@ -31,10 +31,23 @@ bool Line::intersects(const Line& other) const {
 	// lines intersect at exactly one end point,
 	// we count this as not intersecting
 	if((abs(d1) == 1) && (abs(d2) == 1) && (abs(d3) == 1) && (abs(d4) == 1)) {
+	//if((abs(d1) == 1) || (abs(d2) == 1) || (abs(d3) == 1) || (abs(d4) == 1)) {
 		return false;
 	}
 	
 	return true;
+}
+
+bool Line::hasPoint(VirtualPosition p) const {
+	if(p == a || p == b) { return true; }
+	//if(l.cross(p - a) != 0) { return false; }
+	if(!fequal((b - a) * (p - a), (b - a).length() * (p - a).length())) { return false; }
+	return (p - a).length() <= (b - a).length();
+}
+
+std::ostream& operator<<(std::ostream& os, Line l) {
+	os << l.getA() << "-" << l.getB();
+	return os;
 }
 
 } // namespace grail
