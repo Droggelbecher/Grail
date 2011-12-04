@@ -21,7 +21,7 @@ SoundTask::SoundTask(std::string resource, size_t loops)
 	buffer = static_cast<const ALubyte*>(soundChunk.createBuffer(bufsize));
 
 	alBuf = alureCreateBufferFromMemory(buffer,bufsize);
-	assert(alBuf);
+	// assert(alBuf);
 
 	alSourcei(src, AL_BUFFER, alBuf);
 	// TODO: make this more elegant and think about the api

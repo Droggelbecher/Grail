@@ -168,6 +168,7 @@ class Ground {
 		//list<WaypointPolygon*> innerPolygons, outerPolygons;
 		
 		//PolygonTree<WaypointPolygon> polygons;
+	public:
 		Component *rootComponent;
 		
 };
