@@ -62,7 +62,7 @@ Vector2d<T, N> operator*(Vector2d<T, N> v, double scalar) {
 
 template <typename T, int N>
 T operator*(Vector2d<T, N> v, Vector2d<T, N> w) {
-	return Vector2d<T, N>((T)(v._x * w._x), (T)(v._y * w._y));
+	return (T)(v._x * w._x + v._y * w._y);
 }
 
 template <typename T, int N>

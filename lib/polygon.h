@@ -18,7 +18,7 @@ template<typename Node, typename GetPosition>
 class Polygon : public Area {
 	public:
 		enum Orientation { UNKNOWN, CW, CCW };
-		enum LineDirection { NOT_ATTACHED, IN, OUT };
+		enum LineDirection { NOT_ATTACHED, IN, OUT, NEITHER };
 		
 		class LineIterator {
 				const Polygon *parent;

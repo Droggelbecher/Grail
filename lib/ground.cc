@@ -76,7 +76,7 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
 	// Waypoints outside of the component are not reachable
-	if(!component->outerBoundary.hasPoint(wp1.getPosition())) { cdbg << "wp1 outside\n"; return false; }
+	if(!component->outerBoundary.hasPoint(wp1.getPosition())) { return false; }
 	if(!component->outerBoundary.hasPoint(wp2.getPosition())) { return false; }
 	
 	if(wp1 == wp2) { return true; }
@@ -85,20 +85,25 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	
 	// Even though no point is outside of the outer boundary (checked above),
 	// the line between them might cross the boundary (e.g. if the boundary
-	// is)
+	// is non-convex)
+	// if l crosses the boundary that means there is no line of sight between
+	// wp1 and wp2 though.
+	// Ignore crossings when one of them is a boundary point though.
 	
-	// If at least one point is not on the $outerBoundary, that means $l
-	// crosses $outerBoundary.
 	polygon_t o = component->outerBoundary; 
 	for(polygon_t::LineIterator li = o.beginLines(); li != o.endLines(); ++li) {
-		if(l != *li && l.intersects(*li)) { return false; }
+		if(l != *li && l.intersects(*li)) {
+			return false;
+		}
 	}
 	
 	// Also, if $l crosses a hole, wp2 is not directly reachable from wp1.
 	for(Component::hole_iter_t hi = component->holes.begin(); hi != component->holes.end(); ++hi) {
 		polygon_t p = (*hi)->outerBoundary;
 		for(polygon_t::LineIterator li = p.beginLines(); li != p.endLines(); ++li) {
-			if(l != *li && l.intersects(*li)) { return false; }
+			if(l != *li && l.intersects(*li)) {
+				return false;
+			}
 		}
 	}
 	
@@ -111,18 +116,20 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	
 	polygon_t::LineDirection dir = component->outerBoundary.getLineDirection(l);
 	if(dir == polygon_t::IN) { return true; }
-	else if(dir == polygon_t::OUT) { return false; }
+	else if(dir == polygon_t::OUT) {
+		return false;
+	}
 		
 	for(Component::hole_iter_t hi = component->holes.begin(); hi != component->holes.end(); ++hi) {
 		polygon_t::LineDirection dir = (*hi)->outerBoundary.getLineDirection(l);
-		if(dir == polygon_t::IN) { return false; }
+		if(dir == polygon_t::IN) {
+			return false;
+		}
 		else if(dir == polygon_t::OUT) { return true; }
 	}
 	
 	// Both points must be inner points now that are directly reachable from
 	// each other.
-	// TODO: ...or they may be located on a polygon edge but not on a polygon
-	// node, which is a case we ignore for now)
 	return true;
 }
 

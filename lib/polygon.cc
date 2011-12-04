@@ -14,6 +14,10 @@ Polygon<Node, GetPosition>::Polygon() : orientation(UNKNOWN) {
 
 template<typename Node, typename GetPosition>
 bool Polygon<Node, GetPosition>::hasPoint(VirtualPosition p) const {
+	if(hasBoundaryPoint(p)) {
+		return true;
+	}
+	
 	// If there is an uneven number of intersections
 	// in both directions, the Offset is inside the
 	// polygon
@@ -45,17 +49,35 @@ bool Polygon<Node, GetPosition>::hasBoundaryPoint(VirtualPosition p) const {
 
 template<typename Node, typename GetPosition>
 typename Polygon<Node, GetPosition>::LineDirection Polygon<Node, GetPosition>::getLineDirection(Line l) const {
+	
+	/*
+	 *         / l1
+	 *        /
+	 *       X ----->----- l
+	 *       |\
+	 *       | \
+	 *       ^  \ l2
+	 *       |
+	 *       |
+	 *      prev 
+	 */
+	
 	LineIterator li;
+	Line prev(GetPosition::getPosition(nodes.back()), GetPosition::getPosition(nodes.front()));
 	Orientation o = getOrientation();
+	
 	for(li = beginLines(); li != endLines(); ++li) {
 		if((*li).getA() == l.getA()) {
-			VirtualPosition::Scalar s =
-				((*li).getB() - (*li).getA()).cross(
-					l.getB() - l.getA()
-				);
-			if((s < 0) == (o == CCW)) { return IN; }
+			VirtualPosition::Scalar s_l = ((*li).getB() - (*li).getA()).cross(l.getB() - l.getA());
+			VirtualPosition::Scalar s_prev = (prev.getA() - prev.getB()).cross(l.getB() - l.getA());
+			
+			if(s_l == 0 || s_prev == 0) { return NEITHER; }
+			
+			if((o == CCW) && (s_l < 0) && (s_prev > 0)) { return IN; }
+			else if((o == CW) && (s_l > 0) && (s_prev < 0)) { return IN; }
 			else { return OUT; }
 		} // if li.a == l.a
+		prev = *li;
 	} // for lines
 	return NOT_ATTACHED;
 } // getLineDirection()

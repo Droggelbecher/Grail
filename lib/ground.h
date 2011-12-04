@@ -47,8 +47,14 @@ class Ground {
 				double costSum;
 				
 			public:
-				Waypoint(const Waypoint&) { }
-				Waypoint& operator=(const Waypoint&) { return *this; }
+				Waypoint(const Waypoint& other)
+					: position(other.position), neighbours(other.neighbours), costSum(other.costSum) { }
+				Waypoint& operator=(const Waypoint& other) {
+					position = other.position;
+					neighbours = other.neighbours;
+					costSum = other.costSum;
+					return *this;
+				}
 				Waypoint(VirtualPosition position) : position(position), costSum(0) { }
 				virtual ~Waypoint() { reset(); }
 				
@@ -158,7 +164,7 @@ class Ground {
 		//list<Line> walls;
 		//list<Waypoint*> waypoints;
 		
-		typedef Polygon<Waypoint*, Waypoint::GetPosition> WaypointPolygon;
+		//typedef Polygon<Waypoint*, Waypoint::GetPosition> WaypointPolygon;
 		//list<WaypointPolygon*> innerPolygons, outerPolygons;
 		
 		//PolygonTree<WaypointPolygon> polygons;

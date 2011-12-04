@@ -244,6 +244,7 @@ TEST(Ground, directReachable) {
 		0    20 50  80 90100 120150 180   200
 		
 	*/
+
 	
 	// p11 p12 p13 p14   p21 p22 p23 p24   p31 p32 p33 p34  x1 x2 x3 x4 x5 x6
 	enum Idx { P11=0, P12, P13, P14, P21, P22, P23, P24, P31, P32, P33, P34, X1, X2, X3, X4, X5, X6 };
@@ -254,8 +255,6 @@ TEST(Ground, directReachable) {
 		P(180, 80), P(180, 20), P(120, 20), P(120, 80),
 		P(100, 30), P(150, 40), P(10, 50), P(50, 50), P(150, 60), P(90, 90)
 	};
-	
-	// TODO: Construct ground, construct polygons
 	
 	Ground g;
 	
@@ -315,11 +314,11 @@ TEST(Ground, directReachable) {
 		for(int j = 0; j<=X6; ++j) {
 			//bool expected = (reachable[i][j] == '1');
 			if(i <= P34 && j <= P34) {
-				cdbg << "i=" << i << " j=" << j << "\n";
-				cdbg
-					<< "wp[i]=" << g.rootComponent->waypoints[i].getPosition()
-					<< " wp[j]=" << g.rootComponent->waypoints[j].getPosition()
-					<< "\n";
+				//cdbg << "i=" << i << " j=" << j << "\n";
+				//cdbg
+				//	<< "wp[i]=" << g.rootComponent->waypoints[i].getPosition()
+				//	<< " wp[j]=" << g.rootComponent->waypoints[j].getPosition()
+				//	<< "\n";
 				if(reachable[i][j] == '1') {
 					CHECK_EQUAL(
 						g.directReachable(
