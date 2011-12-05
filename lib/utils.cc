@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <stdint.h>
+#include <cmath>
 
 #include "utils.h"
 #include "debug.h"
@@ -136,6 +137,26 @@ uint16_t nextPower2(uint16_t n) {
 	else {
 		return l2 << 1;
 	}
+}
+
+double fepsilon = 1e-10;
+bool fequal(double a, double b) {
+	double diff = a - b;
+	return diff > -fepsilon && diff < fepsilon;
+}
+
+double normalizeAngle(double a) {
+	
+	if(a >= 2.0*M_PI) {
+		a -= floor(a / (2.0*M_PI)) * 2.0*M_PI;
+	}
+	
+	else if(a < 0) {
+		a -= floor(a / (2.0*M_PI)) * 2.0*M_PI;
+	}
+	
+
+	return a;
 }
 
 } // namespace grail
