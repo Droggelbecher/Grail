@@ -91,9 +91,9 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	list<Actor::Ptr>::const_iterator iter;
 	for(iter = actors.begin(); iter != actors.end(); ++iter) {
 		(*iter)->renderAt(target, ticks, p);
+		// if the character is speaking render their current line through the current dialog frontend
 		if ((*iter)->isSpeaking()) {
-			// render the speech bubble
-			printf("%s\n", (*iter)->getDialogLine()->getText().c_str());
+			Game::getInstance().getDialogFrontend()->render((*iter)->getDialogLine());
 		}
 	}
 	

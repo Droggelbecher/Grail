@@ -15,6 +15,7 @@
 #include "exceptions.h"
 #include "scene.h"
 #include "user_interface.h"
+#include "dialog_frontend.h"
 #include "actor.h"
 #include "mainloop.h"
 
@@ -28,6 +29,7 @@ class Game {
 		Scene::Ptr currentScene;
 		ResourceManager* resourceManager;
 		UserInterface::Ptr userInterface;
+		DialogFrontend::Ptr dialogFrontend;
 		Actor::Ptr mainCharacter;
 		std::map<std::string, Scene::Ptr> scenes;
 		MainLoop loop;
@@ -53,6 +55,7 @@ class Game {
 		ResourceManager& getResourceManager();
 		void setUserInterface(UserInterface::Ptr ui);
 		UserInterface::Ptr getUserInterface();
+		DialogFrontend::Ptr getDialogFrontend();
 		MainLoop& getMainLoop() { return loop; }
 		
 		Actor::Ptr getMainCharacter() const;

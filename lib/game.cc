@@ -8,6 +8,7 @@
 #include "resource_manager.h"
 #include "user_interface.h"
 #include "debug.h"
+#include "dialog_frontend_default.h"
 
 using std::cout;
 using std::cerr;
@@ -21,6 +22,10 @@ Game* Game::_instance = 0;
 
 Game::Game() : viewport(0), resourceManager(0), loop(true) {
 	SDL_Init(SDL_INIT_EVERYTHING);
+
+	// temporarily use default dialog frontend
+	boost::shared_ptr<DialogFrontend> frontend(new DialogFrontendDefault());
+	dialogFrontend = frontend;
 }
 
 Game::~Game() {
@@ -80,6 +85,10 @@ void Game::setUserInterface(UserInterface::Ptr ui) {
 
 UserInterface::Ptr Game::getUserInterface() {
 	return userInterface;
+}
+
+DialogFrontend::Ptr Game::getDialogFrontend() {
+	return dialogFrontend;
 }
 
 void Game::setMainCharacter(Actor::Ptr actor) {

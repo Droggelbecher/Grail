@@ -9,6 +9,8 @@ set(GRAIL_FILES
 	blit_cached.cc
 	debug.cc
 	dialog_line.cc
+	dialog_frontend.cc
+	dialog_frontend_default.cc
 	event.cc
 	font.cc
 	game.cc
