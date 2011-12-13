@@ -5,7 +5,6 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include "game.h"
 #include "viewport.h"
 
 namespace grail {
@@ -14,9 +13,7 @@ namespace grail {
 			int size;
 			TTF_Font* font;
 			
-			int virtualSizeToPhysicalSize(int vs) {
-				return vs * Game::getInstance().getViewport().getPhysicalHeight() / 800.0;
-			}
+			int virtualSizeToPhysicalSize(int vs);
 			
 		public:
 			typedef boost::shared_ptr<Font> Ptr;
