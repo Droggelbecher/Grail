@@ -1,7 +1,6 @@
 // vim: set noexpandtab:
 
 #include "dialog_frontend.h"
-#include "vector2d.h"
 
 namespace grail {
 
