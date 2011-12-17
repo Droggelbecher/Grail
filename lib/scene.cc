@@ -91,11 +91,13 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	list<Actor::Ptr>::const_iterator iter;
 	for(iter = actors.begin(); iter != actors.end(); ++iter) {
 		(*iter)->renderAt(target, ticks, p);
-		// if the character is speaking render their current line through the current dialog frontend
+
 		if ((*iter)->isSpeaking()) {
-			Game::getInstance().getDialogFrontend()->render((*iter)->getDialogLine());
+			Game::getInstance().getDialogFrontend()->say((*iter)->getDialogLine(), (*iter));
 		}
 	}
+
+	Game::getInstance().getDialogFrontend()->renderAt(target, ticks, p);
 	
 	for(piter = foregrounds.begin(); piter != foregrounds.end(); ++piter) {
 		(*piter)->animation->renderAt(target, ticks,
@@ -115,6 +117,14 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 			aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xffffffff);
 		}
 		*/
+	}
+
+	// check which actors are speaking and render their dialog lines
+	// using the current dialog frontend
+	for(iter = actors.begin(); iter != actors.end(); ++iter) {
+		if ((*iter)->isSpeaking()) {
+			Game::getInstance().getDialogFrontend()->say((*iter)->getDialogLine(), (*iter));
+		}
 	}
 	
 } // renderAt

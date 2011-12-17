@@ -4,10 +4,24 @@
 
 namespace grail {
 
-	// for now just prints out the dialog to output
-	void DialogFrontendDefault::render(DialogLine::Ptr dialogLine) {
-		printf("%s\n", dialogLine->getText().c_str()); 
-	}
+	void DialogFrontendDefault::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
 
+		// remove unused text objects
+		for (std::map<Actor::Ptr, Text::Ptr>::iterator iter = lines.begin();
+			iter != lines.end(); iter++) {
+			if (!(*iter).first->isSpeaking()) {
+				lines.erase(iter);
+			}
+		}
+
+		// render the text objects
+		for (std::map<Actor::Ptr, Text::Ptr>::iterator iter = lines.begin();
+			iter != lines.end(); iter++) {
+
+			VirtualPosition actorPosition = (*iter).first->getPosition();
+			(*iter).second->eachFrame(ticks); // temporarily here
+			(*iter).second->renderAt(target, ticks, actorPosition);
+		}
+	}
 } // namespace grail
 

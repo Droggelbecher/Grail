@@ -13,7 +13,7 @@ namespace grail {
 	class DialogFrontendDefault : public DialogFrontend {
 
 		public:
-			virtual void render(DialogLine::Ptr);
+			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p);
 	};
 
 } // namespace grail

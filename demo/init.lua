@@ -21,7 +21,6 @@ function initChapter(n)
 		local scarecrow = Actor("Scarecrow")
 		scarecrow:addAnimation("default", Image("/media/$res/scarecrow.png"))
 		scarecrow:setPosition(VP(6000, 2700))
-		scarecrow:say("hello world!", 3000)
 		s:addActor(scarecrow)
 		
 		local pumpkin = Actor("Pumpkin")
@@ -32,6 +31,7 @@ function initChapter(n)
 		
 		main_character.mc:setPosition(VP(250, 2700))
 		s:addActor(mc)
+		mc:say("Wooo, dark", 4000)
 		
 		local Audio = Audio()
 		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)

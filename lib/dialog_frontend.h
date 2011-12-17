@@ -4,7 +4,11 @@
 #define DIALOG_FRONTEND_H
 
 #include <boost/shared_ptr.hpp>
+#include <map>
+
 #include "dialog_line.h"
+#include "actor.h"
+#include "text.h"
 
 namespace grail {
 
@@ -17,8 +21,14 @@ namespace grail {
 		public:
 			typedef boost::shared_ptr<DialogFrontend> Ptr;
 
-			// renders the dialog line
-			virtual void render(DialogLine::Ptr) = 0;
+			virtual void say(DialogLine::Ptr, Actor::Ptr);
+
+			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) = 0;
+
+		protected:
+			// map of actors to the text objects used to render
+			// their dialog
+			std::map<Actor::Ptr, Text::Ptr> lines;
 	};
 
 } // namespace grail
