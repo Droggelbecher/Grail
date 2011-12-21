@@ -1,10 +1,10 @@
 // vim: set noexpandtab:
 
-#include "dialog_frontend_default.h"
+#include "dialog_frontend_text.h"
 
 namespace grail {
 
-	void DialogFrontendDefault::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
+	void DialogFrontendText::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
 
 		// remove unused text objects
 		for (std::map<Actor::Ptr, Text::Ptr>::iterator iter = lines.begin();

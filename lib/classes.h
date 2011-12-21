@@ -17,7 +17,7 @@ namespace grail {
 	class Button;
 	class DialogLine;
 	class DialogFrontend;
-	class DialogFrontendDefault;
+	class DialogFrontendText;
 	class DirectionAnimation;
 	class DirectoryIterator;
 	class DirectoryIteratorImpl;

@@ -10,7 +10,7 @@ set(GRAIL_FILES
 	debug.cc
 	dialog_line.cc
 	dialog_frontend.cc
-	dialog_frontend_default.cc
+	dialog_frontend_text.cc
 	event.cc
 	font.cc
 	game.cc
