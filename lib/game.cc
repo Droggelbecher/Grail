@@ -8,7 +8,7 @@
 #include "resource_manager.h"
 #include "user_interface.h"
 #include "debug.h"
-#include "dialog_frontend_text.h"
+#include "dialog_frontend_subtitle.h"
 
 using std::cout;
 using std::cerr;
@@ -24,7 +24,7 @@ Game::Game() : viewport(0), resourceManager(0), loop(true) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	// temporarily use default dialog frontend
-	boost::shared_ptr<DialogFrontend> frontend(new DialogFrontendText());
+	boost::shared_ptr<DialogFrontend> frontend(new DialogFrontendSubtitle());
 	dialogFrontend = frontend;
 }
 
