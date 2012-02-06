@@ -95,9 +95,17 @@ void Actor::eachFrame(uint32_t ticks) {
 	}
 
 	if (isSpeaking()) {
+		// start the next dialog  in the queue
+		if (!getDialogLine()->isStarted()) {
+			getDialogLine()->start();
+		}
+
 		getDialogLine()->eachFrame();
+
+		// remove if finished
 		if (getDialogLine()->isComplete()) {
 			dialogLines.pop();
+			printf("popped\n");
 		}
 	}
 	

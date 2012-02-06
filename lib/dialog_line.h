@@ -19,6 +19,9 @@ namespace grail {
 
 			void eachFrame();
 			std::string getText() { return text; };
+
+			void start();
+			bool isStarted();
 			bool isComplete();
 
 		protected:
@@ -27,7 +30,8 @@ namespace grail {
 			uint32_t timeToLive;
 			uint32_t timeStarted;
 
-			bool complete;
+			bool started;	// whether the dialog line is being said
+			bool complete;	// whether the dialog line is finished being said
 	};
 
 } // namespace grail

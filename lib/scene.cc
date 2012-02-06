@@ -69,6 +69,10 @@ void Scene::eachFrame(uint32_t ticks) {
 	list<Actor::Ptr>::const_iterator iter;
 	for(iter = actors.begin(); iter != actors.end(); iter++) {
 		(*iter)->eachFrame(ticks);
+
+		if ((*iter)->isSpeaking()) {
+			Game::getInstance().getDialogFrontend()->say((*iter)->getDialogLine(), (*iter));
+		}
 	}
 }
 
@@ -92,9 +96,6 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	for(iter = actors.begin(); iter != actors.end(); ++iter) {
 		(*iter)->renderAt(target, ticks, p);
 
-		if ((*iter)->isSpeaking()) {
-			Game::getInstance().getDialogFrontend()->say((*iter)->getDialogLine(), (*iter));
-		}
 	}
 
 	Game::getInstance().getDialogFrontend()->renderAt(target, ticks, p);
@@ -119,14 +120,6 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 		*/
 	}
 
-	// check which actors are speaking and render their dialog lines
-	// using the current dialog frontend
-	for(iter = actors.begin(); iter != actors.end(); ++iter) {
-		if ((*iter)->isSpeaking()) {
-			Game::getInstance().getDialogFrontend()->say((*iter)->getDialogLine(), (*iter));
-		}
-	}
-	
 } // renderAt
 
 EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
