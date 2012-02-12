@@ -8,20 +8,15 @@ namespace grail {
 	}
 
 	void DialogLine::start() {
-
 		started = true;
 		timeStarted = SDL_GetTicks();
-
-		printf("activated\n");
 	}
 
 	bool DialogLine::isStarted() {
-
 		return started;
 	}
 
 	void DialogLine::eachFrame() {
-
 		if (isStarted()) {
 			uint32_t timeNow = SDL_GetTicks();
 

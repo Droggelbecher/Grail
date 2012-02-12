@@ -10,6 +10,7 @@
 #include <queue>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "classes.h"
 #include "vector2d.h"
@@ -25,7 +26,7 @@ namespace grail {
 	/**
 	 * Anything in the game that can walk around (e.g. people)
 	 */
-	class Actor : public Area {
+	class Actor : public Area, public boost::enable_shared_from_this<Actor> {
 			Animation::Ptr animation;
 			std::map<std::string, Animation::Ptr> animationModes;
 			std::string mode;

@@ -105,7 +105,6 @@ void Actor::eachFrame(uint32_t ticks) {
 		// remove if finished
 		if (getDialogLine()->isComplete()) {
 			dialogLines.pop();
-			printf("popped\n");
 		}
 	}
 	
@@ -144,6 +143,7 @@ void Actor::eachFrame(uint32_t ticks) {
 void Actor::say(std::string statement, uint32_t displayTime) {
 	boost::shared_ptr<DialogLine> line(new DialogLine(statement,displayTime));
 	dialogLines.push(line);
+	Game::getInstance().getDialogFrontend()->say(line, shared_from_this());
 }
 
 bool Actor::isSpeaking() {

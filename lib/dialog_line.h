@@ -23,6 +23,7 @@ namespace grail {
 			void start();
 			bool isStarted();
 			bool isComplete();
+			uint32_t getLength() { return timeToLive; }
 
 		protected:
 			std::string text;

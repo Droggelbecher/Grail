@@ -25,6 +25,7 @@ set(GRAIL_FILES
 	sound_task.cc
 	shortcuts.cc
 	sprite.cc
+	subtitle.cc
 	surface.cc
 	task.cc
 	text.cc

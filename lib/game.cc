@@ -106,6 +106,9 @@ void Game::eachFrame(uint32_t ticks) {
 	if(currentScene) {
 		currentScene->eachFrame(ticks);
 	}
+	if(dialogFrontend) {
+		dialogFrontend->eachFrame(ticks);
+	}
 }
 
 void Game::renderEverything(uint32_t ticks) {

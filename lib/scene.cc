@@ -69,10 +69,6 @@ void Scene::eachFrame(uint32_t ticks) {
 	list<Actor::Ptr>::const_iterator iter;
 	for(iter = actors.begin(); iter != actors.end(); iter++) {
 		(*iter)->eachFrame(ticks);
-
-		if ((*iter)->isSpeaking()) {
-			Game::getInstance().getDialogFrontend()->say((*iter)->getDialogLine(), (*iter));
-		}
 	}
 }
 

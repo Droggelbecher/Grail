@@ -11,27 +11,36 @@ namespace grail {
 		subtitlePosition = VirtualPosition(defaultX, defaultY);
 	}
 
-	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
+	void DialogFrontendSubtitle::say(DialogLine::Ptr line, Actor::Ptr speaker) {
+		boost::shared_ptr<Subtitle> s(new Subtitle(line));
+		subtitles.push_back(s);
+	}
 
-		// remove unused text objects
-		for (std::map<Actor::Ptr, Text::Ptr>::iterator iter = lines.begin();
-			iter != lines.end(); iter++) {
-			if (!(*iter).first->isSpeaking()) {
-				lines.erase(iter);
+	void DialogFrontendSubtitle::eachFrame(uint32_t ticks)  {
+
+		// remove completed subs
+		for (std::vector<boost::shared_ptr<Subtitle> >::iterator iter = subtitles.begin();
+			iter != subtitles.end(); iter++) {
+			if ((*iter)->isComplete()) {
+				subtitles.erase(iter);
 			}
 		}
 
-		// render the text objects
-		for (std::map<Actor::Ptr, Text::Ptr>::iterator iter = lines.begin();
-			iter != lines.end(); iter++) {
+		// update the subtitles
+		for (std::vector<boost::shared_ptr<Subtitle> >::iterator iter = subtitles.begin();
+			iter != subtitles.end(); iter++) {
+			(*iter)->eachFrame(ticks);
+		}
+	}
 
-			// set the actor's text object to the text of what they are saying
-			(*iter).second->setText((*iter).first->getDialogLine()->getText());
+	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
 
-			(*iter).second->eachFrame(ticks); // temporarily here
-
-			// render the subtitle
-			(*iter).second->renderAt(target, ticks, subtitlePosition);
+		// render the subtitles
+		for (std::vector<boost::shared_ptr<Subtitle> >::iterator iter = subtitles.begin();
+			iter != subtitles.end(); iter++) {
+			if ((*iter)->isStarted()) {
+				(*iter)->renderAt(target, ticks, subtitlePosition);
+			}
 		}
 	}
 } // namespace grail

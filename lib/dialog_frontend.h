@@ -23,6 +23,7 @@ namespace grail {
 
 			virtual void say(DialogLine::Ptr, Actor::Ptr);
 
+			virtual void eachFrame(uint32_t ticks) = 0;
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) = 0;
 
 		protected:
