@@ -93,8 +93,6 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 		(*iter)->renderAt(target, ticks, p);
 
 	}
-
-	Game::getInstance().getDialogFrontend()->renderAt(target, ticks, p);
 	
 	for(piter = foregrounds.begin(); piter != foregrounds.end(); ++piter) {
 		(*piter)->animation->renderAt(target, ticks,
@@ -115,6 +113,8 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 		}
 		*/
 	}
+
+	Game::getInstance().getDialogFrontend()->renderAt(target, ticks, p);
 
 } // renderAt
 

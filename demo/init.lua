@@ -32,6 +32,7 @@ function initChapter(n)
 		main_character.mc:setPosition(VP(250, 2700))
 		s:addActor(mc)
 		mc:say("Wooo, dark", 4000)
+		mc:say("I wonder if Deckard came this way?", 6000)
 		
 		local Audio = Audio()
 		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)
