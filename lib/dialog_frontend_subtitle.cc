@@ -20,9 +20,11 @@ namespace grail {
 
 		// remove completed subs
 		for (std::vector<boost::shared_ptr<Subtitle> >::iterator iter = subtitles.begin();
-			iter != subtitles.end(); iter++) {
+			iter != subtitles.end(); ) {
 			if ((*iter)->isComplete()) {
-				subtitles.erase(iter);
+				iter = subtitles.erase(iter);
+			} else {
+				++iter;
 			}
 		}
 
