@@ -5,6 +5,8 @@
 
 #include "dialog_frontend.h"
 #include "subtitle.h"
+#include "font.h"
+#include "boost/shared_ptr.hpp"
 
 namespace grail {
 
@@ -14,10 +16,15 @@ namespace grail {
 		public:
 			DialogFrontendSubtitle();
 			void say(DialogLine::Ptr, Actor::Ptr);
+
 			void eachFrame(uint32_t ticks);
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p);
 
+			void setFont(std::string);
+
 		protected:
+			std::string defaultFontPath;
+			Font::Ptr defaultFont;
 			VirtualPosition subtitlePosition;
 			std::vector<boost::shared_ptr<Subtitle> > subtitles;
 	};

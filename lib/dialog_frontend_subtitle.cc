@@ -9,10 +9,22 @@ namespace grail {
 		int defaultX = 1300;
 		int defaultY = 2800;
 		subtitlePosition = VirtualPosition(defaultX, defaultY);
+
+		setFont("fonts/crkdwno1.ttf");
 	}
 
 	void DialogFrontendSubtitle::say(DialogLine::Ptr line, Actor::Ptr speaker) {
-		boost::shared_ptr<Subtitle> s(new Subtitle(line));
+
+		// set the default font here if not set
+		// ** for some reason doing this in the constructor causes a segfault
+		// and I can't figure out why -- feedelli **
+		if (!defaultFont) {
+			defaultFont = boost::shared_ptr<Font>(new Font(defaultFontPath, 40, 1));
+		}
+
+		// queue a new subtitle with the line to be said and using the default font for now
+		// ** to be implemented: allow characters to have their own fonts
+		boost::shared_ptr<Subtitle> s(new Subtitle(line, defaultFont));
 		subtitles.push_back(s);
 	}
 
@@ -44,6 +56,10 @@ namespace grail {
 				(*iter)->renderAt(target, ticks, subtitlePosition);
 			}
 		}
+	}
+
+	void DialogFrontendSubtitle::setFont(std::string path) {
+		defaultFontPath = path;
 	}
 } // namespace grail
 

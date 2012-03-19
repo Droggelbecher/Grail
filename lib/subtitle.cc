@@ -4,9 +4,7 @@
 
 namespace grail {
 
-	Subtitle::Subtitle(boost::shared_ptr<DialogLine> d) : dialogLine(d), started(false), complete(false) {
-		// temporary solution to create text object
-		boost::shared_ptr<Font> font(new Font("fonts/tommy_holloway.ttf", 40, 1));
+	Subtitle::Subtitle(boost::shared_ptr<DialogLine> d, boost::shared_ptr<Font> f) : dialogLine(d), font(f), started(false), complete(false) {
 		boost::shared_ptr<Text> t(new Text(font));
 		t->setText(dialogLine->getText());
 		text = t;

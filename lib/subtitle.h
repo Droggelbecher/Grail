@@ -4,6 +4,7 @@
 #define SUBTITLE_H
 
 #include "text.h"
+#include "font.h"
 #include "dialog_line.h"
 #include "boost/shared_ptr.hpp"
 
@@ -13,7 +14,7 @@ namespace grail {
 	class Subtitle {
 
 		public:
-			Subtitle(boost::shared_ptr<DialogLine>);
+			Subtitle(boost::shared_ptr<DialogLine>, Font::Ptr);
 
 			void eachFrame(uint32_t ticks);
 			void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
@@ -23,6 +24,7 @@ namespace grail {
 			bool isComplete() { return complete; }
 
 		protected:
+			Font::Ptr font;
 			boost::shared_ptr<Text> text;
 			boost::shared_ptr<DialogLine> dialogLine;
 

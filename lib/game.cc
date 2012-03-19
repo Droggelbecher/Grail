@@ -24,8 +24,7 @@ Game::Game() : viewport(0), resourceManager(0), loop(true) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	// temporarily use default dialog frontend
-	boost::shared_ptr<DialogFrontend> frontend(new DialogFrontendSubtitle());
-	dialogFrontend = frontend;
+	dialogFrontend = boost::shared_ptr<DialogFrontend>(new DialogFrontendSubtitle());
 }
 
 Game::~Game() {
