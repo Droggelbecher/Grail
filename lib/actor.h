@@ -40,7 +40,9 @@ namespace grail {
 			
 			Path walkPath;
 
+			// speaking
 			std::queue<DialogLine::Ptr> dialogLines;
+			uint32_t dialogGapTime; // the length of time between each line of dialog
 			
 		protected:
 			VirtualPosition getUpperLeftCorner() const;

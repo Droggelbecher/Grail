@@ -12,7 +12,7 @@ using std::copy;
 namespace grail {
 
 Actor::Actor(std::string name) :
-	mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0) {
+	mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0), dialogGapTime(300) {
 }
 
 std::string Actor::getName() const {
@@ -143,6 +143,11 @@ void Actor::eachFrame(uint32_t ticks) {
 void Actor::say(std::string statement, uint32_t displayTime) {
 	boost::shared_ptr<DialogLine> line(new DialogLine(statement,displayTime));
 	dialogLines.push(line);
+
+	// add a pause after the dialog
+	boost::shared_ptr<DialogLine> gap(new DialogLine("", dialogGapTime));
+	dialogLines.push(gap);
+
 	Game::getInstance().getDialogFrontend()->say(line, shared_from_this());
 }
 
