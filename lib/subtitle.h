@@ -22,6 +22,10 @@ namespace grail {
 			void start();
 			bool isStarted() { return started; }
 			bool isComplete() { return complete; }
+			
+			VirtualSize getSize() const {
+				return text->getSize();
+			}
 
 		protected:
 			Font::Ptr font;

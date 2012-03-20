@@ -6,10 +6,16 @@ namespace grail {
 
 	DialogFrontendSubtitle::DialogFrontendSubtitle() {
 
-		int defaultX = 1300;
+		// sdefault subs position
+		int defaultX = 2000;
 		int defaultY = 2800;
 		subtitlePosition = VirtualPosition(defaultX, defaultY);
 
+
+		//center the subs by default
+		centered = true;
+
+		// default font to be used
 		setFont("fonts/crkdwno1.ttf");
 	}
 
@@ -19,7 +25,7 @@ namespace grail {
 		// ** for some reason doing this in the constructor causes a segfault
 		// and I can't figure out why -- feedelli **
 		if (!defaultFont) {
-			defaultFont = boost::shared_ptr<Font>(new Font(defaultFontPath, 40, 1));
+			defaultFont = boost::shared_ptr<Font>(new Font(defaultFontPath, 30, 1));
 		}
 
 		// queue a new subtitle with the line to be said and using the default font for now
@@ -49,17 +55,28 @@ namespace grail {
 
 	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
 
-		// render the subtitles
+		// render the subtitles centered
 		for (std::vector<boost::shared_ptr<Subtitle> >::iterator iter = subtitles.begin();
 			iter != subtitles.end(); iter++) {
 			if ((*iter)->isStarted()) {
-				(*iter)->renderAt(target, ticks, subtitlePosition);
+				VirtualPosition renderPosition = subtitlePosition;
+
+				// center the text around the rener position if set to centered
+				if (centered) {
+					renderPosition = renderPosition - ((*iter)->getSize()/2);
+				}
+
+				(*iter)->renderAt(target, ticks, (renderPosition));
 			}
 		}
 	}
 
 	void DialogFrontendSubtitle::setFont(std::string path) {
 		defaultFontPath = path;
+	}
+
+	void DialogFrontendSubtitle::setCentered(bool c) {
+		centered = c;
 	}
 } // namespace grail
 
