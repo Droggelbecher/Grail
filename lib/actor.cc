@@ -148,7 +148,7 @@ void Actor::say(std::string statement, uint32_t displayTime) {
 	boost::shared_ptr<DialogLine> gap(new DialogLine(shared_from_this(),"", dialogGapTime));
 	dialogLines.push(gap);
 
-	Game::getInstance().getDialogFrontend()->say(line, shared_from_this());
+	Game::getInstance().getDialogFrontend()->say(line);
 }
 
 bool Actor::isSpeaking() {

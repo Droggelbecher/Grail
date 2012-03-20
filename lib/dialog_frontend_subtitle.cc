@@ -66,18 +66,30 @@ namespace grail {
 
 	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
 
+		// count active subs
+		int activeSubtitles = 0;
+
 		// render the subtitles centered
-		for (std::vector<boost::shared_ptr<Subtitle> >::iterator iter = subtitles.begin();
-			iter != subtitles.end(); iter++) {
-			if ((*iter)->isStarted()) {
+		// render backwards so earlier subtitles stack upwards
+		for (std::vector<boost::shared_ptr<Subtitle> >::reverse_iterator riter = subtitles.rbegin();
+			riter != subtitles.rend(); ++riter) {
+
+			if ((*riter)->isStarted()) {
+
+				activeSubtitles++;
+
 				VirtualPosition renderPosition = subtitlePosition;
 
 				// center the text around the rener position if set to centered
 				if (centered) {
-					renderPosition = renderPosition - ((*iter)->getSize()/2);
+					renderPosition = renderPosition - ((*riter)->getSize()/2);
 				}
 
-				(*iter)->renderAt(target, ticks, (renderPosition));
+				if (activeSubtitles > 1) {
+					renderPosition.setY(renderPosition.getY() - (200 * (activeSubtitles - 1)));
+				}
+
+				(*riter)->renderAt(target, ticks, (renderPosition));
 			}
 		}
 	}

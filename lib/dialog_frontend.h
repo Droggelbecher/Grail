@@ -21,7 +21,7 @@ namespace grail {
 		public:
 			typedef boost::shared_ptr<DialogFrontend> Ptr;
 
-			virtual void say(DialogLine::Ptr, Actor::Ptr);
+			virtual void say(DialogLine::Ptr) = 0;
 
 			virtual void eachFrame(uint32_t ticks) = 0;
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) = 0;
