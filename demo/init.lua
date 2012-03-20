@@ -29,10 +29,8 @@ function initChapter(n)
 		pumpkin:setYOffset(-700)
 		s:addActor(pumpkin)
 		
-		main_character.mc:setPosition(VP(250, 2700))
+		main_character.mc:setPosition(VP(5000, 2700))
 		s:addActor(mc)
-		mc:say("Wooo, dark", 4000)
-		mc:say("I wonder if Deckard came this way?", 6000)
 		
 		local Audio = Audio()
 		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)
@@ -48,6 +46,17 @@ function initChapter(n)
 		WaitTask(3000):start()
 		print("--- After nonblocking timer")
 		------------------------------
+
+		mc:say("Wooo, dark", 4000)
+		mc:say("I wonder if Deckard came this way?", 6000)
+
+		WaitTask(12000):block()
+
+		pumpkin:say("Why hello there.", 3000 );
+
+		WaitTask(3200):block()
+
+		mc:say("OMG! WTF?", 5000);
 		
 	end
 end
