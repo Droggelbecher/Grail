@@ -15,6 +15,9 @@ namespace grail {
 		//center the subs by default
 		centered = true;
 
+		// show speaker's name by default
+		showSpeakersName = true;
+
 		// default font to be used
 		setFont("fonts/crkdwno1.ttf");
 	}
@@ -26,6 +29,14 @@ namespace grail {
 		// and I can't figure out why -- feedelli **
 		if (!defaultFont) {
 			defaultFont = boost::shared_ptr<Font>(new Font(defaultFontPath, 30, 1));
+		}
+
+		std::string subtitleText = line->getText();
+
+		// prepend the speakers name and a colon if showSpeakersName is set
+		if (showSpeakersName) {	
+			subtitleText = line->getSpeaker()->getName() + ": " + subtitleText;
+			line->setText(subtitleText);
 		}
 
 		// queue a new subtitle with the line to be said and using the default font for now

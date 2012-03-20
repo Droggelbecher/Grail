@@ -1,10 +1,11 @@
 // vim: set noexpandtab:
 
 #include "dialog_line.h"
+#include "actor.h"
 
 namespace grail {
 
-	DialogLine::DialogLine(std::string s, uint32_t t) : text(s), timeToLive(t), started(false), complete(false)  {
+	DialogLine::DialogLine(Actor::Ptr spk, std::string s, uint32_t t) : speaker(spk), text(s), timeToLive(t), started(false), complete(false)  {
 	}
 
 	void DialogLine::start() {

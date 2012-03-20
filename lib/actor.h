@@ -17,7 +17,8 @@
 #include "animation.h"
 #include "area.h"
 #include "debug.h"
-#include "dialog_line.h"
+
+class dialogLine;
 
 namespace grail {
 	
@@ -41,7 +42,7 @@ namespace grail {
 			Path walkPath;
 
 			// speaking
-			std::queue<DialogLine::Ptr> dialogLines;
+			std::queue<boost::shared_ptr<DialogLine> > dialogLines;
 			uint32_t dialogGapTime; // the length of time between each line of dialog
 			
 		protected:
@@ -96,7 +97,7 @@ namespace grail {
 
 			void say(std::string, uint32_t);
 			bool isSpeaking();
-			DialogLine::Ptr getDialogLine();
+			boost::shared_ptr<DialogLine> getDialogLine();
 	};
 	
 	std::ostream& operator<<(std::ostream& os, const Actor& actor);

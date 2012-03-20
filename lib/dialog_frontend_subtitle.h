@@ -18,6 +18,7 @@ namespace grail {
 			Font::Ptr defaultFont;
 			VirtualPosition subtitlePosition;
 			bool centered;	//is the text centered around subtitleposition
+			bool showSpeakersName;
 
 			std::vector<boost::shared_ptr<Subtitle> > subtitles;
 

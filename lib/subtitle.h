@@ -27,6 +27,10 @@ namespace grail {
 				return text->getSize();
 			}
 
+			DialogLine::Ptr getDialogLine() {
+				return dialogLine;
+			}
+
 		protected:
 			Font::Ptr font;
 			boost::shared_ptr<Text> text;

@@ -141,11 +141,11 @@ void Actor::eachFrame(uint32_t ticks) {
 }
 
 void Actor::say(std::string statement, uint32_t displayTime) {
-	boost::shared_ptr<DialogLine> line(new DialogLine(statement,displayTime));
+	boost::shared_ptr<DialogLine> line(new DialogLine(shared_from_this(),statement,displayTime));
 	dialogLines.push(line);
 
 	// add a pause after the dialog
-	boost::shared_ptr<DialogLine> gap(new DialogLine("", dialogGapTime));
+	boost::shared_ptr<DialogLine> gap(new DialogLine(shared_from_this(),"", dialogGapTime));
 	dialogLines.push(gap);
 
 	Game::getInstance().getDialogFrontend()->say(line, shared_from_this());

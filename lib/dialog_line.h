@@ -5,8 +5,8 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
-
 #include "SDL.h"
+#include "actor.h"
 
 namespace grail {
 
@@ -15,10 +15,14 @@ namespace grail {
 		public:
 			typedef boost::shared_ptr<DialogLine> Ptr;
 
-			DialogLine(std::string, uint32_t);
+			DialogLine(Actor::Ptr, std::string, uint32_t);
 
 			void eachFrame();
+
+			void setText(std::string newText) { text = newText; };
 			std::string getText() { return text; };
+
+			Actor::Ptr getSpeaker() { return speaker; };
 
 			void start();
 			bool isStarted();
@@ -26,6 +30,7 @@ namespace grail {
 			uint32_t getLength() { return timeToLive; }
 
 		protected:
+			boost::shared_ptr<Actor> speaker;
 			std::string text;
 
 			uint32_t timeToLive;
