@@ -22,7 +22,7 @@ namespace grail {
 		setFont("fonts/crkdwno1.ttf");
 	}
 
-	void DialogFrontendSubtitle::say(DialogLine::Ptr line, Actor::Ptr speaker) {
+	void DialogFrontendSubtitle::say(DialogLine::Ptr line) {
 
 		// set the default font here if not set
 		// ** for some reason doing this in the constructor causes a segfault

@@ -24,7 +24,7 @@ namespace grail {
 
 		public:
 			DialogFrontendSubtitle();
-			void say(DialogLine::Ptr, Actor::Ptr);
+			void say(DialogLine::Ptr);
 
 			void eachFrame(uint32_t ticks);
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p);
