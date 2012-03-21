@@ -91,6 +91,7 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	list<Actor::Ptr>::const_iterator iter;
 	for(iter = actors.begin(); iter != actors.end(); ++iter) {
 		(*iter)->renderAt(target, ticks, p);
+
 	}
 	
 	for(piter = foregrounds.begin(); piter != foregrounds.end(); ++piter) {
@@ -112,7 +113,9 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 		}
 		*/
 	}
-	
+
+	Game::getInstance().getDialogFrontend()->renderAt(target, ticks, p);
+
 } // renderAt
 
 EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {

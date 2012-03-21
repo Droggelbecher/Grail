@@ -15,6 +15,9 @@ namespace grail {
 	class BlitCached;
 	class Box;
 	class Button;
+	class DialogLine;
+	class DialogFrontend;
+	class DialogFrontendText;
 	class DirectionAnimation;
 	class DirectoryIterator;
 	class DirectoryIteratorImpl;

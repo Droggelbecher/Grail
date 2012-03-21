@@ -15,6 +15,7 @@
 #include "exceptions.h"
 #include "scene.h"
 #include "user_interface.h"
+#include "dialog_frontend.h"
 #include "actor.h"
 #include "mainloop.h"
 
@@ -28,9 +29,11 @@ class Game {
 		Scene::Ptr currentScene;
 		ResourceManager* resourceManager;
 		UserInterface::Ptr userInterface;
+		DialogFrontend::Ptr dialogFrontend;
 		Actor::Ptr mainCharacter;
 		std::map<std::string, Scene::Ptr> scenes;
 		MainLoop loop;
+		bool userControl;
 		
 		Game();
 		
@@ -53,6 +56,7 @@ class Game {
 		ResourceManager& getResourceManager();
 		void setUserInterface(UserInterface::Ptr ui);
 		UserInterface::Ptr getUserInterface();
+		DialogFrontend::Ptr getDialogFrontend();
 		MainLoop& getMainLoop() { return loop; }
 		
 		Actor::Ptr getMainCharacter() const;
@@ -60,7 +64,9 @@ class Game {
 		
 		virtual void eachFrame(uint32_t ticks);
 		void renderEverything(uint32_t ticks);
-		void handleEvent(const SDL_Event &event, uint32_t ticks);
+		EventState handleEvent(SDL_Event &event, uint32_t ticks);
+		
+		void enableUserControl(bool enable);
 		
 		void quit();
 };

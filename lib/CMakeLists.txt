@@ -8,6 +8,9 @@ set(GRAIL_FILES
 	audio.cc
 	blit_cached.cc
 	debug.cc
+	dialog_line.cc
+	dialog_frontend.cc
+	dialog_frontend_subtitle.cc
 	event.cc
 	font.cc
 	game.cc
@@ -22,6 +25,7 @@ set(GRAIL_FILES
 	sound_task.cc
 	shortcuts.cc
 	sprite.cc
+	subtitle.cc
 	surface.cc
 	task.cc
 	text.cc

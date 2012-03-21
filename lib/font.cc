@@ -4,6 +4,7 @@
 #include "resource_manager.h"
 #include "sdl_exception.h"
 #include "debug.h"
+#include "game.h"
 
 namespace grail {
 	Font::Font(std::string path, int size, int outline) : path(path), size(size) {
@@ -37,6 +38,10 @@ namespace grail {
 		if(font) {
 			TTF_CloseFont(font);
 		}
+	}
+
+	int Font::virtualSizeToPhysicalSize(int vs) {
+		return vs * Game::getInstance().getViewport().getPhysicalHeight() / 800.0;
 	}
 	
 	void Font::setOutline(int width) {

@@ -8,6 +8,7 @@
 #include "resource_manager.h"
 #include "user_interface.h"
 #include "debug.h"
+#include "dialog_frontend_subtitle.h"
 
 using std::cout;
 using std::cerr;
@@ -19,8 +20,11 @@ namespace grail {
 
 Game* Game::_instance = 0;
 
-Game::Game() : viewport(0), resourceManager(0), loop(true) {
+Game::Game() : viewport(0), resourceManager(0), loop(true), userControl(false) {
 	SDL_Init(SDL_INIT_EVERYTHING);
+
+	// temporarily use default dialog frontend
+	dialogFrontend = boost::shared_ptr<DialogFrontend>(new DialogFrontendSubtitle());
 }
 
 Game::~Game() {
@@ -82,6 +86,10 @@ UserInterface::Ptr Game::getUserInterface() {
 	return userInterface;
 }
 
+DialogFrontend::Ptr Game::getDialogFrontend() {
+	return dialogFrontend;
+}
+
 void Game::setMainCharacter(Actor::Ptr actor) {
 	mainCharacter = actor;
 }
@@ -96,6 +104,9 @@ void Game::eachFrame(uint32_t ticks) {
 	}
 	if(currentScene) {
 		currentScene->eachFrame(ticks);
+	}
+	if(dialogFrontend) {
+		dialogFrontend->eachFrame(ticks);
 	}
 }
 
@@ -112,7 +123,26 @@ void Game::renderEverything(uint32_t ticks) {
 	}
 }
 
-void Game::handleEvent(const SDL_Event &event, uint32_t ticks) {
+EventState Game::handleEvent(SDL_Event &event, uint32_t ticks) {
+	
+	if(event.type == SDL_QUIT) {
+		loop.exit();
+	}
+
+	if(userControl) {
+		if(getUserInterface()->handleEvent(event, ticks) == EVENT_STATE_HANDLED) {
+			return EVENT_STATE_HANDLED;
+		}
+		
+		if(getCurrentScene()->handleEvent(event, ticks) == EVENT_STATE_HANDLED) {
+			return EVENT_STATE_HANDLED;
+		}
+	}
+	return EVENT_STATE_UNHANDLED;
+}
+
+void Game::enableUserControl(bool enable) {
+	userControl = enable;
 }
 
 void Game::quit() {
