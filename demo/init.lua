@@ -2,12 +2,13 @@
 
 require 'user_interface'
 require 'main_character'
+require 'scene1'
 
 function initChapter(n)
 	print("This is initChapter("..n..")")
 	
 	if n == 0 then
-		local s = Scene(VP(8000, 3000))
+		local s = Scene1(VP(8000, 3000))
 		GAME:registerScene(s, "scene1")
 		
 		s:addBackground(Image("/media/$res/scene1/static_background.png"), VP(0, 0), 0.0, 1.0)
@@ -18,28 +19,28 @@ function initChapter(n)
 		s:addBackground(Image("/media/$res/scene1/walkable_area.png"), VP(0, 2500), 1.0, 1.0)
 		s:addForeground(Image("/media/$res/scene1/foreground.png"), VP(700, 590), 1.2, 1.0)
 		
-		local scarecrow = Actor("Scarecrow")
-		scarecrow:addAnimation("default", Image("/media/$res/scarecrow.png"))
-		scarecrow:setPosition(VP(6000, 2700))
-		s:addActor(scarecrow)
+		s.scarecrow = Actor("Scarecrow")
+		s.scarecrow:addAnimation("default", Image("/media/$res/scarecrow.png"))
+		s.scarecrow:setPosition(VP(6000, 2700))
+		s:addActor(s.scarecrow)
 		
-		local pumpkin1 = Actor("Pumpkin One")
-		pumpkin1:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		pumpkin1:setPosition(VP(5950, 2700))
-		pumpkin1:setYOffset(-700)
-		s:addActor(pumpkin1)
+		s.pumpkin1 = Actor("Pumpkin One")
+		s.pumpkin1:addAnimation("default", Image("/media/$res/pumpkin.png"))
+		s.pumpkin1:setPosition(VP(5950, 2700))
+		s.pumpkin1:setYOffset(-700)
+		s:addActor(s.pumpkin1)
 
-		local pumpkin2 = Actor("Pumpkin Two")
-		pumpkin2:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		pumpkin2:setPosition(VP(6200, 3500))
-		pumpkin2:setYOffset(-700)
-		s:addActor(pumpkin2)
+		s.pumpkin2 = Actor("Pumpkin Two")
+		s.pumpkin2:addAnimation("default", Image("/media/$res/pumpkin.png"))
+		s.pumpkin2:setPosition(VP(6200, 3500))
+		s.pumpkin2:setYOffset(-700)
+		s:addActor(s.pumpkin2)
 
-		local pumpkin3 = Actor("Pumpkin Three")
-		pumpkin3:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		pumpkin3:setPosition(VP(6700, 3500))
-		pumpkin3:setYOffset(-700)
-		s:addActor(pumpkin3)
+		s.pumpkin3 = Actor("Pumpkin Three")
+		s.pumpkin3:addAnimation("default", Image("/media/$res/pumpkin.png"))
+		s.pumpkin3:setPosition(VP(6700, 3500))
+		s.pumpkin3:setYOffset(-700)
+		s:addActor(s.pumpkin3)
 		
 		main_character.mc:setPosition(VP(5000, 2700))
 		s:addActor(mc)
@@ -48,8 +49,10 @@ function initChapter(n)
 		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)
 		bgmusic:start()
 
+		print("goto s")
 		GAME:goToScene(s)
 
+		--[[
 		--- WaitTask test/example ---
 		print("--- Before blocking timer (3s)")
 		WaitTask(3000):block()
@@ -58,26 +61,8 @@ function initChapter(n)
 		WaitTask(3000):start()
 		print("--- After nonblocking timer")
 		------------------------------
+		--]]
 
-		GAME:enableUserControl(false);
-
-		mc:say("Wooo, dark", 4000)
-		mc:say("I wonder if Deckard came this way?", 6000)
-		
-		WaitTask(9000):block()
-
-		pumpkin1:say("GROG!", 3000 );
-		WaitTask(400):block()
-		pumpkin2:say("GROG!", 3000 );
-		WaitTask(400):block()
-		pumpkin3:say("GROG!", 3000 );
-		WaitTask(400):block()
-
-		WaitTask(3200):block()
-
-		mc:say("OMG! WTF?", 5000);
-		
-		GAME:enableUserControl(true);
 		
 	end
 end
@@ -94,5 +79,6 @@ mc = main_character.create()
 GAME:setMainCharacter(mc)
 GAME:getViewport():setFollowing(mc)
 -- Run!
+print("run ch 0")
 GAME:runChapter(0)
 

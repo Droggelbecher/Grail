@@ -20,7 +20,7 @@ namespace grail {
 
 Game* Game::_instance = 0;
 
-Game::Game() : viewport(0), resourceManager(0), loop(true), userControl(false) {
+Game::Game() : viewport(0), resourceManager(0), loop(true), userControl(true) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	// temporarily use default dialog frontend
@@ -71,6 +71,7 @@ Scene::Ptr Game::getCurrentScene() const throw(ValueNotSet) {
 
 void Game::goToScene(Scene::Ptr scene) {
 	currentScene = scene;
+	currentScene->onEnter();
 }
 
 ResourceManager& Game::getResourceManager() {

@@ -50,6 +50,19 @@ namespace luabind {
 			o.push(L);
 		}
 	};
+	
+	/*
+	template <>
+	struct default_converter<Task> : native_converter_base<Task> {
+		static int compute_score(lua_state* L, int index) {
+			return lua_type(L, index) == LUA_TFUNCTION ? 0 : -1;
+		}
+		
+		Task from(lua_State* L, ind index);
+		object o(from_stack(L, index));
+
+	};
+	*/
 }
 
 #endif // LUA_CONVERTER_H

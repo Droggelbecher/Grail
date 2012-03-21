@@ -68,6 +68,8 @@ class Scene {
 		void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
 		
 		EventState handleEvent(SDL_Event& event, uint32_t ticks);
+		
+		virtual void onEnter() { }
 };
 
 } // namespace grail

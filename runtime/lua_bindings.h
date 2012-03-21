@@ -91,6 +91,20 @@ class TaskWrapper : public grail::Task, public luabind::wrap_base {
 		}
 }; // class TaskWrapper
 
+class SceneWrapper : public grail::Scene, public luabind::wrap_base {
+	public:
+		SceneWrapper(grail::VirtualSize sz) : grail::Scene(sz) { }
+		SceneWrapper(grail::Animation::Ptr anim) : grail::Scene(anim) { };
+		SceneWrapper(const std::string& backgroundPath) : grail::Scene(backgroundPath) { };
+		
+		void onEnter() {
+			call<void>("onEnter");
+		}
+		static void default_onEnter(grail::Scene::Ptr ptr) {
+			ptr->Scene::onEnter();
+		}
+}; // clas SceneWrapper
+
 extern "C" int init(lua_State* L);
 
 #endif // LUA_BINDINGS_H

@@ -147,7 +147,7 @@ extern "C" int init(lua_State* L) {
 			.def("exists", &ResourceManager::exists)
 			,
 		
-		class_<Scene, Scene::Ptr>("Scene")
+		class_<Scene, SceneWrapper, Scene::Ptr>("Scene")
 			.def(constructor<Animation::Ptr>())
 			.def(constructor<const std::string&>())
 			.def(constructor<VirtualSize>())
@@ -158,6 +158,7 @@ extern "C" int init(lua_State* L) {
 			.def("actorsMoved", &Scene::actorsMoved)
 			.def("getGround", &Scene::getGround)
 			.def("enableDrawWalls", &Scene::enableDrawWalls)
+			.def("onEnter", &Scene::onEnter, &SceneWrapper::default_onEnter)
 			,
 		
 		class_<Event>("Event")
