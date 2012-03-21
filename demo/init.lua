@@ -59,9 +59,11 @@ function initChapter(n)
 		print("--- After nonblocking timer")
 		------------------------------
 
+		GAME:enableUserControl(false);
+
 		mc:say("Wooo, dark", 4000)
 		mc:say("I wonder if Deckard came this way?", 6000)
-
+		
 		WaitTask(9000):block()
 
 		pumpkin1:say("GROG!", 3000 );
@@ -74,6 +76,8 @@ function initChapter(n)
 		WaitTask(3200):block()
 
 		mc:say("OMG! WTF?", 5000);
+		
+		GAME:enableUserControl(true);
 		
 	end
 end

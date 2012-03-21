@@ -80,7 +80,7 @@ void MainLoop::run() {
 
 void MainLoop::exit() { exit_ = true; }
 
-void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
+EventState MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
 	Game &controller = Game::getInstance();
 	
 	if(event.type == SDL_QUIT) {
@@ -90,14 +90,7 @@ void MainLoop::handleEvent(SDL_Event& event, uint32_t frameDuration) {
 	else if(event.type == SDL_USEREVENT) {
 	}
 	
-	if(controller.getUserInterface()->handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
-		return;
-	}
-	
-	if(controller.getCurrentScene()->handleEvent(event, frameDuration) == EVENT_STATE_HANDLED) {
-		return;
-	}
-	
+	return controller.handleEvent(event, frameDuration);
 }
 
 void MainLoop::addTask(Task::Ptr task) {

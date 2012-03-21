@@ -33,6 +33,7 @@ class Game {
 		Actor::Ptr mainCharacter;
 		std::map<std::string, Scene::Ptr> scenes;
 		MainLoop loop;
+		bool userControl;
 		
 		Game();
 		
@@ -63,7 +64,9 @@ class Game {
 		
 		virtual void eachFrame(uint32_t ticks);
 		void renderEverything(uint32_t ticks);
-		void handleEvent(const SDL_Event &event, uint32_t ticks);
+		EventState handleEvent(SDL_Event &event, uint32_t ticks);
+		
+		void enableUserControl(bool enable);
 		
 		void quit();
 };

@@ -32,9 +32,9 @@ namespace grail {
 			}
 
 		protected:
+			boost::shared_ptr<DialogLine> dialogLine;
 			Font::Ptr font;
 			boost::shared_ptr<Text> text;
-			boost::shared_ptr<DialogLine> dialogLine;
 
 			// timer stuff (note should be put in timer wrapper
 			uint32_t timeToLive;
