@@ -12,7 +12,7 @@ using std::copy;
 namespace grail {
 
 Actor::Actor(std::string name) :
-	mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0) {
+	mode("default"), name(name), yOffset(0), alignmentX(0.5), alignmentY(1.0), speed(1000.0), dialogGapTime(300) {
 }
 
 std::string Actor::getName() const {
@@ -93,6 +93,20 @@ void Actor::eachFrame(uint32_t ticks) {
 	if(animation) {
 		animation->eachFrame(ticks);
 	}
+
+	if (isSpeaking()) {
+		// start the next dialog  in the queue
+		if (!getDialogLine()->isStarted()) {
+			getDialogLine()->start();
+		}
+
+		getDialogLine()->eachFrame();
+
+		// remove if finished
+		if (getDialogLine()->isComplete()) {
+			dialogLines.pop();
+		}
+	}
 	
 	if(!walkPath.empty()) {
 		setMode("walk");
@@ -124,6 +138,25 @@ void Actor::eachFrame(uint32_t ticks) {
 			}
 		}
 	} // if walkPath not empty
+}
+
+void Actor::say(std::string statement, uint32_t displayTime) {
+	boost::shared_ptr<DialogLine> line(new DialogLine(shared_from_this(),statement,displayTime));
+	dialogLines.push(line);
+
+	// add a pause after the dialog
+	boost::shared_ptr<DialogLine> gap(new DialogLine(shared_from_this(),"", dialogGapTime));
+	dialogLines.push(gap);
+
+	Game::getInstance().getDialogFrontend()->say(line);
+}
+
+bool Actor::isSpeaking() {
+	return !(dialogLines.empty());
+}
+
+DialogLine::Ptr Actor::getDialogLine() {
+	return dialogLines.front();
 }
 
 std::ostream& operator<<(std::ostream& os, const Actor& actor) {

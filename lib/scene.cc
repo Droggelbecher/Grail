@@ -91,6 +91,7 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	list<Actor::Ptr>::const_iterator iter;
 	for(iter = actors.begin(); iter != actors.end(); ++iter) {
 		(*iter)->renderAt(target, ticks, p);
+
 	}
 	
 	for(piter = foregrounds.begin(); piter != foregrounds.end(); ++piter) {
@@ -103,14 +104,18 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	}
 	
 	if(_drawWalls) {
+		/*
 		list<Line>::const_iterator iter;
 		for(iter = ground.getWalls().begin(); iter != ground.getWalls().end(); iter++) {
 			PhysicalPosition a = conv<VirtualPosition, PhysicalPosition>(iter->getA() + p);
 			PhysicalPosition b = conv<VirtualPosition, PhysicalPosition>(iter->getB() + p);
 			aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xffffffff);
 		}
+		*/
 	}
-	
+
+	Game::getInstance().getDialogFrontend()->renderAt(target, ticks, p);
+
 } // renderAt
 
 EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {

@@ -3,13 +3,21 @@
 #include <list>
 #include "polygon.h"
 #include "vector2d.h"
+#include "debug.h"
+#include "utils.h"
 
 namespace grail {
 
-Polygon::Polygon() {
+template<typename Node, typename GetPosition>
+Polygon<Node, GetPosition>::Polygon() : orientation(UNKNOWN) {
 }
 
-bool Polygon::hasPoint(VirtualPosition p) const {
+template<typename Node, typename GetPosition>
+bool Polygon<Node, GetPosition>::hasPoint(VirtualPosition p) const {
+	if(hasBoundaryPoint(p)) {
+		return true;
+	}
+	
 	// If there is an uneven number of intersections
 	// in both directions, the Offset is inside the
 	// polygon
@@ -18,18 +26,64 @@ bool Polygon::hasPoint(VirtualPosition p) const {
 	
 	// Consider all lines from one point to the next one
 	// plus one line from the last one to the first
-	list<VirtualPosition>::const_iterator iter, iter2;
+	typename list<Node>::const_iterator iter, iter2;
 	for(iter = nodes.begin(); iter != nodes.end(); iter++) {
 		iter2 = iter;
 		iter2++;
 		if(iter2 == nodes.end()) { iter2 = nodes.begin(); }
-		unevenIntersectionsRight ^= intersects(p, *iter, *iter2, true);
-		unevenIntersectionsLeft ^= intersects(p, *iter, *iter2, false);
+		unevenIntersectionsRight ^= intersects(p, GetPosition::getPosition(*iter), GetPosition::getPosition(*iter2), true);
+		unevenIntersectionsLeft ^= intersects(p, GetPosition::getPosition(*iter), GetPosition::getPosition(*iter2), false);
 	}
 	return unevenIntersectionsRight && unevenIntersectionsLeft;
 }
 
-bool Polygon::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition pb, bool right) {
+template<typename Node, typename GetPosition>
+bool Polygon<Node, GetPosition>::hasBoundaryPoint(VirtualPosition p) const {
+	LineIterator li;
+	for(li = beginLines(); li != endLines(); ++li) {
+		if((*li).hasPoint(p)) { return true; }
+	}
+	return false;
+}
+
+
+template<typename Node, typename GetPosition>
+typename Polygon<Node, GetPosition>::LineDirection Polygon<Node, GetPosition>::getLineDirection(Line l) const {
+	
+	/*
+	 *         / l1
+	 *        /
+	 *       X ----->----- l
+	 *       |\
+	 *       | \
+	 *       ^  \ l2
+	 *       |
+	 *       |
+	 *      prev 
+	 */
+	
+	LineIterator li;
+	Line prev(GetPosition::getPosition(nodes.back()), GetPosition::getPosition(nodes.front()));
+	Orientation o = getOrientation();
+	
+	for(li = beginLines(); li != endLines(); ++li) {
+		if((*li).getA() == l.getA()) {
+			VirtualPosition::Scalar s_l = ((*li).getB() - (*li).getA()).cross(l.getB() - l.getA());
+			VirtualPosition::Scalar s_prev = (prev.getA() - prev.getB()).cross(l.getB() - l.getA());
+			
+			if(s_l == 0 || s_prev == 0) { return NEITHER; }
+			
+			if((o == CCW) && (s_l < 0) && (s_prev > 0)) { return IN; }
+			else if((o == CW) && (s_l > 0) && (s_prev < 0)) { return IN; }
+			else { return OUT; }
+		} // if li.a == l.a
+		prev = *li;
+	} // for lines
+	return NOT_ATTACHED;
+} // getLineDirection()
+
+template<typename Node, typename GetPosition>
+bool Polygon<Node, GetPosition>::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition pb, bool right) {
 	// Think a horizontal line drawn from q to the right and look
 	// for an intersection.
 	VirtualPosition::Y dy = pb.getY() - pa.getY();
@@ -44,6 +98,7 @@ bool Polygon::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition 
 	// intersection point is really between pa and pb.
 	// t == 0 would mean: The intersection point is pa, t == 1 would mean the
 	// intersection point is pb.
+
 	double t = static_cast<double>(q.getY() - pa.getY()) / static_cast<double>(dy);
 	if(t < 0.0 || t > 1.0) {
 		return false;
@@ -71,5 +126,28 @@ bool Polygon::intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition 
 	}
 } // intersects()
 
+template<typename Node, typename GetPosition>
+void Polygon<Node, GetPosition>::updateOrientation() const {
+	LineIterator li = beginLines();
+	double a = ((*li).getB() - (*li).getA()).getAngle(), new_a = 0, angleSum = 0;
+	for(++li ; li != endLines(); ++li) {
+		a = normalizeAngle(a);
+		new_a = ((*li).getB() - (*li).getA()).getAngle();
+		double x = a + M_PI - new_a;
+		x = normalizeAngle(x);
+		angleSum += x;
+		a = new_a;
+	}
+	
+	li = beginLines();
+	new_a = ((*li).getB() - (*li).getA()).getAngle();
+	a = normalizeAngle(a);
+	double x = a + M_PI - new_a;
+	x = normalizeAngle(x);
+	angleSum += x;
+	
+	orientation = fequal(angleSum / (nodes.size() - 2.0), M_PI) ? CCW : CW;
 }
+	
+} // namespace
 

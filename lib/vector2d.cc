@@ -61,6 +61,11 @@ Vector2d<T, N> operator*(Vector2d<T, N> v, double scalar) {
 }
 
 template <typename T, int N>
+T operator*(Vector2d<T, N> v, Vector2d<T, N> w) {
+	return (T)(v._x * w._x + v._y * w._y);
+}
+
+template <typename T, int N>
 bool operator==(Vector2d<T, N> a, Vector2d<T, N> b) { return a._x == b._x && a._y == b._y; }
 
 template <typename T, int N>
@@ -74,7 +79,7 @@ std::ostream& operator<<(std::ostream& os, Vector2d<T, N> v) {
 
 
 template <typename A, typename B>
-B conv(A a) { assert("Couldnt convert types" && false); };
+B conv(A a) { assert("Couldnt convert types" && false); }
 
 template <>
 SDL_Rect conv<PhysicalPosition, SDL_Rect>(PhysicalPosition p) {

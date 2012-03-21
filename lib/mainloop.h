@@ -7,6 +7,7 @@
 #include <list>
 #include "classes.h"
 #include "task.h"
+#include "event.h"
 
 namespace grail {
 
@@ -27,7 +28,7 @@ class MainLoop {
 		virtual void run();
 		virtual void exit();
 		
-		virtual void handleEvent(SDL_Event& event, uint32_t frameDuration);
+		virtual EventState handleEvent(SDL_Event& event, uint32_t frameDuration);
 
 		/**
 		 * Add task to this mainloop.

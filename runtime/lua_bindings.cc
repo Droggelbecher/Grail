@@ -70,6 +70,7 @@ extern "C" int init(lua_State* L) {
 			.def("setMainCharacter", &GameWrapper::setMainCharacter)
 			.def("getMainCharacter", &GameWrapper::getMainCharacter)
 			.def("runChapter", &GameWrapper::runChapter)
+			.def("enableUserControl", &GameWrapper::enableUserControl)
 			.def("quit", &GameWrapper::quit)
 			,
 		
@@ -86,6 +87,7 @@ extern "C" int init(lua_State* L) {
 			.def("walkTo", (void(Actor::*)(VirtualPosition))&Actor::walkTo)
 			.def("walkTo", (void(Actor::*)(Actor::Ptr))&Actor::walkTo)
 			.def("walkStraight", &Actor::walkStraight)
+			.def("say", (void(Actor::*)(std::string, uint32_t))&Actor::say)
 			.def(tostring(self))
 			,
 		
@@ -125,22 +127,19 @@ extern "C" int init(lua_State* L) {
 				.def("setText", &Text::setText)
 				,
 			
-		class_<Audio>("Audio")
-			.def(constructor<>())
-			,
-		
+
+
 		class_<Ground>("Ground")
 			.scope[
 				class_<Ground::Waypoint>("Waypoint")
 					.def("getPosition", &Ground::Waypoint::getPosition)
-					.def("link", &Ground::Waypoint::link)
-					//...
+					.def("linkBidirectional", &Ground::Waypoint::linkBidirectional)
 				]
 			
-			.def("addWall", &Ground::addWall)
-			.def("addWalls", &Ground::addWalls)
+			//.def("addWall", &Ground::addWall)
+			//.def("addWalls", &Ground::addWalls)
 			//.def("getWalls", &Ground::getWalls)
-			.def("addWaypoint", &Ground::addWaypoint)
+			//.def("addWaypoint", &Ground::addWaypoint)
 			.def("directReachable", &Ground::directReachable)
 			,
 		
@@ -254,6 +253,14 @@ extern "C" int init(lua_State* L) {
 		
 		class_<WaitTask, Task, Task::Ptr>("WaitTask")
 			.def(constructor<uint32_t>())
+			,
+		class_<SoundTask, Task, Task::Ptr>("SoundTask")
+			.def(constructor<std::string, size_t>())
+			.def("pause", &SoundTask::pause)
+			,
+		class_<Audio>("Audio")
+			.def(constructor<>())
+			.def("prepareSound", &Audio::prepareSound)
 	];
 	
 	return 0;

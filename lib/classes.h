@@ -15,6 +15,9 @@ namespace grail {
 	class BlitCached;
 	class Box;
 	class Button;
+	class DialogLine;
+	class DialogFrontend;
+	class DialogFrontendText;
 	class DirectionAnimation;
 	class DirectoryIterator;
 	class DirectoryIteratorImpl;
@@ -30,13 +33,12 @@ namespace grail {
 	class Line;
 	class LineIterator;
 	class MainLoop;
-	class Polygon;
+	template<typename Node, typename GetPosition> class Polygon;
 	class Rect;
 	class Resource;
 	class ResourceHandler;
 	class ResourceManager;
 	class Scene;
-	class SceneAnimation;
 	class SDLException;
 	class SoundTask;
 	class SplitIterator;
@@ -51,6 +53,9 @@ namespace grail {
 	class UserInterfaceElement;
 	class ValueNotSet;
 	class Viewport;
+	class WaitTask;
+	class WallWaypoint;
+	class Waypoint;
 	
 } // namespace grail
 

@@ -23,15 +23,31 @@ function initChapter(n)
 		scarecrow:setPosition(VP(6000, 2700))
 		s:addActor(scarecrow)
 		
-		local pumpkin = Actor("Pumpkin")
-		pumpkin:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		pumpkin:setPosition(VP(5950, 2700))
-		pumpkin:setYOffset(-700)
-		s:addActor(pumpkin)
+		local pumpkin1 = Actor("Pumpkin One")
+		pumpkin1:addAnimation("default", Image("/media/$res/pumpkin.png"))
+		pumpkin1:setPosition(VP(5950, 2700))
+		pumpkin1:setYOffset(-700)
+		s:addActor(pumpkin1)
+
+		local pumpkin2 = Actor("Pumpkin Two")
+		pumpkin2:addAnimation("default", Image("/media/$res/pumpkin.png"))
+		pumpkin2:setPosition(VP(6200, 3500))
+		pumpkin2:setYOffset(-700)
+		s:addActor(pumpkin2)
+
+		local pumpkin3 = Actor("Pumpkin Three")
+		pumpkin3:addAnimation("default", Image("/media/$res/pumpkin.png"))
+		pumpkin3:setPosition(VP(6700, 3500))
+		pumpkin3:setYOffset(-700)
+		s:addActor(pumpkin3)
 		
-		main_character.mc:setPosition(VP(250, 2700))
+		main_character.mc:setPosition(VP(5000, 2700))
 		s:addActor(mc)
 		
+		local Audio = Audio()
+		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)
+		bgmusic:start()
+
 		GAME:goToScene(s)
 
 		--- WaitTask test/example ---
@@ -42,6 +58,26 @@ function initChapter(n)
 		WaitTask(3000):start()
 		print("--- After nonblocking timer")
 		------------------------------
+
+		GAME:enableUserControl(false);
+
+		mc:say("Wooo, dark", 4000)
+		mc:say("I wonder if Deckard came this way?", 6000)
+		
+		WaitTask(9000):block()
+
+		pumpkin1:say("GROG!", 3000 );
+		WaitTask(400):block()
+		pumpkin2:say("GROG!", 3000 );
+		WaitTask(400):block()
+		pumpkin3:say("GROG!", 3000 );
+		WaitTask(400):block()
+
+		WaitTask(3200):block()
+
+		mc:say("OMG! WTF?", 5000);
+		
+		GAME:enableUserControl(true);
 		
 	end
 end

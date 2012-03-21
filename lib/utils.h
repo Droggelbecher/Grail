@@ -178,6 +178,19 @@ bool isParentOrEqualPath(std::string path1, std::string path2);
  */
 uint16_t nextPower2(uint16_t n);
 
+/**
+ * Return the sign (-1, 0 or 1) of the given value
+ */
+template<typename T>
+int sgn(const T v) { return v < 0 ? -1 : (v > 0); }
+
+
+//double fepsilon;
+bool fequal(double a, double b);
+
+// Return equivalent engle in range [0, 2pi)
+double normalizeAngle(double a);
+
 } // namespace grail
 
 #endif // UTILS_H

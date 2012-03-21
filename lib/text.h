@@ -15,6 +15,9 @@
 
 namespace grail {
 
+/**
+ * Render a piece of text using SDL_ttf
+ */
 class Text : public Animation, public BlitCached {
 		std::string text;
 		Font::Ptr font;
