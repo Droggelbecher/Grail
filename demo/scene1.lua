@@ -12,7 +12,7 @@ function Scene1:onEnter()
 	print("onEnter")
 	local mc = GAME:getMainCharacter()
 	
-	GAME:enableUserControl(false);
+	--GAME:enableUserControl(false);
 
 	mc:say("Wooo, dark", 4000)
 	mc:say("I wonder if Deckard came this way?", 6000)

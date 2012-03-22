@@ -52,7 +52,8 @@ function MyUI:handleEvent(evt, frameDuration)
 	elseif evt:getType() == EVT_SCENECLICK then
 		print("You clicked the scene with button "..tostring(evt:getButton())..
 			" at "..tostring(evt:getPosition()))
-		GAME:getMainCharacter():walkStraight(evt:getPosition())
+		--GAME:getMainCharacter():walkStraight(evt:getPosition())
+		GAME:getMainCharacter():walkTo(evt:getPosition())
 		return EVENT_STATE_HANDLED
 	end
 	return EVENT_STATE_UNHANDLED

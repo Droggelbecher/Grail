@@ -27,18 +27,18 @@ Ground::~Ground() {
 	*/
 }
 
-void Ground::addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node) {
+void Ground::addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node) {
 	if(!node && !rootComponent) {
 		rootComponent = new Component(polygon);
 	}
 	else if(!node) {
-		addPolygon(polygon, rootComponent);
+		addPolygonToComponent(polygon, rootComponent);
 	}
 	else {
 		VirtualPosition pos = *(polygon.beginNodes());
 		for(Component::hole_iter_t iter = node->holes.begin(); iter != node->holes.end(); ++iter) {
 			if((*iter)->outerBoundary.hasPoint(pos)) {
-				addPolygon(polygon, *iter);
+				addPolygonToComponent(polygon, *iter);
 				return;
 			}
 		}
@@ -133,11 +133,11 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	return true;
 }
 
-void Ground::generateMap(Component* component) {
+void Ground::generateMapForComponent(Component* component) {
 	if(!component) {
 		//clearMap();
 		if(rootComponent) {
-			generateMap(rootComponent);
+			generateMapForComponent(rootComponent);
 		}
 		return;
 	}
@@ -305,6 +305,7 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 }
 
 void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
+	cdbg << "this is getPath\n\n";
 	bool foundPath = false;
 	vector<Waypoint*> border;
 	set<Waypoint*> inner;

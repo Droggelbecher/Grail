@@ -42,6 +42,13 @@ function initChapter(n)
 		s.pumpkin3:setYOffset(-700)
 		s:addActor(s.pumpkin3)
 		
+		local p = Poly(
+			VP(0, 2000), VP(8000, 2000), VP(8000, 3000), VP(0, 3000)
+		)
+		local g = s:getGround()
+		g:addPolygon(p)
+		--g:generateMap()
+		
 		main_character.mc:setPosition(VP(5000, 2700))
 		s:addActor(mc)
 		
@@ -49,7 +56,6 @@ function initChapter(n)
 		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)
 		bgmusic:start()
 
-		print("goto s")
 		GAME:goToScene(s)
 
 		--[[

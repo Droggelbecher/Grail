@@ -119,8 +119,8 @@ class Ground {
 		 * @param polygon The polygon to add.
 		 * @param node Only used internally, leave at 0.
 		 */
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygon(polygon, 0); }
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
+		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygonToComponent(polygon, 0); }
+		void addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
 		
 //		const list<Line>& getWalls() const { return walls; }
 		
@@ -130,8 +130,8 @@ class Ground {
 		 * appropriately to allow pathfinding.
 		 * Only call once or you will get unecessary waypoints.
 		 */
-		void generateMap() { generateMap(0); }
-		void generateMap(Component* component);
+		void generateMap() { generateMapForComponent(0); }
+		void generateMapForComponent(Component* component);
 		
 		/**
 		 * Add a new waypoint. Note that this will be pretty useless if you
