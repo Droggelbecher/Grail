@@ -20,8 +20,10 @@ namespace grail {
 	class DialogFrontend {
 
 		protected:
-			// map of actors to the text objects used to render
-			// their dialog
+			/**
+			* map of actors to the text objects used to render
+			* their dialog
+			*/
 			std::map<Actor::Ptr, Text::Ptr> lines;
 
 		public:
@@ -31,7 +33,6 @@ namespace grail {
 
 			virtual void eachFrame(uint32_t ticks) = 0;
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) = 0;
-
 	};
 
 } // namespace grail
