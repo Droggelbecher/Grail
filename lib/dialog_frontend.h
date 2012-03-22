@@ -12,11 +12,17 @@
 
 namespace grail {
 
-	// Virtual base class for in-game dialog renderers.
-	// Intended to be pluggable so a developer may customise how dialog
-	// is outputted to the screen.
-	// For example via subtitles or text floating above an actor's head.
+	/**
+	* Virtual base class for in-game dialog renderers,
+	* which arentended to be pluggable so a developer may customise how dialog
+	* is outputted to the screen, eg. subtitles, floating text
+	*/
 	class DialogFrontend {
+
+		protected:
+			// map of actors to the text objects used to render
+			// their dialog
+			std::map<Actor::Ptr, Text::Ptr> lines;
 
 		public:
 			typedef boost::shared_ptr<DialogFrontend> Ptr;
@@ -26,10 +32,6 @@ namespace grail {
 			virtual void eachFrame(uint32_t ticks) = 0;
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) = 0;
 
-		protected:
-			// map of actors to the text objects used to render
-			// their dialog
-			std::map<Actor::Ptr, Text::Ptr> lines;
 	};
 
 } // namespace grail

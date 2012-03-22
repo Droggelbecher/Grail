@@ -1,7 +1,6 @@
 // vim: set noexpandtab:
 
 #include "dialog_line.h"
-#include "actor.h"
 
 namespace grail {
 
@@ -13,10 +12,6 @@ namespace grail {
 		timeStarted = SDL_GetTicks();
 	}
 
-	bool DialogLine::isStarted() {
-		return started;
-	}
-
 	void DialogLine::eachFrame() {
 		if (isStarted()) {
 			uint32_t timeNow = SDL_GetTicks();
@@ -25,10 +20,6 @@ namespace grail {
 				complete = true;
 			}
 		}
-	}
-
-	bool DialogLine::isComplete() {
-		return complete;
 	}
 
 } //namespace grail
