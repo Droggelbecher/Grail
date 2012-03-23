@@ -2,12 +2,14 @@
 
 #include <iostream>
 #include <SDL.h>
+#include <string>
 #include "game.h"
 #include "utils.h"
 #include "viewport.h"
 #include "resource_manager.h"
 #include "user_interface.h"
 #include "debug.h"
+
 #include "dialog_frontend_subtitle.h"
 
 using std::cout;
@@ -22,9 +24,6 @@ Game* Game::_instance = 0;
 
 Game::Game() : viewport(0), resourceManager(0), loop(true), userControl(true) {
 	SDL_Init(SDL_INIT_EVERYTHING);
-
-	// temporarily use default dialog frontend
-	dialogFrontend = boost::shared_ptr<DialogFrontend>(new DialogFrontendSubtitle());
 }
 
 Game::~Game() {
@@ -89,6 +88,12 @@ UserInterface::Ptr Game::getUserInterface() {
 
 DialogFrontend::Ptr Game::getDialogFrontend() {
 	return dialogFrontend;
+}
+
+void Game::setDialogFrontend(std::string type) {
+	if ((type == "subtitle") || (type =="subtitles")) {
+		dialogFrontend = DialogFrontend::Ptr(new DialogFrontendSubtitle());
+	}
 }
 
 void Game::setMainCharacter(Actor::Ptr actor) {

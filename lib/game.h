@@ -56,8 +56,14 @@ class Game {
 		ResourceManager& getResourceManager();
 		void setUserInterface(UserInterface::Ptr ui);
 		UserInterface::Ptr getUserInterface();
-		DialogFrontend::Ptr getDialogFrontend();
 		MainLoop& getMainLoop() { return loop; }
+
+		DialogFrontend::Ptr getDialogFrontend();
+
+		/**
+ 		* set a dialog frontend based on a string
+ 		*/
+		void setDialogFrontend(std::string);
 		
 		Actor::Ptr getMainCharacter() const;
 		void setMainCharacter(Actor::Ptr actor);
