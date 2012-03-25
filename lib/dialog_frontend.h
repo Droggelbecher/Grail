@@ -19,16 +19,20 @@ namespace grail {
 	*/
 	class DialogFrontend {
 		protected:
+			/*
+ 			* dialog lines being spoken in the scene
+ 			*/
 			std::list<DialogLine::Ptr> lines;
 
 		public:
 			typedef boost::shared_ptr<DialogFrontend> Ptr;
 
 			virtual void eachFrame(uint32_t ticks);
-			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) = 0;
+			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const = 0;
 
 			/*
- 			* collects all the new dialog lines from a scene
+ 			* collects all the new dialog lines from a scene and adds
+ 			* them to the list
  			*/
 			std::list<DialogLine::Ptr> updateDialogLines();
 	};

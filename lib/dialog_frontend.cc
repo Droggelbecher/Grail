@@ -11,10 +11,12 @@ namespace grail {
 
 	std::list<DialogLine::Ptr> DialogFrontend::updateDialogLines() {
 
-		std::list<DialogLine::Ptr> newLines;
+		std::list<DialogLine::Ptr> newLines; // remember which ones are new
 
+		// get all the actors currently in the scene
 		std::list<Actor::Ptr> actors = Game::getInstance().getCurrentScene()->getActors();
 
+		// collect each actor's lines and add them to the list if not already there
 		Actor::Ptr actor;
 		for (std::list<Actor::Ptr>::iterator iter = actors.begin();
 			iter != actors.end(); ++iter) {

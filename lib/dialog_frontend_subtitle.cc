@@ -87,6 +87,7 @@ namespace grail {
 
 	void DialogFrontendSubtitle::eachFrame(uint32_t ticks)  {
 		
+		// create new subs for new lines of dialog as necessary
 		std::list<DialogLine::Ptr> newLines = updateDialogLines();
 		if (!newLines.empty()) {
 			if (newLines.size() > 1) {
@@ -116,7 +117,7 @@ namespace grail {
 		}
 	}
 
-	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) {
+	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
 
 		// count active subs (to keep track of stacking subtitles
 		// vertically on-screen
@@ -124,7 +125,7 @@ namespace grail {
 
 		// render the subtitles centered
 		// note:: render backwards so earlier subtitles stack upwards
-		for (std::vector<Subtitle::Ptr>::reverse_iterator riter = subtitles.rbegin();
+		for (std::vector<Subtitle::Ptr>::const_reverse_iterator riter = subtitles.rbegin();
 			riter != subtitles.rend(); ++riter) {
 
 			if ((*riter)->isStarted()) {

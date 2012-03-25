@@ -65,23 +65,25 @@ namespace grail {
 			Font::Ptr defaultFont;
 
 			/**
-			* location of the subtitle on screen
+			* display options
 			*/
-			VirtualPosition subtitlePosition;
-
+			VirtualPosition subtitlePosition; //location on-screen
 			bool centered;	//is the text centered
 			bool showSpeakersName; // prepend text with actors name and colon
 
 		public:
 			DialogFrontendSubtitle();
 
+			/*
+ 			* create a subtitle for a given line of dialog
+ 			*/
 			void createSubtitle(DialogLine::Ptr);
 
 			void setFont(std::string);
 			void setCentered(bool);
 
 			void eachFrame(uint32_t ticks);
-			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p);
+			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
 	};
 
 } // namespace grail
