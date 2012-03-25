@@ -147,16 +147,14 @@ void Actor::say(std::string statement, uint32_t displayTime) {
 	// add a pause after the dialog
 	boost::shared_ptr<DialogLine> gap(new DialogLine(shared_from_this(),"", dialogGapTime));
 	dialogLines.push(gap);
-
-	// if a dialog frontend has been set tell it actor is speaking the line
-	// TODO: the actor itself should not need to register a line to the frontend
-	if (Game::getInstance().getDialogFrontend()) {
-		Game::getInstance().getDialogFrontend()->say(line);
-	}
 }
 
 bool Actor::isSpeaking() {
-	return !(dialogLines.empty());
+	if (!dialogLines.empty() && !(dialogLines.size() == 1 && getDialogLine()->getText() != "")) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 DialogLine::Ptr Actor::getDialogLine() {

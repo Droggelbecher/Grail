@@ -75,11 +75,7 @@ namespace grail {
 		public:
 			DialogFrontendSubtitle();
 
-			/**
-			* take an actor's dialog line and create a
-			* subtitle for it and queue it
-			*/
-			void say(DialogLine::Ptr);
+			void createSubtitle(DialogLine::Ptr);
 
 			void setFont(std::string);
 			void setCentered(bool);

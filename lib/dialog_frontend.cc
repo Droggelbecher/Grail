@@ -1,8 +1,36 @@
 // vim: set noexpandtab:
 
 #include "dialog_frontend.h"
+#include "game.h"
 
 namespace grail {
 
+	void DialogFrontend::eachFrame(uint32_t ticks) {
+		updateDialogLines();
+	}
+
+	std::list<DialogLine::Ptr> DialogFrontend::updateDialogLines() {
+
+		std::list<DialogLine::Ptr> newLines;
+
+		std::list<Actor::Ptr> actors = Game::getInstance().getCurrentScene()->getActors();
+
+		Actor::Ptr actor;
+		for (std::list<Actor::Ptr>::iterator iter = actors.begin();
+			iter != actors.end(); ++iter) {
+			actor = (*iter);	
+			if (actor->isSpeaking()) {
+				DialogLine::Ptr line = actor->getDialogLine();
+
+				// check if the line is already in the list
+				if (!(std::find(lines.begin(), lines.end(), line) != lines.end()) && (line->getText() != "")) {
+					lines.push_back(line);	
+					newLines.push_back(line);
+				}
+			}
+		}
+
+		return newLines;
+	}
 }
 

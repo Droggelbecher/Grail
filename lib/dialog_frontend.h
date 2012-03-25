@@ -4,7 +4,7 @@
 #define DIALOG_FRONTEND_H
 
 #include <boost/shared_ptr.hpp>
-#include <map>
+#include <list>
 
 #include "dialog_line.h"
 #include "actor.h"
@@ -18,21 +18,19 @@ namespace grail {
 	* is outputted to the screen, eg. subtitles, floating text
 	*/
 	class DialogFrontend {
-
 		protected:
-			/**
-			* map of actors to the text objects used to render
-			* their dialog
-			*/
-			std::map<Actor::Ptr, Text::Ptr> lines;
+			std::list<DialogLine::Ptr> lines;
 
 		public:
 			typedef boost::shared_ptr<DialogFrontend> Ptr;
 
-			virtual void say(DialogLine::Ptr) = 0;
-
-			virtual void eachFrame(uint32_t ticks) = 0;
+			virtual void eachFrame(uint32_t ticks);
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) = 0;
+
+			/*
+ 			* collects all the new dialog lines from a scene
+ 			*/
+			std::list<DialogLine::Ptr> updateDialogLines();
 	};
 
 } // namespace grail

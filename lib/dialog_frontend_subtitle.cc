@@ -1,6 +1,7 @@
 // vim: set noexpandtab:
 
 #include "dialog_frontend_subtitle.h"
+#include "game.h"
 
 namespace grail {
 
@@ -61,7 +62,7 @@ namespace grail {
 		setFont("fonts/crkdwno1.ttf");
 	}
 
-	void DialogFrontendSubtitle::say(DialogLine::Ptr line) {
+	void DialogFrontendSubtitle::createSubtitle(DialogLine::Ptr line) {
 
 		// set the default font here if not set
 		// ** for some reason doing this in the constructor causes a segfault
@@ -85,6 +86,18 @@ namespace grail {
 	}
 
 	void DialogFrontendSubtitle::eachFrame(uint32_t ticks)  {
+		
+		std::list<DialogLine::Ptr> newLines = updateDialogLines();
+		if (!newLines.empty()) {
+			if (newLines.size() > 1) {
+				for(std::list<DialogLine::Ptr>::iterator iter = newLines.begin();
+				iter != newLines.end(); ++iter) {
+					createSubtitle((*iter));
+				}
+			} else {
+				createSubtitle((*newLines.begin()));
+			}
+		}
 
 		// remove completed subs
 		for (std::vector<Subtitle::Ptr>::iterator iter = subtitles.begin();
