@@ -5,6 +5,7 @@
 
 #include "dialog_frontend.h"
 #include "font.h"
+#include "text.h"
 #include "boost/shared_ptr.hpp"
 
 namespace grail {

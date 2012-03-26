@@ -8,7 +8,7 @@
 
 #include "dialog_line.h"
 #include "actor.h"
-#include "text.h"
+#include "user_interface_element.h"
 
 namespace grail {
 
@@ -17,7 +17,7 @@ namespace grail {
 	* which arentended to be pluggable so a developer may customise how dialog
 	* is outputted to the screen, eg. subtitles, floating text
 	*/
-	class DialogFrontend {
+	class DialogFrontend : public UserInterfaceElement {
 		protected:
 			/*
  			* dialog lines being spoken in the scene
@@ -27,7 +27,10 @@ namespace grail {
 		public:
 			typedef boost::shared_ptr<DialogFrontend> Ptr;
 
+			virtual VirtualPosition getSize() const { }
+
 			virtual void eachFrame(uint32_t ticks);
+			virtual EventState handleEvent(const SDL_Event& event, uint32_t frameDuration) {};
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const = 0;
 
 			/*

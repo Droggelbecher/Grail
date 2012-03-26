@@ -35,6 +35,10 @@ function MyUI:__init()
 	self:setAction(go)
 	
 	self:addElement(at)
+
+	-- Dialog display
+	local dialog = Subtitles()
+	self:addElement(dialog)
 end
 
 function MyUI:handleEvent(evt, frameDuration)

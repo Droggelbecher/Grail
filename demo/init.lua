@@ -69,7 +69,6 @@ end
 
 GAME:setInitChapterCallback(initChapter)
 GAME:getViewport():setup(800, 600, false)
-GAME:setDialogFrontend("subtitle");
 
 -- UI
 local ui = user_interface.create()

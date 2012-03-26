@@ -86,6 +86,17 @@ namespace grail {
 	}
 
 	void DialogFrontendSubtitle::eachFrame(uint32_t ticks)  {
+
+		// remove completed subs
+		for (std::vector<Subtitle::Ptr>::iterator iter = subtitles.begin();
+			iter != subtitles.end(); ) {
+			// if the subs dialog line is gone or complete
+			if ((!(*iter)->getDialogLine()) || (*iter)->isComplete()) {
+				iter = subtitles.erase(iter);
+			} else {
+				++iter;
+			}
+		}
 		
 		// create new subs for new lines of dialog as necessary
 		std::list<DialogLine::Ptr> newLines = updateDialogLines();
@@ -97,16 +108,6 @@ namespace grail {
 				}
 			} else {
 				createSubtitle((*newLines.begin()));
-			}
-		}
-
-		// remove completed subs
-		for (std::vector<Subtitle::Ptr>::iterator iter = subtitles.begin();
-			iter != subtitles.end(); ) {
-			if ((*iter)->isComplete()) {
-				iter = subtitles.erase(iter);
-			} else {
-				++iter;
 			}
 		}
 

@@ -11,6 +11,16 @@ namespace grail {
 
 	std::list<DialogLine::Ptr> DialogFrontend::updateDialogLines() {
 
+		// remove completed lines
+		for (std::list<DialogLine::Ptr>::iterator iter = lines.begin();
+			iter != lines.end(); ) {
+			if ((*iter)->isComplete()) {
+				iter = lines.erase(iter);
+			} else {
+				++iter;
+			}
+		}
+
 		std::list<DialogLine::Ptr> newLines; // remember which ones are new
 
 		// get all the actors currently in the scene
