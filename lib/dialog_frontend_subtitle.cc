@@ -48,9 +48,7 @@ namespace grail {
 	DialogFrontendSubtitle::DialogFrontendSubtitle() {
 
 		// default subs position
-		int defaultX = 2000;
-		int defaultY = 2800;
-		subtitlePosition = VirtualPosition(defaultX, defaultY);
+		setPosition(VirtualPosition(2000,2800));
 
 		// default font to use
 		defaultFont = Font::Ptr(new Font("fonts/crkdwno1.ttf", 30, 1));
@@ -126,7 +124,7 @@ namespace grail {
 
 				activeSubtitles++;
 
-				VirtualPosition renderPosition = subtitlePosition;
+				VirtualPosition renderPosition = getPosition();
 
 				// center the text around the render position if set to centered
 				if (centered) {

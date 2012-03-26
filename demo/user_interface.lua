@@ -38,6 +38,7 @@ function MyUI:__init()
 
 	-- Dialog display
 	local subtitles = Subtitles()
+	subtitles:setPosition(VP(2000,2800))
 	subtitles.font = Font("fonts/tommy_holloway.ttf", 45, 1)
 	subtitles.centered = true
 	subtitles.showSpeakersName = true

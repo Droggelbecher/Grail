@@ -63,7 +63,6 @@ namespace grail {
 			/**
 			* display options
 			*/
-			VirtualPosition subtitlePosition; //location on-screen
 			bool centered;	//is the text centered
 			bool showSpeakersName; // prepend text with actors name and colon
 
