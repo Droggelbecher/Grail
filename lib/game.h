@@ -29,7 +29,6 @@ class Game {
 		Scene::Ptr currentScene;
 		ResourceManager* resourceManager;
 		UserInterface::Ptr userInterface;
-		DialogFrontend::Ptr dialogFrontend;
 		Actor::Ptr mainCharacter;
 		std::map<std::string, Scene::Ptr> scenes;
 		MainLoop loop;
@@ -58,13 +57,6 @@ class Game {
 		UserInterface::Ptr getUserInterface();
 		MainLoop& getMainLoop() { return loop; }
 
-		DialogFrontend::Ptr getDialogFrontend();
-
-		/**
- 		* set a dialog frontend based on a string
- 		*/
-		void setDialogFrontend(std::string);
-		
 		Actor::Ptr getMainCharacter() const;
 		void setMainCharacter(Actor::Ptr actor);
 		

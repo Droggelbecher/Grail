@@ -113,11 +113,6 @@ void Scene::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 		}
 		*/
 	}
-
-	// render the dialog if a frontend has been set
-	if (Game::getInstance().getDialogFrontend()) {
-		Game::getInstance().getDialogFrontend()->renderAt(target, ticks, p);
-	}
 } // renderAt
 
 EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {

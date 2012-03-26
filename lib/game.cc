@@ -10,8 +10,6 @@
 #include "user_interface.h"
 #include "debug.h"
 
-#include "dialog_frontend_subtitle.h"
-
 using std::cout;
 using std::cerr;
 using std::clog;
@@ -86,16 +84,6 @@ UserInterface::Ptr Game::getUserInterface() {
 	return userInterface;
 }
 
-DialogFrontend::Ptr Game::getDialogFrontend() {
-	return dialogFrontend;
-}
-
-void Game::setDialogFrontend(std::string type) {
-	if ((type == "subtitle") || (type =="subtitles")) {
-		dialogFrontend = DialogFrontend::Ptr(new DialogFrontendSubtitle());
-	}
-}
-
 void Game::setMainCharacter(Actor::Ptr actor) {
 	mainCharacter = actor;
 }
@@ -110,9 +98,6 @@ void Game::eachFrame(uint32_t ticks) {
 	}
 	if(currentScene) {
 		currentScene->eachFrame(ticks);
-	}
-	if(dialogFrontend) {
-		dialogFrontend->eachFrame(ticks);
 	}
 }
 

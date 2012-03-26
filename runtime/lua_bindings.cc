@@ -66,7 +66,6 @@ extern "C" int init(lua_State* L) {
 			.def("getResourceManager", &GameWrapper::getResourceManager)
 			.def("getUserInterface", &GameWrapper::getUserInterface)
 			.def("setUserInterface", &GameWrapper::setUserInterface)
-			.def("setDialogFrontend", &GameWrapper::setDialogFrontend)
 			.def("initChapter", &GameWrapper::initChapter)
 			.def("setInitChapterCallback", &GameWrapper::setInitChapterCallback)
 			.def("setMainCharacter", &GameWrapper::setMainCharacter)
@@ -220,6 +219,7 @@ extern "C" int init(lua_State* L) {
 				,
 			class_<DialogFrontendSubtitle, UserInterfaceElement, UserInterfaceElement::Ptr>("Subtitles")
 				.def(constructor<>())
+				.def("setFont", &DialogFrontendSubtitle::setFont)
 				,
 		
 		class_<VirtualPosition>("VirtualPosition")

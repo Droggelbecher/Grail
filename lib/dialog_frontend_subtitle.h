@@ -55,11 +55,6 @@ namespace grail {
 			std::vector<Subtitle::Ptr> subtitles;
 
 			/**
-			* where to look for the font by default
-			*/
-			std::string defaultFontPath;
-
-			/**
 			* the default font used to render subtitles
 			* (if an actor does not specifiy own font)
 			*/
@@ -80,7 +75,7 @@ namespace grail {
  			*/
 			void createSubtitle(DialogLine::Ptr);
 
-			void setFont(std::string);
+			void setFont(Font::Ptr);
 			void setCentered(bool);
 
 			void eachFrame(uint32_t ticks);

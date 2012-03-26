@@ -52,24 +52,17 @@ namespace grail {
 		int defaultY = 2800;
 		subtitlePosition = VirtualPosition(defaultX, defaultY);
 
+		// default font to use
+		defaultFont = Font::Ptr(new Font("fonts/crkdwno1.ttf", 30, 1));
+
 		//center the subs by default
 		centered = true;
 
 		// show speaker's name by default
 		showSpeakersName = true;
-
-		// default font to be used
-		setFont("fonts/crkdwno1.ttf");
 	}
 
 	void DialogFrontendSubtitle::createSubtitle(DialogLine::Ptr line) {
-
-		// set the default font here if not set
-		// ** for some reason doing this in the constructor causes a segfault
-		// and I can't figure out why -- feedelli **
-		if (!defaultFont) {
-			defaultFont = Font::Ptr(new Font(defaultFontPath, 30, 1));
-		}
 
 		// prepend the speakers name and a colon if showSpeakersName is set
 		std::string subtitleText = line->getText();
@@ -150,8 +143,8 @@ namespace grail {
 		}
 	}
 
-	void DialogFrontendSubtitle::setFont(std::string path) {
-		defaultFontPath = path;
+	void DialogFrontendSubtitle::setFont(Font::Ptr f) {
+		defaultFont = f;
 	}
 
 	void DialogFrontendSubtitle::setCentered(bool c) {

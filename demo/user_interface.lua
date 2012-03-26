@@ -38,6 +38,7 @@ function MyUI:__init()
 
 	-- Dialog display
 	local dialog = Subtitles()
+	dialog:setFont(Font("fonts/tommy_holloway.ttf", 45, 1))
 	self:addElement(dialog)
 end
 
