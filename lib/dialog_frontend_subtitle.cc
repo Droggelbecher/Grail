@@ -143,12 +143,28 @@ namespace grail {
 		}
 	}
 
+	Font::Ptr DialogFrontendSubtitle::getFont() {
+		return defaultFont;
+	}
+
 	void DialogFrontendSubtitle::setFont(Font::Ptr f) {
 		defaultFont = f;
 	}
 
+	bool DialogFrontendSubtitle::getCentered() {
+		return centered;
+	}
+
 	void DialogFrontendSubtitle::setCentered(bool c) {
 		centered = c;
+	}
+
+	bool DialogFrontendSubtitle::getShowSpeakersName() {
+		return showSpeakersName;
+	}
+
+	void DialogFrontendSubtitle::setShowSpeakersName(bool show) {
+		showSpeakersName = show;
 	}
 } // namespace grail
 

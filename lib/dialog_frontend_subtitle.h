@@ -75,8 +75,14 @@ namespace grail {
  			*/
 			void createSubtitle(DialogLine::Ptr);
 
+			Font::Ptr getFont();
 			void setFont(Font::Ptr);
+
+			bool getCentered();
 			void setCentered(bool);
+
+			bool getShowSpeakersName();
+			void setShowSpeakersName(bool);
 
 			void eachFrame(uint32_t ticks);
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;

@@ -37,9 +37,11 @@ function MyUI:__init()
 	self:addElement(at)
 
 	-- Dialog display
-	local dialog = Subtitles()
-	dialog:setFont(Font("fonts/tommy_holloway.ttf", 45, 1))
-	self:addElement(dialog)
+	local subtitles = Subtitles()
+	subtitles.font = Font("fonts/tommy_holloway.ttf", 45, 1)
+	subtitles.centered = true
+	subtitles.showSpeakersName = true
+	self:addElement(subtitles)
 end
 
 function MyUI:handleEvent(evt, frameDuration)

@@ -219,7 +219,9 @@ extern "C" int init(lua_State* L) {
 				,
 			class_<DialogFrontendSubtitle, UserInterfaceElement, UserInterfaceElement::Ptr>("Subtitles")
 				.def(constructor<>())
-				.def("setFont", &DialogFrontendSubtitle::setFont)
+				.property("font", &DialogFrontendSubtitle::getFont, &DialogFrontendSubtitle::setFont)
+				.property("centered", &DialogFrontendSubtitle::getCentered, &DialogFrontendSubtitle::setCentered)
+				.property("showSpeakersName", &DialogFrontendSubtitle::getShowSpeakersName, &DialogFrontendSubtitle::setShowSpeakersName)
 				,
 		
 		class_<VirtualPosition>("VirtualPosition")
