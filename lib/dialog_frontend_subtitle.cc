@@ -52,6 +52,7 @@ namespace grail {
 
 		// default font to use
 		defaultFont = Font::Ptr(new Font("fonts/crkdwno1.ttf", 30, 1));
+		useActorsFont = false;
 
 		//center the subs by default
 		centered = true;
@@ -70,9 +71,16 @@ namespace grail {
 			line->setText(subtitleText);
 		}
 
-		// queue a new subtitle with the line to be said and using the default font for now
-		// ** to be implemented: allow characters to have their own fonts
-		Subtitle::Ptr s(new Subtitle(line, defaultFont));
+
+		// queue a new subtitle with the line to be said
+		// use actors font if they have one and the option is set
+		Font::Ptr font;
+		if (useActorsFont && line->getSpeaker()->getFont()) {
+			font = line->getSpeaker()->getFont();
+		} else {
+			font = defaultFont;
+		}
+		Subtitle::Ptr s(new Subtitle(line, font));
 		subtitles.push_back(s);
 	}
 
@@ -163,6 +171,14 @@ namespace grail {
 
 	void DialogFrontendSubtitle::setShowSpeakersName(bool show) {
 		showSpeakersName = show;
+	}
+
+	bool DialogFrontendSubtitle::getUseActorsFont() {
+		return useActorsFont;
+	}
+
+	void DialogFrontendSubtitle::setUseActorsFont(bool use) {
+		useActorsFont = use;
 	}
 } // namespace grail
 

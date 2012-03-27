@@ -19,6 +19,7 @@
 #include "debug.h"
 
 class dialogLine;
+class font;
 
 namespace grail {
 	
@@ -44,6 +45,7 @@ namespace grail {
 			// speaking
 			std::queue<boost::shared_ptr<DialogLine> > dialogLines;
 			uint32_t dialogGapTime; // the length of time between each line of dialog
+			boost::shared_ptr<Font> font; // the font to use for their dialog if required
 			
 		protected:
 			VirtualPosition getUpperLeftCorner() const;
@@ -98,6 +100,8 @@ namespace grail {
 			void say(std::string, uint32_t);
 			bool isSpeaking();
 			boost::shared_ptr<DialogLine> getDialogLine();
+			boost::shared_ptr<Font> getFont();
+			void setFont(boost::shared_ptr<Font>);
 	};
 	
 	std::ostream& operator<<(std::ostream& os, const Actor& actor);

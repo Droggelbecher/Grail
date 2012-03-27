@@ -8,6 +8,7 @@ using std::copy;
 
 #include "game.h"
 #include "scene.h"
+#include "font.h"
 
 namespace grail {
 
@@ -159,6 +160,14 @@ bool Actor::isSpeaking() {
 
 DialogLine::Ptr Actor::getDialogLine() {
 	return dialogLines.front();
+}
+
+Font::Ptr Actor::getFont() {
+	return font;
+}
+
+void Actor::setFont(Font::Ptr f) {
+	font = f;
 }
 
 std::ostream& operator<<(std::ostream& os, const Actor& actor) {

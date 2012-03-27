@@ -90,6 +90,7 @@ extern "C" int init(lua_State* L) {
 			.def("walkStraight", &Actor::walkStraight)
 			.def("say", (void(Actor::*)(std::string, uint32_t))&Actor::say)
 			.def(tostring(self))
+			.property("font", &Actor::getFont, &Actor::setFont)
 			,
 		
 		class_<Action, Action::Ptr>("Action")
@@ -222,6 +223,7 @@ extern "C" int init(lua_State* L) {
 				.property("font", &DialogFrontendSubtitle::getFont, &DialogFrontendSubtitle::setFont)
 				.property("centered", &DialogFrontendSubtitle::getCentered, &DialogFrontendSubtitle::setCentered)
 				.property("showSpeakersName", &DialogFrontendSubtitle::getShowSpeakersName, &DialogFrontendSubtitle::setShowSpeakersName)
+				.property("useActorsFont", &DialogFrontendSubtitle::getUseActorsFont, &DialogFrontendSubtitle::setUseActorsFont)
 				,
 		
 		class_<VirtualPosition>("VirtualPosition")

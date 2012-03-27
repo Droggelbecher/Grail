@@ -65,6 +65,7 @@ namespace grail {
 			*/
 			bool centered;	//is the text centered
 			bool showSpeakersName; // prepend text with actors name and colon
+			bool useActorsFont; // use the actors own font for the sub
 
 		public:
 			DialogFrontendSubtitle();
@@ -82,6 +83,9 @@ namespace grail {
 
 			bool getShowSpeakersName();
 			void setShowSpeakersName(bool);
+
+			bool getUseActorsFont();
+			void setUseActorsFont(bool);
 
 			void eachFrame(uint32_t ticks);
 			virtual void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
