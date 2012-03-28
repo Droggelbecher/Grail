@@ -86,9 +86,11 @@ namespace grail {
 			 * "bored", etc...
 			 */
 			void setMode(std::string mode);
+			std::string getMode() const { return mode; }
 			
 			VirtualPosition getPosition() const { return position; }
 			void setPosition(VirtualPosition position) { this->position = position; }
+			VirtualPosition::Y getYOffset() { return yOffset; }
 			void setYOffset(VirtualPosition::Y offset) { yOffset = offset; }
 			VirtualPosition getInteractionPosition() const { return position; }
 			

@@ -21,30 +21,30 @@ function initChapter(n)
 		
 		s.scarecrow = Actor("Scarecrow")
 		s.scarecrow:addAnimation("default", Image("/media/$res/scarecrow.png"))
-		s.scarecrow:setPosition(VP(6000, 2700))
+		s.scarecrow.position = VP(6000, 2700)
 		s:addActor(s.scarecrow)
 		
 		s.pumpkin1 = Actor("Pumpkin One")
 		s.pumpkin1:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		s.pumpkin1:setPosition(VP(5950, 2700))
-		s.pumpkin1:setYOffset(-700)
+		s.pumpkin1.position = VP(5950, 2700)
+		s.pumpkin1.yOffset = -700
 		s.pumpkin1.font = Font("fonts/crkdwno1.ttf", 45, 1)
 		s:addActor(s.pumpkin1)
 
 		s.pumpkin2 = Actor("Pumpkin Two")
 		s.pumpkin2:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		s.pumpkin2:setPosition(VP(6200, 3500))
-		s.pumpkin2:setYOffset(-700)
+		s.pumpkin2.position = VP(6200, 3500)
+		s.pumpkin2.yOffset = -700
 		s.pumpkin2.font = Font("fonts/crkdownr.ttf", 45, 1)
 		s:addActor(s.pumpkin2)
 
 		s.pumpkin3 = Actor("Pumpkin Three")
 		s.pumpkin3:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		s.pumpkin3:setPosition(VP(6700, 3500))
-		s.pumpkin3:setYOffset(-700)
+		s.pumpkin3.position = VP(6700, 3500)
+		s.pumpkin3.yOffset = -700
 		s:addActor(s.pumpkin3)
 		
-		main_character.mc:setPosition(VP(5000, 2700))
+		main_character.mc.position = VP(5000, 2700)
 		s:addActor(mc)
 		
 		local Audio = Audio()
@@ -52,6 +52,8 @@ function initChapter(n)
 		bgmusic:start()
 
 		print("goto s")
+		GAME:goToScene(s)
+		GAME:goToScene(s)
 		GAME:goToScene(s)
 
 		--[[

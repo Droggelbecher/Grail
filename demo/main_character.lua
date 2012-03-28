@@ -14,7 +14,7 @@ function create()
 	local mc = Actor("Luise")
 	mc:addAnimation("default", mc_stand)
 	mc:addAnimation("walk", mc_walk)
-	mc:setMode("default")
+	mc.mode = "default"
 	
 	return mc
 end

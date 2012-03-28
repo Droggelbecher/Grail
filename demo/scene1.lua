@@ -29,6 +29,7 @@ function Scene1:onEnter()
 	WaitTask(3200):block()
 	
 	mc:say("OMG! WTF?", 5000);
+	WaitTask(5000):block()
 	
 	GAME:enableUserControl(true);
 end
