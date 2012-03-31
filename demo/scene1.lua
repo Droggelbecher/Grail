@@ -14,22 +14,11 @@ function Scene1:onEnter()
 	
 	GAME:enableUserControl(false);
 
-	mc:say("Wooo, dark", 4000)
-	mc:say("I wonder if Deckard came this way?", 6000)
-	
-	WaitTask(9000):block()
+	mc:say("I am just demonstrating...", 4000)
 
-	self.pumpkin1:say("GROG!", 3000 );
-	WaitTask(400):block()
-	self.pumpkin2:say("GROG!", 3000 );
-	WaitTask(400):block()
-	self.pumpkin3:say("GROG!", 3000 );
-	WaitTask(400):block()
+	mc:say("...how I can speak.", 4000)
 
-	WaitTask(3200):block()
-	
-	mc:say("OMG! WTF?", 5000);
-	WaitTask(5000):block()
+	self.pumpkin2:say("We need a way to stop me speaking over Luise.", 3000)
 	
 	GAME:enableUserControl(true);
 end

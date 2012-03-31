@@ -6,6 +6,7 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include "actor.h"
+#include "wait_task.h"
 
 namespace grail {
 
@@ -20,11 +21,8 @@ namespace grail {
 			*/
 			std::string text;
 
-			// timing-related
-			uint32_t timeToLive;
-			uint32_t timeStarted;
-			bool started;
-			bool complete;
+			// timer to keep track of how long line being spoken
+			WaitTask::Ptr timer;
 
 		public:
 			typedef boost::shared_ptr<DialogLine> Ptr;
@@ -36,9 +34,8 @@ namespace grail {
 			std::string getText() { return text; };
 
 			void start();
-			bool isStarted() { return started; }
-			bool isComplete() { return complete; }
-			uint32_t getLength() { return timeToLive; }
+			bool isStarted();
+			bool isComplete();
 
 			void eachFrame();
 	};

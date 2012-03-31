@@ -5,39 +5,16 @@
 
 namespace grail {
 
-	Subtitle::Subtitle(DialogLine::Ptr d, Font::Ptr f) : dialogLine(d), font(f), started(false), complete(false) {
+	Subtitle::Subtitle(DialogLine::Ptr d, Font::Ptr f) : dialogLine(d), font(f) {
 
 		// create the text object to represent the dialog line's text
 		Text::Ptr t(new Text(font));
 		t->setText(dialogLine->getText());
 		text = t;
-
-		// set the subtitle length to the same length as the dialog line
-		timeToLive = dialogLine->getLength();
-	}
-
-	void Subtitle::start() {
-		started = true;
-		timeStarted = SDL_GetTicks();
 	}
 
 	void Subtitle::eachFrame(uint32_t ticks) {
 		text->eachFrame(ticks);
-
-		// start this subtitle if the dialog line has started (if
-		// actor has started saying it
-		if (!isStarted() && dialogLine->isStarted()) {
-			start();
-		}
-
-		// check if subtitle should finish displaying
-		if (isStarted()) {
-			uint32_t timeNow = SDL_GetTicks();
-
-			if (timeNow > (timeStarted + timeToLive)) {
-				complete = true;
-			}
-		}
 	}
 
 	void Subtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
@@ -66,7 +43,7 @@ namespace grail {
 		// prepend the speakers name and a colon if showSpeakersName is set
 		std::string subtitleText = line->getText();
 
-		if (showSpeakersName) {	
+		if (showSpeakersName && (line->getText() != "")) {	
 			subtitleText = line->getSpeaker()->getName() + ": " + subtitleText;
 			line->setText(subtitleText);
 		}
@@ -90,7 +67,7 @@ namespace grail {
 		for (std::vector<Subtitle::Ptr>::iterator iter = subtitles.begin();
 			iter != subtitles.end(); ) {
 			// if the subs dialog line is gone or complete
-			if ((!(*iter)->getDialogLine()) || (*iter)->isComplete()) {
+			if ((!(*iter)->getDialogLine()) || (*iter)->getDialogLine()->isComplete()) {
 				iter = subtitles.erase(iter);
 			} else {
 				++iter;
@@ -128,7 +105,7 @@ namespace grail {
 		for (std::vector<Subtitle::Ptr>::const_reverse_iterator riter = subtitles.rbegin();
 			riter != subtitles.rend(); ++riter) {
 
-			if ((*riter)->isStarted()) {
+			if ((*riter)->getDialogLine()->isStarted()) {
 
 				activeSubtitles++;
 

@@ -18,12 +18,6 @@ namespace grail {
 			Font::Ptr font; // font used for subtitles
 			Text::Ptr text; // text object representing the subtitle
 
-			// timer stuff (note: should be put in timer wrapper
-			uint32_t timeToLive;
-			uint32_t timeStarted;
-			bool started;
-			bool complete;
-
 		public:
 			typedef boost::shared_ptr<Subtitle> Ptr;
 
@@ -34,8 +28,6 @@ namespace grail {
 			*/
 			void start();
 
-			bool isStarted() { return started; }
-			bool isComplete() { return complete; }
 			VirtualSize getSize() const { return text->getSize(); }
 			DialogLine::Ptr getDialogLine() { return dialogLine; }
 

@@ -35,7 +35,7 @@ function initChapter(n)
 		s.pumpkin2:addAnimation("default", Image("/media/$res/pumpkin.png"))
 		s.pumpkin2.position = VP(6200, 3500)
 		s.pumpkin2.yOffset = -700
-		s.pumpkin2.font = Font("fonts/crkdownr.ttf", 45, 1)
+		s.pumpkin2.font = Font("fonts/crkdownr.ttf", 25, 1)
 		s:addActor(s.pumpkin2)
 
 		s.pumpkin3 = Actor("Pumpkin Three")
@@ -52,8 +52,6 @@ function initChapter(n)
 		bgmusic:start()
 
 		print("goto s")
-		GAME:goToScene(s)
-		GAME:goToScene(s)
 		GAME:goToScene(s)
 
 		--[[

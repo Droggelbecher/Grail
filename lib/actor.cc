@@ -96,7 +96,7 @@ void Actor::eachFrame(uint32_t ticks) {
 	}
 
 	if (isSpeaking()) {
-		// start the next dialog  in the queue
+		// start the next dialog line in the queue
 		if (!getDialogLine()->isStarted()) {
 			getDialogLine()->start();
 		}
@@ -108,6 +108,7 @@ void Actor::eachFrame(uint32_t ticks) {
 			dialogLines.pop();
 		}
 	}
+
 	
 	if(!walkPath.empty()) {
 		setMode("walk");

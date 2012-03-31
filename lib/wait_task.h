@@ -18,12 +18,14 @@ namespace grail {
 			uint32_t expire;
 		
 		public:
+			typedef boost::shared_ptr<WaitTask> Ptr;
+
 			/**
 			 * \param duration Sleep duration in ms.
 			 */
 			WaitTask(uint32_t duration);
 			~WaitTask() { };
-			
+
 			void onStart();
 			void eachFrame(uint32_t ticks);
 	};
