@@ -28,10 +28,10 @@ namespace grail {
 			VirtualPosition getPosition() const { return position; }
 			void setPosition(VirtualPosition p) { position = p; }
 			
-			double getAlignmentX() { return alignmentX; }
+			double getAlignmentX() const { return alignmentX; }
 			void setAlignmentX(double x) { alignmentX = x; }
 			
-			double getAlignmentY() { return alignmentY; }
+			double getAlignmentY() const { return alignmentY; }
 			void setAlignmentY(double y) { alignmentY = y; }
 			
 			virtual VirtualPosition getSize() const = 0;

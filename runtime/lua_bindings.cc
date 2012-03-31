@@ -198,9 +198,9 @@ extern "C" int init(lua_State* L) {
 			,
 		
 		class_<UserInterfaceElement, UserInterfaceElement::Ptr>("UserInterfaceElement")
-			.def("setPosition", &UserInterfaceElement::setPosition)
-			.def("setAlignmentX", &UserInterfaceElement::setAlignmentX)
-			.def("setAlignmentY", &UserInterfaceElement::setAlignmentY)
+			.property("position", &UserInterfaceElement::getPosition, &UserInterfaceElement::setPosition)
+			.property("alignmentX", &UserInterfaceElement::getAlignmentX, &UserInterfaceElement::setAlignmentX)
+			.property("alignmentY", &UserInterfaceElement::getAlignmentY, &UserInterfaceElement::setAlignmentY)
 			,
 		
 			class_<ActionText, UserInterfaceElement, UserInterfaceElement::Ptr>("ActionText")

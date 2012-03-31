@@ -9,27 +9,27 @@ function MyUI:__init()
 	
 	-- Panel
 	local atbg = UserInterfaceAnimation(Box(VP(4000, 200)))
-	atbg:setPosition(VP(0, 0))
+	atbg.position = VP(0, 0)
 	self:addElement(atbg)
 	
 	local atborder = UserInterfaceAnimation(Box(VP(4000, 5), 0x303030))
-	atborder:setPosition(VP(0, 200))
+	atborder.position = VP(0, 200)
 	self:addElement(atborder)
 	
 	-- Hand
 	local hand = Button(Image("media/$res/ui/hand.png"), function() print("--- Clicked Hand-Button"); return 0 end)
-	hand:setPosition(VP(10, 0))
+	hand.position = VP(10, 0)
 	self:addElement(hand)
 	
 	local walk = UserInterfaceAnimation(Image("media/$res/ui/walk.png"))
-	walk:setPosition(VP(250, 0))
+	walk.position = VP(250, 0)
 	self:addElement(walk)
 	
 	-- Action text
 	local at = ActionText(Font("fonts/tommy_holloway.ttf", 40, 1))
-	at:setPosition(VP(600, 120))
-	at:setAlignmentX(0.0)
-	at:setAlignmentY(0.5)
+	at.position = VP(600, 120)
+	at.alignmentX = 0.0
+	at.alignmentY = 0.5
 	
 	local go = Action("Go to ", 1)
 	self:setAction(go)
@@ -38,7 +38,7 @@ function MyUI:__init()
 
 	-- Dialog display
 	local subtitles = Subtitles()
-	subtitles:setPosition(VP(2000,2800))
+	subtitles.position = VP(2000,2800)
 	subtitles.font = Font("fonts/tommy_holloway.ttf", 45, 1)
 	subtitles.centered = true
 	subtitles.showSpeakersName = true
