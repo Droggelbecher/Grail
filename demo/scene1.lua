@@ -14,9 +14,9 @@ function Scene1:onEnter()
 	
 	GAME:enableUserControl(false);
 
-	mc:say("I am just demonstrating...", 4000)
+	mc:say("I am just demonstrating...")
 
-	mc:say("...how I can speak.", 4000)
+	mc:say("...how I can speak.")
 
 	self.pumpkin2:say("We need a way to stop me speaking over Luise.", 3000)
 	

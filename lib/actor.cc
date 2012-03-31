@@ -142,6 +142,11 @@ void Actor::eachFrame(uint32_t ticks) {
 	} // if walkPath not empty
 }
 
+void Actor::say(std::string statement) {
+	uint32_t displayTime = (statement.size()*100);
+	say(statement, displayTime);
+}
+
 void Actor::say(std::string statement, uint32_t displayTime) {
 	boost::shared_ptr<DialogLine> line(new DialogLine(shared_from_this(),statement,displayTime));
 	dialogLines.push(line);

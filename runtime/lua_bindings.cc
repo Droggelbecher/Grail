@@ -84,6 +84,7 @@ extern "C" int init(lua_State* L) {
 			.def("walkTo", (void(Actor::*)(VirtualPosition))&Actor::walkTo)
 			.def("walkTo", (void(Actor::*)(Actor::Ptr))&Actor::walkTo)
 			.def("walkStraight", &Actor::walkStraight)
+			.def("say", (void(Actor::*)(std::string))&Actor::say)
 			.def("say", (void(Actor::*)(std::string, uint32_t))&Actor::say)
 			.def(tostring(self))
 			.property("mode", &Actor::getMode, &Actor::setMode)
