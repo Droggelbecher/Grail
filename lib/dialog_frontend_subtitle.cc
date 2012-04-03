@@ -5,30 +5,11 @@
 
 namespace grail {
 
-	Subtitle::Subtitle(DialogLine::Ptr d, Font::Ptr f) : dialogLine(d), font(f) {
-
-		// create the text object to represent the dialog line's text
-		Text::Ptr t(new Text(font));
-		t->setText(dialogLine->getText());
-		text = t;
-	}
-
-	void Subtitle::eachFrame(uint32_t ticks) {
-		text->eachFrame(ticks);
-	}
-
-	void Subtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
-		text->renderAt(target, ticks, p);
-	}
-
-
 	DialogFrontendSubtitle::DialogFrontendSubtitle() {
 
 		// default subs position
 		setPosition(VirtualPosition(2000,2800));
 
-		// default font to use
-		defaultFont = Font::Ptr(new Font("fonts/crkdwno1.ttf", 30, 1));
 		useActorsFont = false;
 
 		//center the subs by default
@@ -38,8 +19,8 @@ namespace grail {
 		showSpeakersName = true;
 	}
 
-	void DialogFrontendSubtitle::createSubtitle(DialogLine::Ptr line) {
-
+	void DialogFrontendSubtitle::addLine(DialogLine::Ptr line) {
+	
 		// prepend the speakers name and a colon if showSpeakersName is set
 		std::string subtitleText = line->getText();
 
@@ -57,41 +38,8 @@ namespace grail {
 		} else {
 			font = defaultFont;
 		}
-		Subtitle::Ptr s(new Subtitle(line, font));
-		subtitles.push_back(s);
-	}
-
-	void DialogFrontendSubtitle::eachFrame(uint32_t ticks)  {
-
-		// remove completed subs
-		for (std::vector<Subtitle::Ptr>::iterator iter = subtitles.begin();
-			iter != subtitles.end(); ) {
-			// if the subs dialog line is gone or complete
-			if ((!(*iter)->getDialogLine()) || (*iter)->getDialogLine()->isComplete()) {
-				iter = subtitles.erase(iter);
-			} else {
-				++iter;
-			}
-		}
-		
-		// create new subs for new lines of dialog as necessary
-		std::list<DialogLine::Ptr> newLines = updateDialogLines();
-		if (!newLines.empty()) {
-			if (newLines.size() > 1) {
-				for(std::list<DialogLine::Ptr>::iterator iter = newLines.begin();
-				iter != newLines.end(); ++iter) {
-					createSubtitle((*iter));
-				}
-			} else {
-				createSubtitle((*newLines.begin()));
-			}
-		}
-
-		// update the subtitles
-		for (std::vector<Subtitle::Ptr>::iterator iter = subtitles.begin();
-			iter != subtitles.end(); iter++) {
-			(*iter)->eachFrame(ticks);
-		}
+		DialogText::Ptr s(new DialogText(line, font));
+		lines.push_back(s);
 	}
 
 	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
@@ -102,8 +50,8 @@ namespace grail {
 
 		// render the subtitles centered
 		// note:: render backwards so earlier subtitles stack upwards
-		for (std::vector<Subtitle::Ptr>::const_reverse_iterator riter = subtitles.rbegin();
-			riter != subtitles.rend(); ++riter) {
+		for (std::vector<DialogText::Ptr>::const_reverse_iterator riter = lines.rbegin();
+			riter != lines.rend(); ++riter) {
 
 			if ((*riter)->getDialogLine()->isStarted()) {
 

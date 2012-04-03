@@ -37,13 +37,15 @@ function MyUI:__init()
 	self:addElement(at)
 
 	-- Dialog display
-	local subtitles = Subtitles()
-	subtitles.position = VP(2000,2800)
-	subtitles.font = Font("fonts/tommy_holloway.ttf", 45, 1)
-	subtitles.centered = true
-	subtitles.showSpeakersName = true
-	subtitles.useActorsFont = true
-	self:addElement(subtitles)
+	local speechbubbles = SpeechBubbles()
+	self:addElement(speechbubbles)
+	-- local subtitles = Subtitles()
+	-- subtitles.position = VP(2000,2800)
+	-- subtitles.font = Font("fonts/tommy_holloway.ttf", 45, 1)
+	-- subtitles.centered = true
+	-- subtitles.showSpeakersName = true
+	-- subtitles.useActorsFont = true
+	-- self:addElement(subtitles)
 end
 
 function MyUI:handleEvent(evt, frameDuration)

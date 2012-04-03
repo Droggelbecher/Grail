@@ -14,6 +14,7 @@
 #include "lib/audio.h"
 #include "lib/box.h"
 #include "lib/button.h"
+#include "lib/dialog_frontend_speech_bubbles.h"
 #include "lib/dialog_frontend_subtitle.h"
 #include "lib/font.h"
 #include "lib/game.h"
@@ -217,6 +218,9 @@ extern "C" int init(lua_State* L) {
 			
 			class_<UserInterfaceAnimation, UserInterfaceElement, UserInterfaceElement::Ptr>("UserInterfaceAnimation")
 				.def(constructor<Animation::Ptr>())
+				,
+			class_<DialogFrontendSpeechBubbles, UserInterfaceElement, UserInterfaceElement::Ptr>("SpeechBubbles")
+				.def(constructor<>())
 				,
 			class_<DialogFrontendSubtitle, UserInterfaceElement, UserInterfaceElement::Ptr>("Subtitles")
 				.def(constructor<>())

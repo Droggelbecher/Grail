@@ -11,7 +11,7 @@ namespace grail {
 	void DialogLine::start() {
 		if (!isStarted()) {
 			if (timer->getState() == Task::STATE_NEW) {
-				timer->block();
+				timer->start();
 			}
 		}
 	}

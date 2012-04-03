@@ -16,7 +16,7 @@ function Scene1:onEnter()
 	WaitTask(1000):block()
 
 	mc:walkTo(self.scarecrow)
-	WaitTask(4000):block()
+	WaitTask(1000):block()
 
 	mc:say("I am just demonstrating...")
 	mc:say("...how I can speak.")

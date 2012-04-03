@@ -47,9 +47,6 @@ namespace grail {
 			uint32_t dialogGapTime; // the length of time between each line of dialog
 			boost::shared_ptr<Font> font; // the font to use for their dialog if required
 			
-		protected:
-			VirtualPosition getUpperLeftCorner() const;
-			
 		public:
 			typedef boost::shared_ptr<Actor> Ptr;
 			
@@ -93,6 +90,7 @@ namespace grail {
 			VirtualPosition::Y getYOffset() { return yOffset; }
 			void setYOffset(VirtualPosition::Y offset) { yOffset = offset; }
 			VirtualPosition getInteractionPosition() const { return position; }
+			VirtualPosition getUpperLeftCorner() const;
 			
 			void walk(const Path& path);
 			void walkTo(Actor::Ptr actor);
