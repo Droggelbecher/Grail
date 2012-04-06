@@ -14,7 +14,7 @@ namespace grail {
 
 	/**
 	* Virtual base class for in-game dialog renderers,
-	* which arentended to be pluggable so a developer may customise how dialog
+	* which are intended to be pluggable so a developer may customise how dialog
 	* is outputted to the screen, eg. subtitles, floating text
 	*/
 	class DialogFrontend : public UserInterfaceElement {

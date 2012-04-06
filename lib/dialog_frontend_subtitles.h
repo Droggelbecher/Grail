@@ -1,7 +1,7 @@
 // vim: set noexpandtab:
 
-#ifndef DIALOG_FRONTEND_SUBTITLE_H
-#define DIALOG_FRONTEND_SUBTITLE_H
+#ifndef DIALOG_FRONTEND_SUBTITLES_H
+#define DIALOG_FRONTEND_SUBTITLES_H
 
 #include "dialog_frontend_text.h"
 #include "font.h"
@@ -14,7 +14,7 @@ namespace grail {
 	* Pluggable dialog frontend which displays
 	* actors' lines in subtitles on the screen
 	*/
-	class DialogFrontendSubtitle : public DialogFrontendText {
+	class DialogFrontendSubtitles : public DialogFrontendText {
 
 			/**
 			* display options
@@ -24,7 +24,7 @@ namespace grail {
 			bool useActorsFont; // use the actors own font for the sub
 
 		public:
-			DialogFrontendSubtitle();
+			DialogFrontendSubtitles();
 
 			void addLine(DialogLine::Ptr);
 
@@ -45,5 +45,5 @@ namespace grail {
 
 } // namespace grail
 
-#endif // DIALOG_FRONTEND_SUBTITLE_H
+#endif // DIALOG_FRONTEND_SUBTITLES_H
 

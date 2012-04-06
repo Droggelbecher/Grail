@@ -4,6 +4,8 @@
 
 namespace grail {
 
+	// DialogText
+
 	DialogText::DialogText(DialogLine::Ptr d, Font::Ptr f) : dialogLine(d), font(f) {
 
 		// create the text object to represent the dialog line's text
@@ -20,6 +22,8 @@ namespace grail {
 		text->renderAt(target, ticks, p);
 	}
 
+
+	// DialogFrontendText
 
 	DialogFrontendText::DialogFrontendText() {
 		// default font to use

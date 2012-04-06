@@ -33,7 +33,7 @@ function initChapter(n)
 
 		s.pumpkin2 = Actor("Pumpkin Two")
 		s.pumpkin2:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		s.pumpkin2.position = VP(6200, 3500)
+		s.pumpkin2.position = VP(6200, 1500)
 		s.pumpkin2.yOffset = -700
 		s.pumpkin2.font = Font("fonts/crkdownr.ttf", 25, 1)
 		s:addActor(s.pumpkin2)
@@ -47,9 +47,9 @@ function initChapter(n)
 		main_character.mc.position = VP(5000, 2700)
 		s:addActor(mc)
 		
-		local Audio = Audio()
-		bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)
-		bgmusic:start()
+		-- local Audio = Audio()
+		-- bgmusic = Audio:prepareSound("sounds/20moment.mp3",2)
+		-- bgmusic:start()
 
 		print("goto s")
 		GAME:goToScene(s)

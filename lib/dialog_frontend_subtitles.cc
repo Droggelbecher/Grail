@@ -1,11 +1,11 @@
 // vim: set noexpandtab:
 
-#include "dialog_frontend_subtitle.h"
+#include "dialog_frontend_subtitles.h"
 #include "game.h"
 
 namespace grail {
 
-	DialogFrontendSubtitle::DialogFrontendSubtitle() {
+	DialogFrontendSubtitles::DialogFrontendSubtitles() {
 
 		// default subs position
 		setPosition(VirtualPosition(2000,2800));
@@ -19,7 +19,7 @@ namespace grail {
 		showSpeakersName = true;
 	}
 
-	void DialogFrontendSubtitle::addLine(DialogLine::Ptr line) {
+	void DialogFrontendSubtitles::addLine(DialogLine::Ptr line) {
 	
 		// prepend the speakers name and a colon if showSpeakersName is set
 		std::string subtitleText = line->getText();
@@ -42,7 +42,7 @@ namespace grail {
 		lines.push_back(s);
 	}
 
-	void DialogFrontendSubtitle::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+	void DialogFrontendSubtitles::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
 
 		// count active subs (to keep track of stacking subtitles
 		// vertically on-screen
@@ -74,35 +74,35 @@ namespace grail {
 		}
 	}
 
-	Font::Ptr DialogFrontendSubtitle::getFont() {
+	Font::Ptr DialogFrontendSubtitles::getFont() {
 		return defaultFont;
 	}
 
-	void DialogFrontendSubtitle::setFont(Font::Ptr f) {
+	void DialogFrontendSubtitles::setFont(Font::Ptr f) {
 		defaultFont = f;
 	}
 
-	bool DialogFrontendSubtitle::getCentered() {
+	bool DialogFrontendSubtitles::getCentered() {
 		return centered;
 	}
 
-	void DialogFrontendSubtitle::setCentered(bool c) {
+	void DialogFrontendSubtitles::setCentered(bool c) {
 		centered = c;
 	}
 
-	bool DialogFrontendSubtitle::getShowSpeakersName() {
+	bool DialogFrontendSubtitles::getShowSpeakersName() {
 		return showSpeakersName;
 	}
 
-	void DialogFrontendSubtitle::setShowSpeakersName(bool show) {
+	void DialogFrontendSubtitles::setShowSpeakersName(bool show) {
 		showSpeakersName = show;
 	}
 
-	bool DialogFrontendSubtitle::getUseActorsFont() {
+	bool DialogFrontendSubtitles::getUseActorsFont() {
 		return useActorsFont;
 	}
 
-	void DialogFrontendSubtitle::setUseActorsFont(bool use) {
+	void DialogFrontendSubtitles::setUseActorsFont(bool use) {
 		useActorsFont = use;
 	}
 } // namespace grail

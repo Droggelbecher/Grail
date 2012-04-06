@@ -12,7 +12,7 @@ set(GRAIL_FILES
 	dialog_frontend.cc
 	dialog_frontend_text.cc
 	dialog_frontend_speech_bubbles.cc
-	dialog_frontend_subtitle.cc
+	dialog_frontend_subtitles.cc
 	event.cc
 	font.cc
 	game.cc

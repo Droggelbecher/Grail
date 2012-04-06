@@ -15,7 +15,7 @@
 #include "lib/box.h"
 #include "lib/button.h"
 #include "lib/dialog_frontend_speech_bubbles.h"
-#include "lib/dialog_frontend_subtitle.h"
+#include "lib/dialog_frontend_subtitles.h"
 #include "lib/font.h"
 #include "lib/game.h"
 #include "lib/ground.h"
@@ -222,12 +222,12 @@ extern "C" int init(lua_State* L) {
 			class_<DialogFrontendSpeechBubbles, UserInterfaceElement, UserInterfaceElement::Ptr>("SpeechBubbles")
 				.def(constructor<>())
 				,
-			class_<DialogFrontendSubtitle, UserInterfaceElement, UserInterfaceElement::Ptr>("Subtitles")
+			class_<DialogFrontendSubtitles, UserInterfaceElement, UserInterfaceElement::Ptr>("Subtitles")
 				.def(constructor<>())
-				.property("font", &DialogFrontendSubtitle::getFont, &DialogFrontendSubtitle::setFont)
-				.property("centered", &DialogFrontendSubtitle::getCentered, &DialogFrontendSubtitle::setCentered)
-				.property("showSpeakersName", &DialogFrontendSubtitle::getShowSpeakersName, &DialogFrontendSubtitle::setShowSpeakersName)
-				.property("useActorsFont", &DialogFrontendSubtitle::getUseActorsFont, &DialogFrontendSubtitle::setUseActorsFont)
+				.property("font", &DialogFrontendSubtitles::getFont, &DialogFrontendSubtitles::setFont)
+				.property("centered", &DialogFrontendSubtitles::getCentered, &DialogFrontendSubtitles::setCentered)
+				.property("showSpeakersName", &DialogFrontendSubtitles::getShowSpeakersName, &DialogFrontendSubtitles::setShowSpeakersName)
+				.property("useActorsFont", &DialogFrontendSubtitles::getUseActorsFont, &DialogFrontendSubtitles::setUseActorsFont)
 				,
 		
 		class_<VirtualPosition>("VirtualPosition")

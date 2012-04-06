@@ -11,6 +11,7 @@ namespace grail {
 
 	/**
 	* Represents an actor's dialog line as text
+	* used by eg. speech bubbles and subtitles
 	*/
 	class DialogText {
 			DialogLine::Ptr dialogLine; // dialog line to represent
@@ -21,11 +22,6 @@ namespace grail {
 			typedef boost::shared_ptr<DialogText> Ptr;
 
 			DialogText(DialogLine::Ptr, Font::Ptr);
-
-			/**
-			* Start display of the text
-			*/
-			void start();
 
 			VirtualSize getSize() const { return text->getSize(); }
 			DialogLine::Ptr getDialogLine() { return dialogLine; }
