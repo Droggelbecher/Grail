@@ -12,7 +12,7 @@ function Scene1:onEnter()
 	print("onEnter")
 	local mc = GAME:getMainCharacter()
 	
-	--GAME:enableUserControl(false);
+	GAME:enableUserControl(false);
 	WaitTask(1000):block()
 
 	mc:walkTo(self.scarecrow)
@@ -22,8 +22,6 @@ function Scene1:onEnter()
 	mc:say("...how I can speak.")
 	WaitTask(5000):block()
 
-	self.pumpkin2:say("We need a way to stop me speaking over Luise.", 3000)
-	
-	--GAME:enableUserControl(true);
+	GAME:enableUserControl(true);
 end
 

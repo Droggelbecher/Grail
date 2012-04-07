@@ -33,18 +33,18 @@ function initChapter(n)
 
 		s.pumpkin2 = Actor("Pumpkin Two")
 		s.pumpkin2:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		s.pumpkin2.position = VP(6200, 1500)
-		s.pumpkin2.yOffset = -700
+		s.pumpkin2.position = VP(6500, 2800)
+		-- s.pumpkin2.yOffset = -700
 		s.pumpkin2.font = Font("fonts/crkdownr.ttf", 25, 1)
 		s:addActor(s.pumpkin2)
 
 		s.pumpkin3 = Actor("Pumpkin Three")
 		s.pumpkin3:addAnimation("default", Image("/media/$res/pumpkin.png"))
-		s.pumpkin3.position = VP(6700, 3500)
-		s.pumpkin3.yOffset = -700
+		s.pumpkin3.position = VP(6750, 2850)
+		-- s.pumpkin3.yOffset = -700
 		s:addActor(s.pumpkin3)
 		
-		main_character.mc.position = VP(5000, 2700)
+		main_character.mc.position = VP(800, 2700)
 		s:addActor(mc)
 		
 		-- local Audio = Audio()
