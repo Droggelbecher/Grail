@@ -75,11 +75,13 @@ Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
 bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
+	if(wp1 == wp2) { return true; }
+	
 	// Waypoints outside of the component are not reachable
 	if(!component->outerBoundary.hasPoint(wp1.getPosition())) { return false; }
 	if(!component->outerBoundary.hasPoint(wp2.getPosition())) { return false; }
 	
-	if(wp1 == wp2) { return true; }
+	// TODO: Waypoints inside of holes are not reachable
 	
 	Line l(wp1.getPosition(), wp2.getPosition());
 	
@@ -92,7 +94,7 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	
 	polygon_t o = component->outerBoundary; 
 	for(polygon_t::LineIterator li = o.beginLines(); li != o.endLines(); ++li) {
-		if(l != *li && l.intersects(*li)) {
+		if(/*l != *li &&*/ l.intersects(*li, Line::THIS_INNER | Line::OTHER_INNER | Line::OTHER_BOUNDARY)) {
 			return false;
 		}
 	}
@@ -101,7 +103,8 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	for(Component::hole_iter_t hi = component->holes.begin(); hi != component->holes.end(); ++hi) {
 		polygon_t p = (*hi)->outerBoundary;
 		for(polygon_t::LineIterator li = p.beginLines(); li != p.endLines(); ++li) {
-			if(l != *li && l.intersects(*li)) {
+			//if(l.intersects(*li)) {
+			if(l.intersects(*li, Line::THIS_INNER | Line::OTHER_INNER | Line::OTHER_BOUNDARY)) {
 				return false;
 			}
 		}
@@ -152,7 +155,7 @@ void Ground::generateMapForComponent(Component* component) {
 		polygons.push_back(&((*iter)->outerBoundary));
 	}
 	
-	// find out waypoints
+	// find out components waypoints (= corners of $polygons)
 	
 	component->waypoints.clear();
 	for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
@@ -161,10 +164,15 @@ void Ground::generateMapForComponent(Component* component) {
 		}
 	}
 	
+	// connect waypoints
+	
 	for(Component::waypoint_iter_t wi = component->waypoints.begin(); wi != component->waypoints.end(); ++wi) {
 		for(Component::waypoint_iter_t wj = wi; wj != component->waypoints.end(); ++wj) {
 			if(directReachable(component, *wi, *wj)) {
 				// TODO: connect
+				//if(component->containsLine(*wi, *wj)) {
+				//}
+				wi->linkBidirectional(*wj);
 			}
 			
 		} // for wj

@@ -9,13 +9,18 @@
 #include <string>
 #include <list>
 #include <map>
+#include <cstdio>
+#include <cstdarg>
 
 #include "utils.h"
 
 namespace grail {
 
 class Unittest {
+		enum { INFO_BUFSIZE = 1024 };
+		
 		static std::map<std::string, std::list<Unittest*> > tests;
+		static char info_[INFO_BUFSIZE];
 		
 	protected:
 		std::string group, name;
@@ -35,6 +40,8 @@ class Unittest {
 		void checkEqual(bool r, std::string v1, std::string s1, std::string s2, TestResult& result, std::string file, size_t line);
 		void checkGreater(bool r, std::string v1, std::string s1, std::string s2, TestResult& result, std::string file, size_t line);
 		void checkLower(bool r, std::string v1, std::string s1, std::string s2, TestResult& result, std::string file, size_t line);
+		void info(const char* fmt, ...);
+		void popInfo(bool show);
 		
 		static void runAll();
 		

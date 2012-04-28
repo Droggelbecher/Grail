@@ -94,6 +94,11 @@ class Ground {
 				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
 		};
 		
+		/**
+		 * A connected piece of ground area, bounded by one polygon for the
+		 * outer bondary (@ref outerBoundary) and an arbitrary number of
+		 * polygons for the inner boundary (@ref holes).
+		 */
 		struct Component {
 			public:
 				typedef Polygon<VirtualPosition, IsPosition> polygon_t;
@@ -112,8 +117,8 @@ class Ground {
 		 * Add walls from the edges of the given polygon.
 		 * 
 		 * @pre {
-		 * 	@ref polygon does not intersect any polygon added before. (Else
-		 * 	the behaviour is undefined)
+		 * 	@ref polygon does not intersect any polygon added before.
+		 * 	Else the behaviour is undefined
 		 * }
 		 * 
 		 * @param polygon The polygon to add.
@@ -125,7 +130,7 @@ class Ground {
 //		const list<Line>& getWalls() const { return walls; }
 		
 		/**
-		 * Call this after having added all needed walls.
+		 * Call this after having added all needed walls/polygons.
 		 * It will generate waypoints for all corners and connect them
 		 * appropriately to allow pathfinding.
 		 * Only call once or you will get unecessary waypoints.

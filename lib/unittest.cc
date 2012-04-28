@@ -25,6 +25,7 @@ Unittest::Unittest(string group, string name) : group(group), name(name), out(ce
 void Unittest::runAll() {
 	map<string, list<Unittest*> >::const_iterator group_iter;
 	list<Unittest*>::const_iterator test_iter;
+	info_[0] = '\0';
 	
 	TestResult result;
 	
@@ -53,6 +54,7 @@ void Unittest::checkEqual(bool r, string v1, string s1, string s2, TestResult& r
 	else {
 		result.passed++;
 	}
+	popInfo(!r);
 }
 
 void Unittest::checkGreater(bool r, string v1, string s1, string s2, TestResult& result, string file, size_t line) {
@@ -63,6 +65,7 @@ void Unittest::checkGreater(bool r, string v1, string s1, string s2, TestResult&
 	else {
 		result.passed++;
 	}
+	popInfo(!r);
 }
 
 void Unittest::checkLower(bool r, string v1, string s1, string s2, TestResult& result, string file, size_t line) {
@@ -73,7 +76,25 @@ void Unittest::checkLower(bool r, string v1, string s1, string s2, TestResult& r
 	else {
 		result.passed++;
 	}
+	popInfo(!r);
 }
+
+void Unittest::popInfo(bool show) {
+	if(show && info_[0]) {
+		out << endl << "\t\t\x1b[00;33mINFO: " << info_;
+	}
+	info_[0] = '\0';
+}
+
+void Unittest::info(const char* fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	vsnprintf(info_, INFO_BUFSIZE, fmt, ap);
+	va_end(ap);
+}
+
+
+char Unittest::info_[Unittest::INFO_BUFSIZE];
 
 } // namespace grail
 

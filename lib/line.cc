@@ -5,7 +5,12 @@
 
 namespace grail {
 
-bool Line::intersects(const Line& other) const {
+bool Line::intersects(const Line& other, int flags) const {
+	
+	// if one line is not included, it can't intersect the other ;)
+	
+	if(!(flags & (THIS_INNER | THIS_BOUNDARY))) { return false; }
+	if(!(flags & (OTHER_INNER | OTHER_BOUNDARY))) { return false; }
 	
 	/*
 	if(other.a == a && other.b == b) { return false; }
@@ -28,14 +33,21 @@ bool Line::intersects(const Line& other) const {
 	int d4 = sgn(l.cross(a - other.b)) - sgn(l.cross(b - other.b));
 	if(d4 == 0) return false;
 	
-	// lines intersect at exactly one end point,
-	// we count this as not intersecting
-	if((abs(d1) == 1) && (abs(d2) == 1) && (abs(d3) == 1) && (abs(d4) == 1)) {
-	//if((abs(d1) == 1) || (abs(d2) == 1) || (abs(d3) == 1) || (abs(d4) == 1)) {
-		return false;
-	}
+	//printf("f=%d d1=%d d2=%d d3=%d d4=%d\n", flags, d1, d2, d3, d4);
 	
-	return true;
+	// abs(d1) == 1  --> intersection is endpoint of $other
+	// abs(d2) == 1  --> intersection is endpoint of $other
+	// abs(d3) == 1  --> intersection is endpoint of this
+	// abs(d4) == 1  --> intersection is endpoint of this
+	// if == 2, inner
+	// abs(d?) == 0 ruled out before
+
+	bool d12ok = ((flags & OTHER_BOUNDARY) && ((abs(d1) == 1) && (abs(d2) == 1))) ||
+			((flags & OTHER_INNER) && ((abs(d1) == 2) && (abs(d2) == 2)));
+	bool d34ok = ((flags & THIS_BOUNDARY) && ((abs(d3) == 1) && (abs(d4) == 1))) ||
+			((flags & THIS_INNER) && ((abs(d3) == 2) && (abs(d4) == 2)));
+	
+	return d12ok && d34ok;
 }
 
 bool Line::hasPoint(VirtualPosition p) const {
