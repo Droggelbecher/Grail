@@ -22,6 +22,7 @@ class Polygon : public Area {
 		
 		enum Orientation { UNKNOWN, CW, CCW };
 		enum LineDirection { NOT_ATTACHED, IN, OUT, NEITHER };
+		enum Area { ALL, INNER };
 		
 		class LineIterator {
 				const Polygon *parent;
@@ -78,6 +79,9 @@ class Polygon : public Area {
 		void clear() { nodes.clear(); orientation = UNKNOWN; }
 		
 	private:
+		/**
+		 * Return true iff TODO
+		 */
 		static bool intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition pb, bool right);
 		
 		void updateOrientation() const;

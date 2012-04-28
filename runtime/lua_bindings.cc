@@ -137,7 +137,7 @@ extern "C" int init(lua_State* L) {
 				]
 			
 			.def("addPolygon", &Ground::addPolygon)
-			.def("generateMap", &Ground::generateMap)
+			//.def("generateMap", &Ground::generateMap)
 			//.def("addWall", &Ground::addWall)
 			//.def("addWalls", &Ground::addWalls)
 			//.def("getWalls", &Ground::getWalls)

@@ -46,42 +46,23 @@ void Ground::addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& p
 	}
 } // addPolygon
 
-/*
-void Ground::addWalls(const Polygon<VirtualPosition, IsPosition>& polygon) {
-	WaypointPolygon *inner = new WaypointPolygon(), *outer = new WaypointPolygon();
-	for(Polygon<VirtualPosition, IsPosition>::ConstNodeIterator iter = polygon.beginNodes(); iter != polygon.endNodes(); ++iter) {
-		// TODO: Alter directReachable so that points in inner are
-		// only reachable by points inside the polygon (inside/outside test)
-		// and points in outer are only reachable by points outside the
-		// polygon.
-		// This way this method can be used to add an enclosing outside
-		// polygon as well as for obstacles (or even obstacles with holes)
-		inner->push_back(new Waypoint(*iter));
-		outer->push_back(new Waypoint(*iter));
-	}
-	innerPolygons.push_back(inner);
-	outerPolygons.push_back(outer);
-}
-*/
-
-/*
-Ground::Waypoint& Ground::addWaypoint(VirtualPosition p) {
-	Waypoint *wp = new Waypoint(p);
-	waypoints.push_back(wp);
-	return *wp;
-}
-*/
-
-bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
+bool Ground::directReachable(Component* component, Waypoint& wp1, Waypoint& wp2) {
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
 	if(wp1 == wp2) { return true; }
 	
-	// Waypoints outside of the component are not reachable
-	if(!component->outerBoundary.hasPoint(wp1.getPosition())) { return false; }
-	if(!component->outerBoundary.hasPoint(wp2.getPosition())) { return false; }
+	const polygon_t &p = component->outerBoundary;
 	
-	// TODO: Waypoints inside of holes are not reachable
+	// Waypoints outside of the component are not reachable
+	if(!p.hasPoint(wp1.getPosition())) { return false; }
+	if(!p.hasPoint(wp2.getPosition())) { return false; }
+	
+	// Waypoints inside of holes are not reachable
+	for(Component::hole_iter_t iter = component->holes.begin(); iter != component->holes.end(); ++iter) {
+		const polygon_t &h = (*iter)->outerBoundary;
+		if(h.hasPoint(wp1.getPosition()) && !h.hasBoundaryPoint(wp1.getPosition())) { return false; }
+		if(h.hasPoint(wp2.getPosition()) && !h.hasBoundaryPoint(wp2.getPosition())) { return false; }
+	}
 	
 	Line l(wp1.getPosition(), wp2.getPosition());
 	
@@ -92,8 +73,7 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	// wp1 and wp2 though.
 	// Ignore crossings when one of them is a boundary point though.
 	
-	polygon_t o = component->outerBoundary; 
-	for(polygon_t::LineIterator li = o.beginLines(); li != o.endLines(); ++li) {
+	for(polygon_t::LineIterator li = p.beginLines(); li != p.endLines(); ++li) {
 		if(/*l != *li &&*/ l.intersects(*li, Line::THIS_INNER | Line::OTHER_INNER | Line::OTHER_BOUNDARY)) {
 			return false;
 		}
@@ -136,39 +116,29 @@ bool Ground::directReachable(Component* component, Waypoint wp1, Waypoint wp2) {
 	return true;
 }
 
-void Ground::generateMapForComponent(Component* component) {
+void Ground::generateMapForComponent(Component* component, Waypoint& source, Waypoint& target) {
 	if(!component) {
-		//clearMap();
 		if(rootComponent) {
-			generateMapForComponent(rootComponent);
+			generateMapForComponent(rootComponent, source, target);
 		}
 		return;
 	}
 	
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
-	// $polygons := all polygons that bound the current component
+	component->generateWaypoints();
 	
-	std::vector<const polygon_t*> polygons;
-	polygons.push_back(&(component->outerBoundary));
-	for(Component::hole_iter_t iter = component->holes.begin(); iter != component->holes.end(); ++iter) {
-		polygons.push_back(&((*iter)->outerBoundary));
-	}
-	
-	// find out components waypoints (= corners of $polygons)
-	
-	component->waypoints.clear();
-	for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
-		for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
-			component->waypoints.push_back(Waypoint(*ni));
-		}
-	}
+	component->waypoints.push_back(source);
+	component->waypoints.push_back(target);
 	
 	// connect waypoints
 	
 	for(Component::waypoint_iter_t wi = component->waypoints.begin(); wi != component->waypoints.end(); ++wi) {
 		for(Component::waypoint_iter_t wj = wi; wj != component->waypoints.end(); ++wj) {
-			if(directReachable(component, *wi, *wj)) {
+			if(directReachable(component, *wi, *wj) && (wi != wj)) {
+				cdbg << "genMap: " << &*wi << " " << wi->getPosition()
+					<< " -- " << &*wj << " " << wj->getPosition() << "\n";
+				
 				// TODO: connect
 				//if(component->containsLine(*wi, *wj)) {
 				//}
@@ -177,139 +147,80 @@ void Ground::generateMapForComponent(Component* component) {
 			
 		} // for wj
 	} // for wi
-	
-	
-	// connect waypoints
-	
-		// connect iff
-		// - connecting edge extends to inner of outerBoundary or outer of a hole
-		// - connecting edge does not cross any boundary edge
-	
-	
-	
-	//------------------
-	
-	
-	// Let component hold all its waypoints
-	/*
-	component->waypoints.clear();
-	for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
-		for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
-			component->waypoints.push_back(Waypoint(*ni));
+}
+
+VirtualPosition Ground::findBoundaryPoint(VirtualPosition source, VirtualPosition target, const Ground::Component::polygon_t& poly) {
+	Line l(source, target);
+	VirtualPosition nearestPoint = source;
+	double nearestDistance = (target - source).length();
+	for(Component::polygon_t::LineIterator li = poly.beginLines(); li != poly.endLines(); ++li) {
+		if(l.intersects(*li, Line::TOUCH_OR_INTERSECT)) {
+			VirtualPosition p = l.intersection(*li);
+			double len = (target - p).length();
+			if(len < nearestDistance) {
+				len = nearestDistance;
+				nearestPoint = p;
+			}
 		}
 	}
-	*/
-	
-//	for(Component::waypoint_iter_t wi = component
-	
-/*	
-	// TODO: First, create waypoints for all polygon nodes, then iterate over
-	// those!
-	
-	// First polygon node (niter)
-	for(std::vector<const polygon_t*>::iterator piter = polygons.begin(); piter != polygons.end(); ++piter) {
-		for(polygon_t::ConstNodeIterator niter = niter->beginNodes(); niter != piter->endNodes();  ++niter) {
-			
-			// Second polygon node (niter2)
-			for(std::vector<const polygon_t*>::iterator piter2 = polygons.begin(); piter2 != polygons.end(); ++piter2) {
-				for(polygon_t::ConstNodeIterator niter2 = niter2->beginNodes(); niter2 != piter2->endNodes();  ++niter2) {
-					Line l(*niter, *niter2);
-					
-					//bool intersects = false;
-					
-					// Polygon lines (liter)
-					for(std::vector<const polygon_t*>::iterator piter3 = polygons.begin(); piter3 != polygons.end(); ++piter3) {
-						for(polygon_t::LineIterator liter = piter3->beginLines(); liter != piter3->endLines(); ++liter) {
-							if(l != *liter && l.intersects(*liter)) {
-					//			intersects = true;
-								goto intersection_found;
-							}
-						}
-					}
-					
-					wp1.linkBidirectional(wp2);
-					
-					intersection_found:
-				} // niter2
-			} // piter2
-		} // niter
-	} // piter
-	*/
-	/*
-	for(list<Line>::iterator iter = walls.begin(); iter != walls.end(); iter++) {
-		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(), -1));
-		waypoints.push_back(new WallWaypoint(iter->getA(), iter->getB(),  1));
-		waypoints.push_back(new WallWaypoint(iter->getB(), iter->getA(), -1));
-		waypoints.push_back(new WallWaypoint(iter->getB(), iter->getA(),  1));
-	}
-	
-	// two points A,B will be connected iff:
-	// - they are directReachable() (ie. the line between them doesn't cross a
-	//   polygon edge
-	// - i
-	
-	
-	// Now mesh-connect all waypoints
-	for(list<Waypoint*>::iterator i = waypoints.begin(); i != waypoints.end(); ++i) {
-		for(list<Waypoint*>::iterator j = waypoints.begin(); j != waypoints.end(); ++j) {
-			if(directReachable((*i)->getPosition(), (*j)->getPosition())) {
-				(*i)->linkBidirectional(**j);
-			}
-		} // for j
-	} // for i
-	*/
+	return nearestPoint;
 }
-	
 
 void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path) {
-	generateMap();
 	
-	// In this class, paths directly from/to wall endpoints are generally
-	// allowed (internally), since the optimal (non-trivial) path always is along walls.
-	// This means however the user could "break out" by walking exactly onto a
-	// wall intersection and from there he could chose any side of the wall to
-	// continue. In order to avoid this, we forbid the target to be at such a
-	// position.
+	// find innermost walkable component that contains source
+	// (root component is walkable, holes of holes of walkable components are
+	// walkable)
 	
-	/*
-	list<Waypoint*>::iterator iter;
-	for(iter = waypoints.begin(); iter != waypoints.end(); iter++) {
-		if(target == (*iter)->getPosition()) {
-			return;
+	Component *island = rootComponent, *c;
+	do {
+		c = island;
+		island = 0;
+		
+		// it_hole = hole (not walkable)
+		for(Component::hole_iter_t it_hole = c->holes.begin(); it_hole != c->holes.end(); ++it_hole) {
+			// it_island = walkable area inside hole
+			for(Component::hole_iter_t it_island = (*it_hole)->holes.begin(); it_island != (*it_hole)->holes.end(); ++it_island) {
+				if(island->outerBoundary.hasPoint(source)) {
+					island = *it_island;
+					// break out of both "for" loops
+					it_island = (*it_hole)->holes.end();
+					it_hole = (*it_hole)->holes.end();
+				}
+			}
+		}
+	} while(island);
+	
+	
+	// if target not in the component -> target := nearest polygon node
+	// to target
+	
+	VirtualPosition nearTarget;
+	if(c->outerBoundary.hasPoint(target)) {
+		nearTarget = target;
+		for(Component::hole_iter_t it_hole = c->holes.begin(); it_hole != c->holes.end(); ++it_hole) {
+			if((*it_hole)->outerBoundary.hasPoint(target)) {
+				nearTarget = findBoundaryPoint(source, target, (*it_hole)->outerBoundary);
+				break;
+			}
 		}
 	}
-	
-	if(directReachable(source, target)) {
-		path.push_back(target);
-		return;
+	else {
+		nearTarget = findBoundaryPoint(source, target, c->outerBoundary);
 	}
 	
-	// Create temporary waypoints for source and target
-	Waypoint *s = new Waypoint(source),
-		 *t = new Waypoint(target);
-	waypoints.push_back(s);
-	waypoints.push_back(t);
+	// TODO: generate map for component that includes source and target
 	
+	Waypoint sourceWP(source), targetWP(nearTarget);
 	
-	// Now connect them to all other reachable points
-	for(iter = waypoints.begin(); iter != waypoints.end(); iter++) {
-		if(*iter != t && directReachable(t->getPosition(), (*iter)->getPosition())) {
-			t->linkBidirectional(**iter);
-		}
-		if(*iter != s && directReachable(s->getPosition(), (*iter)->getPosition())) {
-			s->linkBidirectional(**iter);
-		}
-	}
+	generateMapForComponent(c, sourceWP, targetWP);
 	
-	getPath(*s, *t, path);
+	// compute path
+		
+		cdbg << "sourceWP: " <<  sourceWP.getPosition()
+			<< " neighbor count: " << sourceWP.neighbours.size() <<   "\n";
 	
-	waypoints.pop_back();
-	waypoints.pop_back();
-	
-	delete s;
-	delete t;
-	
-	*/
+	getPath(sourceWP, targetWP, path);
 }
 
 void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
@@ -325,12 +236,20 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 	push_heap(border.begin(), border.end(), Waypoint::comparePointer);
 	
 	while(!border.empty()) {
+		cdbg << "border size: " << border.size();
+		
 		pop_heap(border.begin(), border.end(), Waypoint::comparePointer);
 		cheapestNode = border.back();
 		border.pop_back();
 		
+		cdbg << "cheapestNode: " <<  cheapestNode->getPosition()
+			<< " neighbor count: " << cheapestNode->neighbours.size() <<   "\n";
+		
+		
 		Waypoint::NeighbourIterator iter;
 		for(iter = cheapestNode->beginNeighbours(); iter != cheapestNode->endNeighbours(); iter++) {
+			cdbg << "cheapestNode neighbor: " << (*iter)->getPosition() << "\n";
+		
 			double cost = cheapestNode->costTo(*iter);
 			double newCost = cheapestNode->getCostSum() + cost;
 			
@@ -363,27 +282,30 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 		Waypoint* p = &target;
 		cdbg << "found path:\n";
 		do {
-			cdbg << *p << "\n";
+			cdbg << p->getPosition() << "\n";
 			path.push_front(p->getPosition());
 			p = p->cheapestParent;
 		} while(p && *p != source);
 	}
+	else {
+		cdbg << "did not find path :(\n";
+	}
 } // getPath
 
-#ifdef DEBUG
-std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp) {
-	/*
-	const Ground::WallWaypoint* wwp = dynamic_cast<const Ground::WallWaypoint*>(&wp);
-	if(wwp) {
-		os << "WallWaypoint(" << wwp->position << "," << wwp->wallEnd << "," << wwp->side << ")";
-	}
-	else {
-		os << "Waypoint(" << wp.position << ")";
-	}
-	*/
-	return os;
-}
-#endif // DEBUG
+//#ifdef DEBUG
+//std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp) {
+	//[>
+	//const Ground::WallWaypoint* wwp = dynamic_cast<const Ground::WallWaypoint*>(&wp);
+	//if(wwp) {
+		//os << "WallWaypoint(" << wwp->position << "," << wwp->wallEnd << "," << wwp->side << ")";
+	//}
+	//else {
+		//os << "Waypoint(" << wp.position << ")";
+	//}
+	//*/
+	//return os;
+//}
+//#endif // DEBUG
 
 
 } // namespace

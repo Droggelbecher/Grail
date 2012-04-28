@@ -38,15 +38,19 @@ namespace grail {
 class Ground {
 	public:
 		class Waypoint {
+				// TODO:
+				// storing pointers to waypoints in STL structures is not a
+				// very good idea. Better: store a map
+				// Position => Waypoint { list<Position> neighbors; costSum;
+				// position; cheapestParent }
+			
 			public:
 				typedef list<Waypoint*>::iterator NeighbourIterator;
 				
-			private:
 				VirtualPosition position;
 				list<Waypoint*> neighbours;
 				double costSum;
 				
-			public:
 				Waypoint(const Waypoint& other)
 					: position(other.position), neighbours(other.neighbours), costSum(other.costSum) { }
 				Waypoint& operator=(const Waypoint& other) {
@@ -55,11 +59,13 @@ class Ground {
 					costSum = other.costSum;
 					return *this;
 				}
+				
+			public:
 				Waypoint(VirtualPosition position) : position(position), costSum(0) { }
 				virtual ~Waypoint() { reset(); }
 				
 				void link(Waypoint& other) { neighbours.push_back(&other); }
-				void unlink(Waypoint& other) { neighbours.remove(&other); }
+				void unlink(Waypoint& other) {/* neighbours.remove(&other);*/ }
 				
 				Waypoint* cheapestParent;
 				
@@ -71,7 +77,7 @@ class Ground {
 					cheapestParent = 0;
 					NeighbourIterator iter;
 					for(iter = beginNeighbours(); iter != endNeighbours(); ++iter) {
-						(*iter)->unlink(*this);
+						//(*iter)->unlink(*this);
 					}
 				}
 				
@@ -91,7 +97,7 @@ class Ground {
 				NeighbourIterator beginNeighbours() { return neighbours.begin(); }
 				NeighbourIterator endNeighbours() { return neighbours.end(); }
 				friend class Ground;
-				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
+		//		friend std::ostream& operator<<(std::ostream&, const Waypoint&);
 		};
 		
 		/**
@@ -108,6 +114,21 @@ class Ground {
 				const polygon_t &outerBoundary;
 				std::vector<Component*> holes;
 				std::vector<Waypoint> waypoints;
+				
+				void generateWaypoints() {
+					std::vector<const polygon_t*> polygons;
+					polygons.push_back(&(outerBoundary));
+					for(Component::hole_iter_t iter = holes.begin(); iter != holes.end(); ++iter) {
+						polygons.push_back(&((*iter)->outerBoundary));
+					}
+	
+					waypoints.clear();
+					for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
+						for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
+							waypoints.push_back(Waypoint(*ni));
+						}
+					}
+				}
 		};
 		
 		Ground();
@@ -135,8 +156,9 @@ class Ground {
 		 * appropriately to allow pathfinding.
 		 * Only call once or you will get unecessary waypoints.
 		 */
-		void generateMap() { generateMapForComponent(0); }
-		void generateMapForComponent(Component* component);
+		//void generateMap() { generateMapForComponent(0); }
+		//void generateMapForComponent(Component* component);
+		void generateMapForComponent(Component* component, Waypoint& source, Waypoint& target);
 		
 		/**
 		 * Add a new waypoint. Note that this will be pretty useless if you
@@ -147,9 +169,10 @@ class Ground {
 		 */
 		//Waypoint& addWaypoint(VirtualPosition p);
 		
+			
 		/**
 		 */
-		bool directReachable(Component*, Waypoint, Waypoint);
+		bool directReachable(Component*, Waypoint&, Waypoint&);
 		
 		/**
 		 * Returns a points of nodes that discribe a path from source to target.
@@ -166,6 +189,8 @@ class Ground {
 	private:
 	#endif
 		
+		VirtualPosition findBoundaryPoint(VirtualPosition source, VirtualPosition target, const Component::polygon_t& poly);
+		
 		//list<Line> walls;
 		//list<Waypoint*> waypoints;
 		
@@ -179,9 +204,9 @@ class Ground {
 };
 
 
-#ifdef DEBUG
-std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp);
-#endif // DEBUG
+//#ifdef DEBUG
+//std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp);
+//#endif // DEBUG
 
 
 } // namespace grail

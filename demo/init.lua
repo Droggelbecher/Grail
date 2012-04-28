@@ -47,7 +47,6 @@ function initChapter(n)
 		)
 		local g = s:getGround()
 		g:addPolygon(p)
-		--g:generateMap()
 		
 		main_character.mc:setPosition(VP(5000, 2700))
 		s:addActor(mc)

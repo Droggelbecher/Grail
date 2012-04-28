@@ -307,8 +307,6 @@ TEST(Ground, directReachable) {
 	p3.push_back(pos[P34]);
 	g.addPolygon(p3);
 	
-	g.generateMap();
-	
 	// Root component
 	
 	char reachable[X6+1][X6+2] = {
@@ -338,6 +336,8 @@ TEST(Ground, directReachable) {
 			assert(reachable[i][j] == reachable[j][i]);
 		}
 	}
+	
+	g.rootComponent->generateWaypoints();
 	
 	for(int i = 0; i<=X6; ++i) {
 		for(int j = 0; j<=X6; ++j) {
