@@ -353,8 +353,8 @@ TEST(Ground, directReachable) {
 					CHECK_EQUAL(
 						g.directReachable(
 							g.rootComponent,
-							g.rootComponent->waypoints[i],
-							g.rootComponent->waypoints[j]
+							*g.rootComponent->getWaypoints()[i],
+							*g.rootComponent->getWaypoints()[j]
 						), 1
 					);
 				}
@@ -363,8 +363,8 @@ TEST(Ground, directReachable) {
 					CHECK_EQUAL(
 						g.directReachable(
 							g.rootComponent,
-							g.rootComponent->waypoints[i],
-							g.rootComponent->waypoints[j]
+							*g.rootComponent->getWaypoints()[i],
+							*g.rootComponent->getWaypoints()[j]
 						), 0
 					);
 				}

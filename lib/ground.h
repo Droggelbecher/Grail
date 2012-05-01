@@ -38,12 +38,6 @@ namespace grail {
 class Ground {
 	public:
 		class Waypoint {
-				// TODO:
-				// storing pointers to waypoints in STL structures is not a
-				// very good idea. Better: store a map
-				// Position => Waypoint { list<Position> neighbors; costSum;
-				// position; cheapestParent }
-			
 			public:
 				typedef list<Waypoint*>::iterator NeighbourIterator;
 				
@@ -77,7 +71,7 @@ class Ground {
 					cheapestParent = 0;
 					NeighbourIterator iter;
 					for(iter = beginNeighbours(); iter != endNeighbours(); ++iter) {
-						//(*iter)->unlink(*this);
+						(*iter)->unlink(*this);
 					}
 				}
 				
@@ -109,11 +103,41 @@ class Ground {
 			public:
 				typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 				typedef std::vector<Component*>::iterator hole_iter_t;
-				typedef std::vector<Waypoint>::iterator waypoint_iter_t;
-				Component(const polygon_t& ob) : outerBoundary(ob) { }
+				typedef std::vector<Component*>::const_iterator const_hole_iter_t;
+				typedef std::vector<Waypoint*>::iterator waypoint_iter_t;
+			
+			private:
 				const polygon_t &outerBoundary;
 				std::vector<Component*> holes;
-				std::vector<Waypoint> waypoints;
+				std::vector<Waypoint*> waypoints;
+				
+			public:
+				Component(const polygon_t& ob) : outerBoundary(ob) { }
+				
+				const polygon_t& getOuterBoundary() { return outerBoundary; }
+				const std::vector<Component*>& getHoles() { return holes; }
+				std::vector<Waypoint*>& getWaypoints() { return waypoints; }
+				
+				void addHole(Component* hole) {
+					holes.push_back(hole);
+				}
+				
+				void addWaypoint(const Waypoint& wp) {
+					waypoints.push_back(new Waypoint(wp));
+				}
+				
+				Waypoint* createWaypoint(VirtualPosition p) {
+					Waypoint *r = new Waypoint(p);
+					waypoints.push_back(r);
+					return r;
+				}
+				
+				void clearWaypoints() {
+					for(waypoint_iter_t i = waypoints.begin(); i != waypoints.end(); ++i) {
+						delete *i;
+					}
+					waypoints.clear();
+				}
 				
 				void generateWaypoints() {
 					std::vector<const polygon_t*> polygons;
@@ -125,7 +149,7 @@ class Ground {
 					waypoints.clear();
 					for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
 						for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
-							waypoints.push_back(Waypoint(*ni));
+							waypoints.push_back(new Waypoint(*ni));
 						}
 					}
 				}
@@ -154,11 +178,18 @@ class Ground {
 		 * Call this after having added all needed walls/polygons.
 		 * It will generate waypoints for all corners and connect them
 		 * appropriately to allow pathfinding.
-		 * Only call once or you will get unecessary waypoints.
+		 * 
+		 * @param component the component to construct waypoints for
+		 * @param src source position for navigation
+		 * @param tgt target position for navigation
+		 * @param source used to return address of constructed source waypoint
+		 * @param target used to return address of constructed target waypoint
+		 * 
 		 */
 		//void generateMap() { generateMapForComponent(0); }
 		//void generateMapForComponent(Component* component);
-		void generateMapForComponent(Component* component, Waypoint& source, Waypoint& target);
+		//void generateMapForComponent(Component* component, Waypoint& source, Waypoint& target);
+		void generateMapForComponent(Component* component, VirtualPosition src, VirtualPosition tgt, Waypoint*& source, Waypoint*& target);
 		
 		/**
 		 * Add a new waypoint. Note that this will be pretty useless if you
