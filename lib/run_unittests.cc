@@ -71,7 +71,7 @@ TEST(Line, touchIntersect) {
 	Line li(VirtualPosition(0,-10), VirtualPosition(0,10));
 	
 	// "Weak" intersections (intersection point is one lines end point)
-	// should be reportet as not intersecting and @ref reportWeak is false
+	// should be reported as not intersecting and @ref reportWeak is false
 	
 	for(double r = eps; r < M_PI; r += eps) {
 		Line li2(VirtualPosition(0,0), VirtualPosition(10.0*sin(r), 10.0*cos(r)));
