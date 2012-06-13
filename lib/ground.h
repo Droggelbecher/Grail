@@ -41,12 +41,10 @@ class Ground {
 			public:
 				typedef list<Waypoint*>::iterator NeighbourIterator;
 				
-			private:
 				VirtualPosition position;
 				list<Waypoint*> neighbours;
 				double costSum;
 				
-			public:
 				Waypoint(const Waypoint& other)
 					: position(other.position), neighbours(other.neighbours), costSum(other.costSum) { }
 				Waypoint& operator=(const Waypoint& other) {
@@ -55,11 +53,13 @@ class Ground {
 					costSum = other.costSum;
 					return *this;
 				}
+				
+			public:
 				Waypoint(VirtualPosition position) : position(position), costSum(0) { }
 				virtual ~Waypoint() { reset(); }
 				
 				void link(Waypoint& other) { neighbours.push_back(&other); }
-				void unlink(Waypoint& other) { neighbours.remove(&other); }
+				void unlink(Waypoint& other) {/* neighbours.remove(&other);*/ }
 				
 				Waypoint* cheapestParent;
 				
@@ -91,18 +91,68 @@ class Ground {
 				NeighbourIterator beginNeighbours() { return neighbours.begin(); }
 				NeighbourIterator endNeighbours() { return neighbours.end(); }
 				friend class Ground;
-				friend std::ostream& operator<<(std::ostream&, const Waypoint&);
+		//		friend std::ostream& operator<<(std::ostream&, const Waypoint&);
 		};
 		
+		/**
+		 * A connected piece of ground area, bounded by one polygon for the
+		 * outer bondary (@ref outerBoundary) and an arbitrary number of
+		 * polygons for the inner boundary (@ref holes).
+		 */
 		struct Component {
 			public:
 				typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 				typedef std::vector<Component*>::iterator hole_iter_t;
-				typedef std::vector<Waypoint>::iterator waypoint_iter_t;
-				Component(const polygon_t& ob) : outerBoundary(ob) { }
+				typedef std::vector<Component*>::const_iterator const_hole_iter_t;
+				typedef std::vector<Waypoint*>::iterator waypoint_iter_t;
+			
+			private:
 				const polygon_t &outerBoundary;
 				std::vector<Component*> holes;
-				std::vector<Waypoint> waypoints;
+				std::vector<Waypoint*> waypoints;
+				
+			public:
+				Component(const polygon_t& ob) : outerBoundary(ob) { }
+				
+				const polygon_t& getOuterBoundary() { return outerBoundary; }
+				const std::vector<Component*>& getHoles() { return holes; }
+				std::vector<Waypoint*>& getWaypoints() { return waypoints; }
+				
+				void addHole(Component* hole) {
+					holes.push_back(hole);
+				}
+				
+				void addWaypoint(const Waypoint& wp) {
+					waypoints.push_back(new Waypoint(wp));
+				}
+				
+				Waypoint* createWaypoint(VirtualPosition p) {
+					Waypoint *r = new Waypoint(p);
+					waypoints.push_back(r);
+					return r;
+				}
+				
+				void clearWaypoints() {
+					for(waypoint_iter_t i = waypoints.begin(); i != waypoints.end(); ++i) {
+						delete *i;
+					}
+					waypoints.clear();
+				}
+				
+				void generateWaypoints() {
+					std::vector<const polygon_t*> polygons;
+					polygons.push_back(&(outerBoundary));
+					for(Component::hole_iter_t iter = holes.begin(); iter != holes.end(); ++iter) {
+						polygons.push_back(&((*iter)->outerBoundary));
+					}
+	
+					waypoints.clear();
+					for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
+						for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
+							waypoints.push_back(new Waypoint(*ni));
+						}
+					}
+				}
 		};
 		
 		Ground();
@@ -112,26 +162,34 @@ class Ground {
 		 * Add walls from the edges of the given polygon.
 		 * 
 		 * @pre {
-		 * 	@ref polygon does not intersect any polygon added before. (Else
-		 * 	the behaviour is undefined)
+		 * 	@ref polygon does not intersect any polygon added before.
+		 * 	Else the behaviour is undefined
 		 * }
 		 * 
 		 * @param polygon The polygon to add.
 		 * @param node Only used internally, leave at 0.
 		 */
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygon(polygon, 0); }
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
+		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygonToComponent(polygon, 0); }
+		void addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
 		
 //		const list<Line>& getWalls() const { return walls; }
 		
 		/**
-		 * Call this after having added all needed walls.
+		 * Call this after having added all needed walls/polygons.
 		 * It will generate waypoints for all corners and connect them
 		 * appropriately to allow pathfinding.
-		 * Only call once or you will get unecessary waypoints.
+		 * 
+		 * @param component the component to construct waypoints for
+		 * @param src source position for navigation
+		 * @param tgt target position for navigation
+		 * @param source used to return address of constructed source waypoint
+		 * @param target used to return address of constructed target waypoint
+		 * 
 		 */
-		void generateMap() { generateMap(0); }
-		void generateMap(Component* component);
+		//void generateMap() { generateMapForComponent(0); }
+		//void generateMapForComponent(Component* component);
+		//void generateMapForComponent(Component* component, Waypoint& source, Waypoint& target);
+		void generateMapForComponent(Component* component, VirtualPosition src, VirtualPosition tgt, Waypoint*& source, Waypoint*& target);
 		
 		/**
 		 * Add a new waypoint. Note that this will be pretty useless if you
@@ -142,9 +200,10 @@ class Ground {
 		 */
 		//Waypoint& addWaypoint(VirtualPosition p);
 		
+			
 		/**
 		 */
-		bool directReachable(Component*, Waypoint, Waypoint);
+		bool directReachable(Component*, Waypoint&, Waypoint&);
 		
 		/**
 		 * Returns a points of nodes that discribe a path from source to target.
@@ -161,6 +220,8 @@ class Ground {
 	private:
 	#endif
 		
+		VirtualPosition findBoundaryPoint(VirtualPosition source, VirtualPosition target, const Component::polygon_t& poly);
+		
 		//list<Line> walls;
 		//list<Waypoint*> waypoints;
 		
@@ -174,9 +235,9 @@ class Ground {
 };
 
 
-#ifdef DEBUG
-std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp);
-#endif // DEBUG
+//#ifdef DEBUG
+//std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp);
+//#endif // DEBUG
 
 
 } // namespace grail

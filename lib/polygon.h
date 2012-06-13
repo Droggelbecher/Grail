@@ -9,6 +9,7 @@ using std::list;
 #include "area.h"
 #include "vector2d.h"
 #include "line.h"
+#include <boost/shared_ptr.hpp>
 
 namespace grail {
 
@@ -17,8 +18,11 @@ namespace grail {
 template<typename Node, typename GetPosition>
 class Polygon : public Area {
 	public:
+		typedef boost::shared_ptr<Polygon<Node, GetPosition> > Ptr;
+		
 		enum Orientation { UNKNOWN, CW, CCW };
 		enum LineDirection { NOT_ATTACHED, IN, OUT, NEITHER };
+		enum Area { ALL, INNER };
 		
 		class LineIterator {
 				const Polygon *parent;
@@ -75,6 +79,9 @@ class Polygon : public Area {
 		void clear() { nodes.clear(); orientation = UNKNOWN; }
 		
 	private:
+		/**
+		 * Return true iff TODO
+		 */
 		static bool intersects(VirtualPosition q, VirtualPosition pa, VirtualPosition pb, bool right);
 		
 		void updateOrientation() const;
@@ -87,6 +94,9 @@ class Polygon : public Area {
 struct IsPosition {
 	static VirtualPosition getPosition(const VirtualPosition& p) { return p; }
 };
+
+typedef Polygon<VirtualPosition, IsPosition> VirtualPositionPolygon;
+	
 
 } // namespace grail
 

@@ -75,7 +75,14 @@ void Actor::walkTo(Actor::Ptr actor) {
 }
 
 void Actor::walkTo(VirtualPosition p) {
-	walkStraight(p);
+	//walkStraight(p);
+	cdbg << "walkTo " << p << "\n";
+	Scene::Ptr s = Game::getInstance().getCurrentScene();
+	if(s) {
+		cdbg << "s is.\n";
+		walkPath.clear();
+		s->getGround().getPath(position, p, walkPath);
+	}
 }
 
 void Actor::walk(const Path& path) {

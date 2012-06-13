@@ -136,6 +136,8 @@ extern "C" int init(lua_State* L) {
 					.def("linkBidirectional", &Ground::Waypoint::linkBidirectional)
 				]
 			
+			.def("addPolygon", &Ground::addPolygon)
+			//.def("generateMap", &Ground::generateMap)
 			//.def("addWall", &Ground::addWall)
 			//.def("addWalls", &Ground::addWalls)
 			//.def("getWalls", &Ground::getWalls)
@@ -184,6 +186,13 @@ extern "C" int init(lua_State* L) {
 		class_<ImageSprite, Animation, Animation::Ptr>("ImageSprite")
 			.def(constructor<std::string>())
 			.def(constructor<std::string, size_t>())
+			,
+		
+		class_<VirtualPositionPolygon, VirtualPositionPolygon::Ptr>("VirtualPositionPolygon")
+			.def(constructor<>())
+			.def("hasPoint", &VirtualPositionPolygon::hasPoint)
+			.def("push_back", &VirtualPositionPolygon::push_back)
+			.def("clear", &VirtualPositionPolygon::clear)
 			,
 		
 		class_<UserInterface, UserInterfaceWrapper, UserInterface::Ptr>("UserInterface")

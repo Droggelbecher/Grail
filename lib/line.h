@@ -11,9 +11,21 @@ namespace grail {
 class Line {
 		VirtualPosition a, b;
 	public:
+		
+		enum {
+			THIS_INNER = 0x01,
+			THIS_BOUNDARY = 0x02,
+			OTHER_INNER = 0x04,
+			OTHER_BOUNDARY = 0x08,
+			
+			TOUCH_OR_INTERSECT = THIS_INNER | THIS_BOUNDARY | OTHER_INNER | OTHER_BOUNDARY,
+			REAL_INTERSECT = THIS_INNER | OTHER_INNER
+		} Flags;
+		
 		Line(VirtualPosition a, VirtualPosition b) : a(a), b(b) { }
 		
-		bool intersects(const Line& other) const;
+		bool intersects(const Line& other, int flags = REAL_INTERSECT) const;
+		VirtualPosition intersection(const Line& other) const;
 		
 		VirtualPosition getA() const { return a; }
 		VirtualPosition getB() const { return b; }

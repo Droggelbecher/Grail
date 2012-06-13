@@ -53,6 +53,35 @@ TEST(Vector2d, nearestDirection) {
 	CHECK_EQUAL((int)VirtualPosition(-10, -9).nearestDirection(4), 3);
 }
 
+TEST(Line, realIntersect) {
+	double eps = 1.0; //0.001;
+	Line li(VirtualPosition(0,-10), VirtualPosition(0,10));
+	
+	for(double r = eps; r < M_PI; r += eps) {
+		Line li2(VirtualPosition(-10.0*sin(r), -10.0*cos(r)), VirtualPosition(10.0*sin(r), 10.0*cos(r)));
+		CHECK_EQUAL(li.intersects(li2, Line::TOUCH_OR_INTERSECT), true);
+		CHECK_EQUAL(li2.intersects(li, Line::TOUCH_OR_INTERSECT), true);
+		CHECK_EQUAL(li.intersects(li2, Line::REAL_INTERSECT), true);
+		CHECK_EQUAL(li2.intersects(li, Line::REAL_INTERSECT), true);
+	}
+}
+
+TEST(Line, touchIntersect) {
+	double eps = 1.0; //0.001;
+	Line li(VirtualPosition(0,-10), VirtualPosition(0,10));
+	
+	// "Weak" intersections (intersection point is one lines end point)
+	// should be reported as not intersecting and @ref reportWeak is false
+	
+	for(double r = eps; r < M_PI; r += eps) {
+		Line li2(VirtualPosition(0,0), VirtualPosition(10.0*sin(r), 10.0*cos(r)));
+		CHECK_EQUAL(li.intersects(li2, Line::TOUCH_OR_INTERSECT), true);
+		CHECK_EQUAL(li2.intersects(li, Line::TOUCH_OR_INTERSECT), true);
+		CHECK_EQUAL(li.intersects(li2, Line::REAL_INTERSECT), false);
+		CHECK_EQUAL(li2.intersects(li, Line::REAL_INTERSECT), false);
+	}
+}
+
 TEST(Polygon, LineIterator) {
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
@@ -278,8 +307,6 @@ TEST(Ground, directReachable) {
 	p3.push_back(pos[P34]);
 	g.addPolygon(p3);
 	
-	g.generateMap();
-	
 	// Root component
 	
 	char reachable[X6+1][X6+2] = {
@@ -310,6 +337,8 @@ TEST(Ground, directReachable) {
 		}
 	}
 	
+	g.rootComponent->generateWaypoints();
+	
 	for(int i = 0; i<=X6; ++i) {
 		for(int j = 0; j<=X6; ++j) {
 			//bool expected = (reachable[i][j] == '1');
@@ -320,20 +349,22 @@ TEST(Ground, directReachable) {
 				//	<< " wp[j]=" << g.rootComponent->waypoints[j].getPosition()
 				//	<< "\n";
 				if(reachable[i][j] == '1') {
+					info("i=%d j=%d 1", i, j);
 					CHECK_EQUAL(
 						g.directReachable(
 							g.rootComponent,
-							g.rootComponent->waypoints[i],
-							g.rootComponent->waypoints[j]
+							*g.rootComponent->getWaypoints()[i],
+							*g.rootComponent->getWaypoints()[j]
 						), 1
 					);
 				}
 				else {
+					info("i=%d j=%d 0", i, j);
 					CHECK_EQUAL(
 						g.directReachable(
 							g.rootComponent,
-							g.rootComponent->waypoints[i],
-							g.rootComponent->waypoints[j]
+							*g.rootComponent->getWaypoints()[i],
+							*g.rootComponent->getWaypoints()[j]
 						), 0
 					);
 				}
