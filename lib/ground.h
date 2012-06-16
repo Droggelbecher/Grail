@@ -3,6 +3,8 @@
 #ifndef GROUND_H
 #define GROUND_H
 
+#include "visualize.h"
+
 #include <string>
 #include <list>
 #include <vector>
@@ -87,11 +89,20 @@ class Ground {
 				void setCostSum(double s) { costSum = s; }
 				double getCostSum() { return costSum; }
 				double costTo(Waypoint* other) { return (position - other->position).length(); }
-				static int comparePointer(Waypoint* a, Waypoint* b) { return a->costSum - b->costSum; }
+				static int comparePointer(Waypoint* a, Waypoint* b) {
+					return a->costSum > b->costSum;
+				}
 				NeighbourIterator beginNeighbours() { return neighbours.begin(); }
 				NeighbourIterator endNeighbours() { return neighbours.end(); }
-				friend class Ground;
-		//		friend std::ostream& operator<<(std::ostream&, const Waypoint&);
+				
+				bool hasConnection(Waypoint* other) {
+					for(NeighbourIterator iter = beginNeighbours(); iter != endNeighbours(); ++iter) {
+						if(*iter == other) { return true; }
+					}
+					return false;
+				}
+				
+			friend class Ground;
 		};
 		
 		/**
@@ -105,6 +116,7 @@ class Ground {
 				typedef std::vector<Component*>::iterator hole_iter_t;
 				typedef std::vector<Component*>::const_iterator const_hole_iter_t;
 				typedef std::vector<Waypoint*>::iterator waypoint_iter_t;
+				typedef std::vector<Waypoint*>::const_iterator const_waypoint_iter_t;
 			
 			private:
 				const polygon_t &outerBoundary;
@@ -146,13 +158,37 @@ class Ground {
 						polygons.push_back(&((*iter)->outerBoundary));
 					}
 	
-					waypoints.clear();
+					//waypoints.clear();
 					for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
 						for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
 							waypoints.push_back(new Waypoint(*ni));
 						}
 					}
 				}
+				
+				#if VISUALIZE_GROUND
+				void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+					#if VISUALIZE_COMPONENTS
+					outerBoundary.renderAt(target, ticks, p);
+					for(const_hole_iter_t iter = holes.begin(); iter != holes.end(); ++iter) {
+						(*iter)->renderAt(target, ticks, p);
+					}
+					#endif
+					
+					#if VISUALIZE_MAP
+					for(Component::const_waypoint_iter_t wi = waypoints.begin(); wi != waypoints.end(); ++wi) {
+						for(Component::const_waypoint_iter_t wj = wi; wj != waypoints.end(); ++wj) {
+							
+							if((*wi)->hasConnection(*wj)) {
+								PhysicalPosition a = conv<VirtualPosition, PhysicalPosition>((*wi)->getPosition() + p);
+								PhysicalPosition b = conv<VirtualPosition, PhysicalPosition>((*wj)->getPosition() + p);
+								aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xff00fffa0);
+							}
+						}
+					}
+					#endif
+				}
+				#endif
 		};
 		
 		Ground();
@@ -213,6 +249,13 @@ class Ground {
 		/// ditto.
 		void getPath(Waypoint& source, Waypoint& target, Path& path);
 		
+		#if VISUALIZE_GROUND
+		void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+			if(rootComponent) {
+				rootComponent->renderAt(target, ticks, p);
+			}
+		}
+		#endif
 		
 	#if DEBUG
 	public:

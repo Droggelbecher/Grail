@@ -42,13 +42,33 @@ function initChapter(n)
 		s.pumpkin3:setYOffset(-700)
 		s:addActor(s.pumpkin3)
 		
+		--[[ ]]--
 		local p = Poly(
-			VP(0, 2000), VP(8000, 2000), VP(8000, 3000), VP(0, 3000)
+			VP(0, 2500), VP(2000, 1800), VP(4000, 2700), VP(5000, 2200),
+			VP(8000, 2500), VP(8000, 3000), VP(0, 3000)
 		)
+		
 		local g = s:getGround()
 		g:addPolygon(p)
-		
 		main_character.mc:setPosition(VP(5000, 2700))
+		--]]--
+		
+		--[[ ground test
+		local p1 = Poly(
+			VP(1000, 1000), VP(3000, 1000), VP(3000, 3000), VP(1000, 3000)
+		)
+		
+		local p2 = Poly(
+			VP(1200, 1200), VP(2800, 1200), VP(2800, 2800), VP(1200, 2800)
+		)
+		
+		local g = s:getGround()
+		g:addPolygon(p1)
+		g:addPolygon(p2)
+		
+		main_character.mc:setPosition(VP(2000, 1100))
+		--]]--
+		
 		s:addActor(mc)
 		
 		local Audio = Audio()

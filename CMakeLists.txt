@@ -31,7 +31,7 @@ find_package(OpenAL REQUIRED)
 if(debug)
 	set(CMAKE_C_FLAGS "$ENV{CFLAGS} -g -O0 -Wall -ansi -pedantic -pipe -Wl,--no-as-needed -lopenal -lalure -lalut")
 	set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -g -O0 -Wall -ansi -pedantic -pipe -Wl,--no-as-needed -lopenal -lalure -lalut")
-	add_definitions(-DDEBUG)
+	add_definitions(-DDEBUG -DWITH_VISUALIZATION)
 endif(debug)
 
 set(GRAIL_LIBDIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")

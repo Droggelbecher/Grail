@@ -35,6 +35,11 @@ void Actor::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 	if(animation) {
 		animation->renderAt(target, ticks, getUpperLeftCorner() + p + VirtualPosition(0, yOffset));
 	}
+	#if VISUALIZE_HOTSPOTS
+		PhysicalPosition pos = conv<VirtualPosition, PhysicalPosition>(getPosition() + p);
+		aalineColor(target, pos.getX() - 10, pos.getY() - 10, pos.getX() + 10, pos.getY() + 10, 0x00ff00ff);
+		aalineColor(target, pos.getX() - 10, pos.getY() + 10, pos.getX() + 10, pos.getY() - 10, 0x00ff00ff);
+	#endif
 }
 
 void Actor::addAnimation(std::string mode, Animation::Ptr animation) {

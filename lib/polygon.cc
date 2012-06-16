@@ -148,6 +148,17 @@ void Polygon<Node, GetPosition>::updateOrientation() const {
 	
 	orientation = fequal(angleSum / (nodes.size() - 2.0), M_PI) ? CCW : CW;
 }
-	
+
+
+#if VISUALIZE_POLYGONS
+template<typename Node, typename GetPosition>
+void Polygon<Node, GetPosition>::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+	for(LineIterator li = beginLines(); li != endLines(); ++li) {
+		(*li).renderAt(target, ticks, p);
+	}
+}
+#endif
+
+
 } // namespace
 

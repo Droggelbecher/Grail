@@ -12,6 +12,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include "visualize.h"
 #include "classes.h"
 #include "vector2d.h"
 #include "animation.h"
