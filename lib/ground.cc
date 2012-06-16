@@ -126,6 +126,7 @@ void Ground::generateMapForComponent(Component* component, VirtualPosition src, 
 	
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
+	component->clearWaypoints();
 	component->generateWaypoints();
 	
 	source = component->createWaypoint(src);
@@ -209,8 +210,6 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 		nearTarget = findBoundaryPoint(source, target, c->getOuterBoundary());
 	}
 	
-	// TODO: generate map for component that includes source and target
-	
 	Waypoint *sourceWP, *targetWP;
 	
 	generateMapForComponent(c, source, nearTarget, sourceWP, targetWP);
@@ -236,39 +235,48 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 	push_heap(border.begin(), border.end(), Waypoint::comparePointer);
 	
 	while(!border.empty()) {
-		cdbg << "border size: " << border.size();
+		cdbg << "border size: " << border.size() << "\n";
 		
 		pop_heap(border.begin(), border.end(), Waypoint::comparePointer);
 		cheapestNode = border.back();
 		border.pop_back();
 		
 		cdbg << "cheapestNode: " <<  cheapestNode->getPosition()
-			<< " neighbor count: " << cheapestNode->neighbours.size() <<   "\n";
+			<< " costSum: " << cheapestNode->getCostSum() << "\n";
+			//<< " neighbor count: " << cheapestNode->neighbours.size() <<   "\n";
 		
 		
 		Waypoint::NeighbourIterator iter;
 		for(iter = cheapestNode->beginNeighbours(); iter != cheapestNode->endNeighbours(); iter++) {
-			cdbg << "cheapestNode neighbor: " << (*iter)->getPosition() << "\n";
+			cdbg << "  neighbor: " << (*iter)->getPosition() << "\n";
 		
 			double cost = cheapestNode->costTo(*iter);
 			double newCost = cheapestNode->getCostSum() + cost;
 			
-			// Node is totally new to us (neither in 'inner' or in 'border')
-			if(inner.count(*iter) < 1 && count(border.begin(), border.end(), *iter) < 1) {
-				(*iter)->setCostSum(newCost);
-				(*iter)->cheapestParent = cheapestNode;
-				border.push_back(*iter);
-				push_heap(border.begin(), border.end(), Waypoint::comparePointer);
-			}
-			else if(count(border.begin(), border.end(), *iter) > 0) {
-				vector<Waypoint*>::iterator i;
-				i = find(border.begin(), border.end(), *iter);
-				border.erase(i);
-				(*iter)->setCostSum(newCost);
-				(*iter)->cheapestParent = cheapestNode;
-				border.push_back(*iter);
-				push_heap(border.begin(), border.end(), Waypoint::comparePointer);
-				make_heap(border.begin(), border.end(), Waypoint::comparePointer);
+			if(inner.count(*iter) < 1) {
+				// Node is totally new to us (neither in 'inner' or in 'border')
+				// ==> previous cost value is infinity
+				if(count(border.begin(), border.end(), *iter) < 1) {
+					cdbg << "  updating cost: infty -> " << newCost << "\n";
+					
+					(*iter)->setCostSum(newCost);
+					(*iter)->cheapestParent = cheapestNode;
+					border.push_back(*iter);
+					push_heap(border.begin(), border.end(), Waypoint::comparePointer);
+					make_heap(border.begin(), border.end(), Waypoint::comparePointer);
+				}
+				else if(newCost < (*iter)->getCostSum()) {
+					cdbg << "  updating cost: " << (*iter)->getCostSum() << " -> " << newCost << "\n";
+					
+					vector<Waypoint*>::iterator i;
+					i = find(border.begin(), border.end(), *iter);
+					border.erase(i);
+					(*iter)->setCostSum(newCost);
+					(*iter)->cheapestParent = cheapestNode;
+					border.push_back(*iter);
+					push_heap(border.begin(), border.end(), Waypoint::comparePointer);
+					make_heap(border.begin(), border.end(), Waypoint::comparePointer);
+				}
 			}
 		} // for
 		
