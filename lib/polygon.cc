@@ -10,6 +10,12 @@ namespace grail {
 
 template<typename Node, typename GetPosition>
 Polygon<Node, GetPosition>::Polygon() : orientation(UNKNOWN) {
+	printf("Constructing polygon %p\n", this);
+}
+
+template<typename Node, typename GetPosition>
+Polygon<Node, GetPosition>::~Polygon() {
+	printf("Destructing polygon %p\n", this);
 }
 
 template<typename Node, typename GetPosition>

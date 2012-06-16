@@ -27,7 +27,8 @@ Ground::~Ground() {
 	*/
 }
 
-void Ground::addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node) {
+//void Ground::addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node) {
+void Ground::addPolygonToComponent(Polygon<VirtualPosition, IsPosition>::Ptr polygon, Component* node) {
 	if(!node && !rootComponent) {
 		rootComponent = new Component(polygon);
 	}
@@ -35,7 +36,7 @@ void Ground::addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& p
 		addPolygonToComponent(polygon, rootComponent);
 	}
 	else {
-		VirtualPosition pos = *(polygon.beginNodes());
+		VirtualPosition pos = *(polygon->beginNodes());
 		for(Component::const_hole_iter_t iter = node->getHoles().begin(); iter != node->getHoles().end(); ++iter) {
 			if((*iter)->getOuterBoundary().hasPoint(pos)) {
 				addPolygonToComponent(polygon, *iter);
@@ -81,7 +82,7 @@ bool Ground::directReachable(Component* component, Waypoint& wp1, Waypoint& wp2)
 	
 	// Also, if $l crosses a hole, wp2 is not directly reachable from wp1.
 	for(Component::const_hole_iter_t hi = component->getHoles().begin(); hi != component->getHoles().end(); ++hi) {
-		polygon_t p = (*hi)->getOuterBoundary();
+		const polygon_t& p = (*hi)->getOuterBoundary();
 		for(polygon_t::LineIterator li = p.beginLines(); li != p.endLines(); ++li) {
 			//if(l.intersects(*li)) {
 			if(l.intersects(*li, Line::THIS_INNER | Line::OTHER_INNER | Line::OTHER_BOUNDARY)) {

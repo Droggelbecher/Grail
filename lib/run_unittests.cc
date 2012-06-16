@@ -293,19 +293,19 @@ TEST(Ground, directReachable) {
 	p1.push_back(pos[P12]);
 	p1.push_back(pos[P13]);
 	p1.push_back(pos[P14]);
-	g.addPolygon(p1);
+	g.addPolygon(polygon_t::Ptr(&p1));
 	
 	p2.push_back(pos[P21]);
 	p2.push_back(pos[P22]);
 	p2.push_back(pos[P23]);
 	p2.push_back(pos[P24]);
-	g.addPolygon(p2);
+	g.addPolygon(polygon_t::Ptr(&p2));
 	
 	p3.push_back(pos[P31]);
 	p3.push_back(pos[P32]);
 	p3.push_back(pos[P33]);
 	p3.push_back(pos[P34]);
-	g.addPolygon(p3);
+	g.addPolygon(polygon_t::Ptr(&p3));
 	
 	// Root component
 	

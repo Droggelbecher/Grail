@@ -119,14 +119,16 @@ class Ground {
 				typedef std::vector<Waypoint*>::const_iterator const_waypoint_iter_t;
 			
 			private:
-				const polygon_t &outerBoundary;
+				//const polygon_t &outerBoundary;
+				polygon_t::ConstPtr outerBoundary;
 				std::vector<Component*> holes;
 				std::vector<Waypoint*> waypoints;
 				
 			public:
-				Component(const polygon_t& ob) : outerBoundary(ob) { }
+				//Component(const polygon_t& ob) : outerBoundary(&ob) { }
+				Component(polygon_t::ConstPtr ob) : outerBoundary(ob) { }
 				
-				const polygon_t& getOuterBoundary() { return outerBoundary; }
+				const polygon_t& getOuterBoundary() { return *outerBoundary; }
 				const std::vector<Component*>& getHoles() { return holes; }
 				std::vector<Waypoint*>& getWaypoints() { return waypoints; }
 				
@@ -153,9 +155,9 @@ class Ground {
 				
 				void generateWaypoints() {
 					std::vector<const polygon_t*> polygons;
-					polygons.push_back(&(outerBoundary));
+					polygons.push_back(&*(outerBoundary));
 					for(Component::hole_iter_t iter = holes.begin(); iter != holes.end(); ++iter) {
-						polygons.push_back(&((*iter)->outerBoundary));
+						polygons.push_back(&*((*iter)->outerBoundary));
 					}
 	
 					//waypoints.clear();
@@ -169,7 +171,7 @@ class Ground {
 				#if VISUALIZE_GROUND
 				void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
 					#if VISUALIZE_COMPONENTS
-					outerBoundary.renderAt(target, ticks, p);
+					outerBoundary->renderAt(target, ticks, p);
 					for(const_hole_iter_t iter = holes.begin(); iter != holes.end(); ++iter) {
 						(*iter)->renderAt(target, ticks, p);
 					}
@@ -205,8 +207,10 @@ class Ground {
 		 * @param polygon The polygon to add.
 		 * @param node Only used internally, leave at 0.
 		 */
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygonToComponent(polygon, 0); }
-		void addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
+		//void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygonToComponent(polygon, 0); }
+		//void addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
+		void addPolygon(Polygon<VirtualPosition, IsPosition>::Ptr polygon) { addPolygonToComponent(polygon, 0); }
+		void addPolygonToComponent(Polygon<VirtualPosition, IsPosition>::Ptr polygon, Component* node);
 		
 //		const list<Line>& getWalls() const { return walls; }
 		

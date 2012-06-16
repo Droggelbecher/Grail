@@ -20,6 +20,7 @@ template<typename Node, typename GetPosition>
 class Polygon : public Area {
 	public:
 		typedef boost::shared_ptr<Polygon<Node, GetPosition> > Ptr;
+		typedef boost::shared_ptr<const Polygon<Node, GetPosition> > ConstPtr;
 		
 		enum Orientation { UNKNOWN, CW, CCW };
 		enum LineDirection { NOT_ATTACHED, IN, OUT, NEITHER };
@@ -48,6 +49,7 @@ class Polygon : public Area {
 		typedef typename list<Node>::const_iterator ConstNodeIterator;
 		
 		Polygon();
+		virtual ~Polygon();
 		
 		/**
 		 * \return true iff $p is part of the interior of this polygon.
