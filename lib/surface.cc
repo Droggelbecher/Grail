@@ -40,7 +40,7 @@ void Surface::loadFromFile(const std::string& filename) {
 		buildGLTexture(sdlSurface);
 	#else
 		SDL_Surface* image = IMG_Load_RW(getRW(filename, MODE_READ), true);
-		if(!sdlSurface) {
+		if(!image) {
 			throw SDLException(std::string("Could not load surface '") + filename + "'");
 		}
 		SDL_SetColorKey(image, SDL_RLEACCEL, image->format->colorkey);
