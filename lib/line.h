@@ -3,8 +3,14 @@
 #ifndef LINE_H
 #define LINE_H
 
+#include "visualize.h"
+
 #include <ostream>
 #include "vector2d.h"
+
+#if VISUALIZE_LINES
+#include <SDL_gfxPrimitives.h>
+#endif
 
 namespace grail {
 	
@@ -37,6 +43,10 @@ class Line {
 		bool operator!=(const Line& other) const { return !(*this == other); }
 		
 		bool hasPoint(VirtualPosition p) const ;
+		
+		#if VISUALIZE_LINES
+		void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
+		#endif
 };
 
 std::ostream& operator<<(std::ostream&, Line);

@@ -3,6 +3,8 @@
 #ifndef GROUND_H
 #define GROUND_H
 
+#include "visualize.h"
+
 #include <string>
 #include <list>
 #include <vector>
@@ -24,16 +26,6 @@ namespace grail {
  * (e.g. we don't use A*, only dijkstra, we don't pre-calculate a
  * shortest-path map, etc...) However for the expected number of waypoints
  * this will handle, this should be more than suffcient.
- * 
- * TODO: Don't allow users to place individual walls but only polygons.
- * After polygons have been placed, create one point for each side of a
- * corner.
- * 
- * TODO: Usability: Currently a potential user needs to be careful when to add
- * walls, when to add waypoints and when to generate the map. (E.g. adding
- * walls after that is mostly ineffective).
- * Provide assertions and documentation and/or more flexible behaviour to fix
- * this!
  */
 class Ground {
 	public:
@@ -55,7 +47,7 @@ class Ground {
 				}
 				
 			public:
-				Waypoint(VirtualPosition position) : position(position), costSum(0) { }
+				Waypoint(VirtualPosition position) : position(position), costSum(0), cheapestParent(0) { }
 				virtual ~Waypoint() { reset(); }
 				
 				void link(Waypoint& other) { neighbours.push_back(&other); }
@@ -87,11 +79,20 @@ class Ground {
 				void setCostSum(double s) { costSum = s; }
 				double getCostSum() { return costSum; }
 				double costTo(Waypoint* other) { return (position - other->position).length(); }
-				static int comparePointer(Waypoint* a, Waypoint* b) { return a->costSum - b->costSum; }
+				static int comparePointer(Waypoint* a, Waypoint* b) {
+					return a->costSum > b->costSum;
+				}
 				NeighbourIterator beginNeighbours() { return neighbours.begin(); }
 				NeighbourIterator endNeighbours() { return neighbours.end(); }
-				friend class Ground;
-		//		friend std::ostream& operator<<(std::ostream&, const Waypoint&);
+				
+				bool hasConnection(Waypoint* other) {
+					for(NeighbourIterator iter = beginNeighbours(); iter != endNeighbours(); ++iter) {
+						if(*iter == other) { return true; }
+					}
+					return false;
+				}
+				
+			friend class Ground;
 		};
 		
 		/**
@@ -105,16 +106,19 @@ class Ground {
 				typedef std::vector<Component*>::iterator hole_iter_t;
 				typedef std::vector<Component*>::const_iterator const_hole_iter_t;
 				typedef std::vector<Waypoint*>::iterator waypoint_iter_t;
+				typedef std::vector<Waypoint*>::const_iterator const_waypoint_iter_t;
 			
 			private:
-				const polygon_t &outerBoundary;
+				//const polygon_t &outerBoundary;
+				polygon_t::ConstPtr outerBoundary;
 				std::vector<Component*> holes;
 				std::vector<Waypoint*> waypoints;
 				
 			public:
-				Component(const polygon_t& ob) : outerBoundary(ob) { }
+				//Component(const polygon_t& ob) : outerBoundary(&ob) { }
+				Component(polygon_t::ConstPtr ob) : outerBoundary(ob) { }
 				
-				const polygon_t& getOuterBoundary() { return outerBoundary; }
+				const polygon_t& getOuterBoundary() { return *outerBoundary; }
 				const std::vector<Component*>& getHoles() { return holes; }
 				std::vector<Waypoint*>& getWaypoints() { return waypoints; }
 				
@@ -141,18 +145,43 @@ class Ground {
 				
 				void generateWaypoints() {
 					std::vector<const polygon_t*> polygons;
-					polygons.push_back(&(outerBoundary));
+					polygons.push_back(&*(outerBoundary));
 					for(Component::hole_iter_t iter = holes.begin(); iter != holes.end(); ++iter) {
-						polygons.push_back(&((*iter)->outerBoundary));
+						polygons.push_back(&*((*iter)->outerBoundary));
 					}
 	
-					waypoints.clear();
+					//waypoints.clear();
 					for(std::vector<const polygon_t*>::iterator pi = polygons.begin(); pi != polygons.end(); ++pi) {
 						for(polygon_t::ConstNodeIterator ni = (*pi)->beginNodes(); ni != (*pi)->endNodes(); ++ni) {
 							waypoints.push_back(new Waypoint(*ni));
 						}
 					}
 				}
+				
+				#if VISUALIZE_GROUND
+				void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+					#if VISUALIZE_COMPONENTS
+					outerBoundary->renderAt(target, ticks, p);
+					for(const_hole_iter_t iter = holes.begin(); iter != holes.end(); ++iter) {
+						(*iter)->renderAt(target, ticks, p);
+					}
+					#endif
+					
+					#if VISUALIZE_MAP
+					for(Component::const_waypoint_iter_t wi = waypoints.begin(); wi != waypoints.end(); ++wi) {
+						for(Component::const_waypoint_iter_t wj = wi; wj != waypoints.end(); ++wj) {
+							
+							if((*wi)->hasConnection(*wj)) {
+								PhysicalPosition a = conv<VirtualPosition, PhysicalPosition>((*wi)->getPosition() + p);
+								PhysicalPosition b = conv<VirtualPosition, PhysicalPosition>((*wj)->getPosition() + p);
+								aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xffffff40);
+							}
+						}
+					}
+					#endif
+					
+				}
+				#endif
 		};
 		
 		Ground();
@@ -169,10 +198,8 @@ class Ground {
 		 * @param polygon The polygon to add.
 		 * @param node Only used internally, leave at 0.
 		 */
-		void addPolygon(const Polygon<VirtualPosition, IsPosition>& polygon) { addPolygonToComponent(polygon, 0); }
-		void addPolygonToComponent(const Polygon<VirtualPosition, IsPosition>& polygon, Component* node);
-		
-//		const list<Line>& getWalls() const { return walls; }
+		void addPolygon(Polygon<VirtualPosition, IsPosition>::Ptr polygon) { addPolygonToComponent(polygon, 0); }
+		void addPolygonToComponent(Polygon<VirtualPosition, IsPosition>::Ptr polygon, Component* node);
 		
 		/**
 		 * Call this after having added all needed walls/polygons.
@@ -186,21 +213,8 @@ class Ground {
 		 * @param target used to return address of constructed target waypoint
 		 * 
 		 */
-		//void generateMap() { generateMapForComponent(0); }
-		//void generateMapForComponent(Component* component);
-		//void generateMapForComponent(Component* component, Waypoint& source, Waypoint& target);
 		void generateMapForComponent(Component* component, VirtualPosition src, VirtualPosition tgt, Waypoint*& source, Waypoint*& target);
 		
-		/**
-		 * Add a new waypoint. Note that this will be pretty useless if you
-		 * dont connect it to at least one other waypoint.
-		 * Return the created Waypoint node.
-		 * You might want to use waypoint.linkBidirectional(other_wp)
-		 * to create a bidirectional link.
-		 */
-		//Waypoint& addWaypoint(VirtualPosition p);
-		
-			
 		/**
 		 */
 		bool directReachable(Component*, Waypoint&, Waypoint&);
@@ -213,6 +227,18 @@ class Ground {
 		/// ditto.
 		void getPath(Waypoint& source, Waypoint& target, Path& path);
 		
+		#if VISUALIZE_GROUND
+		void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+			if(rootComponent) {
+				rootComponent->renderAt(target, ticks, p);
+			}
+					// DEBUG
+					PhysicalPosition x = conv<VirtualPosition, PhysicalPosition>(nearTarget_ + p);
+					aalineColor(target, x.getX() - 5, x.getY() - 5, x.getX() + 5, x.getY() + 5, 0xffff00ff);
+					aalineColor(target, x.getX() - 5, x.getY() + 5, x.getX() + 5, x.getY() - 5, 0xffff00ff);
+					
+		}
+		#endif
 		
 	#if DEBUG
 	public:
@@ -222,23 +248,10 @@ class Ground {
 		
 		VirtualPosition findBoundaryPoint(VirtualPosition source, VirtualPosition target, const Component::polygon_t& poly);
 		
-		//list<Line> walls;
-		//list<Waypoint*> waypoints;
-		
-		//typedef Polygon<Waypoint*, Waypoint::GetPosition> WaypointPolygon;
-		//list<WaypointPolygon*> innerPolygons, outerPolygons;
-		
-		//PolygonTree<WaypointPolygon> polygons;
 	public:
 		Component *rootComponent;
-		
+		VirtualPosition nearTarget_;
 };
-
-
-//#ifdef DEBUG
-//std::ostream& operator<<(std::ostream& os, const Ground::Waypoint& wp);
-//#endif // DEBUG
-
 
 } // namespace grail
 

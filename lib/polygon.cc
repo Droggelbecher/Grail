@@ -13,6 +13,10 @@ Polygon<Node, GetPosition>::Polygon() : orientation(UNKNOWN) {
 }
 
 template<typename Node, typename GetPosition>
+Polygon<Node, GetPosition>::~Polygon() {
+}
+
+template<typename Node, typename GetPosition>
 bool Polygon<Node, GetPosition>::hasPoint(VirtualPosition p) const {
 	if(hasBoundaryPoint(p)) {
 		return true;
@@ -50,36 +54,41 @@ bool Polygon<Node, GetPosition>::hasBoundaryPoint(VirtualPosition p) const {
 template<typename Node, typename GetPosition>
 typename Polygon<Node, GetPosition>::LineDirection Polygon<Node, GetPosition>::getLineDirection(Line l) const {
 	
-	/*
-	 *         / l1
-	 *        /
-	 *       X ----->----- l
-	 *       |\
-	 *       | \
-	 *       ^  \ l2
-	 *       |
-	 *       |
-	 *      prev 
-	 */
-	
 	LineIterator li;
 	Line prev(GetPosition::getPosition(nodes.back()), GetPosition::getPosition(nodes.front()));
 	Orientation o = getOrientation();
 	
 	for(li = beginLines(); li != endLines(); ++li) {
 		if((*li).getA() == l.getA()) {
-			VirtualPosition::Scalar s_l = ((*li).getB() - (*li).getA()).cross(l.getB() - l.getA());
-			VirtualPosition::Scalar s_prev = (prev.getA() - prev.getB()).cross(l.getB() - l.getA());
-			
-			if(s_l == 0 || s_prev == 0) { return NEITHER; }
-			
-			if((o == CCW) && (s_l < 0) && (s_prev > 0)) { return IN; }
-			else if((o == CW) && (s_l > 0) && (s_prev < 0)) { return IN; }
-			else { return OUT; }
-		} // if li.a == l.a
+			break;
+		}
 		prev = *li;
-	} // for lines
-	return NOT_ATTACHED;
+	}
+	
+	if(li == endLines()) { return NOT_ATTACHED; }
+	
+	VirtualPosition::Scalar turn = (prev.getB() - prev.getA()).cross((*li).getB() - (*li).getA());
+	bool convex = (turn == 0) || ((turn > 0) == (o == CW));
+	
+	VirtualPosition::Scalar s_prev = (prev.getB() - prev.getA()).cross(l.getB() - l.getA()),
+		s_li = ((*li).getB() - (*li).getA()).cross(l.getB() - l.getA());
+	
+	if(o == CCW) {
+		s_li *= -1;
+		s_prev *= -1;
+	}
+	
+	if(convex && s_li >= 0 && s_prev >= 0) {
+		// TODO: might produce false NEITHER statements when line is
+		// exact "extension" of a polygon line, check that case!
+		return (s_li == 0 || s_prev == 0) ? NEITHER : IN;
+	}
+	else if(!convex && ((s_li >= 0 && s_prev >= 0) || ((s_li >= 0) == (s_prev <= 0)))) {
+		// TODO: might produce false NEITHER statements when line is
+		// exact "extension" of a polygon line, check that case!
+		return (s_li == 0 || s_prev == 0) ? NEITHER : IN;
+	}
+	return OUT;
 } // getLineDirection()
 
 template<typename Node, typename GetPosition>
@@ -148,6 +157,17 @@ void Polygon<Node, GetPosition>::updateOrientation() const {
 	
 	orientation = fequal(angleSum / (nodes.size() - 2.0), M_PI) ? CCW : CW;
 }
-	
+
+
+#if VISUALIZE_POLYGONS
+template<typename Node, typename GetPosition>
+void Polygon<Node, GetPosition>::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+	for(LineIterator li = beginLines(); li != endLines(); ++li) {
+		(*li).renderAt(target, ticks, p);
+	}
+}
+#endif
+
+
 } // namespace
 

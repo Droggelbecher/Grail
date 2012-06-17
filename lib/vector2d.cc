@@ -32,6 +32,10 @@ Vector2d<T, N> Vector2d<T, N>::operator-() const {
 	return Vector2d<T, N>(-_x, -_y);
 }
 
+template <typename T, int N>
+T Vector2d<T, N>::cross(Vector2d<T, N> other) const {
+	return _x * other._y - _y * other._x;
+}
 
 template <typename T, int N>
 uint16_t Vector2d<T, N>::nearestDirection(uint16_t directions, double offset) const {

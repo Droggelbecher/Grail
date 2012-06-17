@@ -9,6 +9,7 @@ using std::list;
 #include "area.h"
 #include "vector2d.h"
 #include "line.h"
+#include "visualize.h"
 #include <boost/shared_ptr.hpp>
 
 namespace grail {
@@ -19,6 +20,7 @@ template<typename Node, typename GetPosition>
 class Polygon : public Area {
 	public:
 		typedef boost::shared_ptr<Polygon<Node, GetPosition> > Ptr;
+		typedef boost::shared_ptr<const Polygon<Node, GetPosition> > ConstPtr;
 		
 		enum Orientation { UNKNOWN, CW, CCW };
 		enum LineDirection { NOT_ATTACHED, IN, OUT, NEITHER };
@@ -47,6 +49,7 @@ class Polygon : public Area {
 		typedef typename list<Node>::const_iterator ConstNodeIterator;
 		
 		Polygon();
+		virtual ~Polygon();
 		
 		/**
 		 * \return true iff $p is part of the interior of this polygon.
@@ -77,6 +80,10 @@ class Polygon : public Area {
 		
 		void push_back(const Node& p) { nodes.push_back(p); orientation = UNKNOWN; }
 		void clear() { nodes.clear(); orientation = UNKNOWN; }
+		
+		#if VISUALIZE_POLYGONS
+		void renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const;
+		#endif
 		
 	private:
 		/**

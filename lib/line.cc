@@ -72,6 +72,14 @@ bool Line::hasPoint(VirtualPosition p) const {
 	return (p - a).length() <= (b - a).length();
 }
 
+#if VISUALIZE_LINES
+void Line::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) const {
+	PhysicalPosition a = conv<VirtualPosition, PhysicalPosition>(getA() + p);
+	PhysicalPosition b = conv<VirtualPosition, PhysicalPosition>(getB() + p);
+	aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xffffffff);
+}
+#endif
+
 std::ostream& operator<<(std::ostream& os, Line l) {
 	os << l.getA() << "-" << l.getB();
 	return os;

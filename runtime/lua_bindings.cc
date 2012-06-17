@@ -231,6 +231,7 @@ extern "C" int init(lua_State* L) {
 			.def(constructor<VirtualPosition::X, VirtualPosition::Y>())
 			.def("length", &VirtualPosition::length)
 			.def("nearestDirection", &VirtualPosition::nearestDirection)
+			.def("cross", &VirtualPosition::cross)
 			.def(-self)
 			.def(double() * self)
 			.def(self * double())
