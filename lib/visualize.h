@@ -12,6 +12,7 @@
 	#define VISUALIZE_MAP 1
 
 	#define VISUALIZE_HOTSPOTS 1
+	#define VISUALIZE_WALKPATH 1
 #endif
 
 #endif // VISUALIZE_H

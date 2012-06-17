@@ -251,7 +251,7 @@ TEST(Task, WaitTask) {
 	CHECK_LOWER(SDL_GetTicks(), now + 200);
 }
 
-TEST(Ground, directReachable) {
+TEST(Ground, directReachable1) {
 	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
 	
 	/*
@@ -373,6 +373,46 @@ TEST(Ground, directReachable) {
 		} // for j
 	} // for i
 }
+
+TEST(Ground, directReachable2) {
+	typedef Polygon<VirtualPosition, IsPosition> polygon_t;
+	
+	/*
+	 *   p0      p2
+	 *   | \    / |
+	 *   |  \  /  |
+	 *   |   p1   |
+	 *   |        |
+	 *   | p5  p6 |
+	 *   |        |
+	 *   p4------p3
+	 */
+	
+	typedef VirtualPosition P;
+	P pos[] = { P(0, 0), P(500, 100), P(1000, 0),
+		P(1000, 1000), P(0, 1000),
+		P(200, 50), P(600,90) };
+	
+	Ground g;
+	polygon_t p;
+	
+	p.push_back(pos[0]);
+	p.push_back(pos[1]);
+	p.push_back(pos[2]);
+	p.push_back(pos[3]);
+	p.push_back(pos[4]);
+	g.addPolygon(polygon_t::Ptr(&p));
+	
+	g.rootComponent->generateWaypoints();
+	g.rootComponent->createWaypoint(pos[5]);
+	g.rootComponent->createWaypoint(pos[6]);
+	
+	CHECK_EQUAL(g.directReachable(g.rootComponent, *g.rootComponent->getWaypoints()[5], *g.rootComponent->getWaypoints()[0]), 1);
+	CHECK_EQUAL(g.directReachable(g.rootComponent, *g.rootComponent->getWaypoints()[5], *g.rootComponent->getWaypoints()[1]), 1);
+	CHECK_EQUAL(g.directReachable(g.rootComponent, *g.rootComponent->getWaypoints()[6], *g.rootComponent->getWaypoints()[1]), 1);
+	CHECK_EQUAL(g.directReachable(g.rootComponent, *g.rootComponent->getWaypoints()[6], *g.rootComponent->getWaypoints()[2]), 1);
+}
+
 
 /*
 TEST(Ground, Pathfinding) {

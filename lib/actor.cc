@@ -40,6 +40,16 @@ void Actor::renderAt(SDL_Surface* target, uint32_t ticks, VirtualPosition p) con
 		aalineColor(target, pos.getX() - 10, pos.getY() - 10, pos.getX() + 10, pos.getY() + 10, 0x00ff00ff);
 		aalineColor(target, pos.getX() - 10, pos.getY() + 10, pos.getX() + 10, pos.getY() - 10, 0x00ff00ff);
 	#endif
+	
+	#if VISUALIZE_WALKPATH
+		VirtualPosition prev = position;
+		for(Path::const_iterator iter = walkPath.begin(); iter != walkPath.end(); ++iter) {
+			PhysicalPosition a = conv<VirtualPosition, PhysicalPosition>(prev + p);
+			PhysicalPosition b = conv<VirtualPosition, PhysicalPosition>(*iter + p);
+			aalineColor(target, a.getX(), a.getY(), b.getX(), b.getY(), 0xff0000ff);
+			prev = *iter;
+		}
+	#endif
 }
 
 void Actor::addAnimation(std::string mode, Animation::Ptr animation) {
@@ -84,7 +94,6 @@ void Actor::walkTo(VirtualPosition p) {
 	cdbg << "walkTo " << p << "\n";
 	Scene::Ptr s = Game::getInstance().getCurrentScene();
 	if(s) {
-		cdbg << "s is.\n";
 		walkPath.clear();
 		s->getGround().getPath(position, p, walkPath);
 	}

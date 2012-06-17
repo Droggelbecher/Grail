@@ -138,12 +138,6 @@ void Ground::generateMapForComponent(Component* component, VirtualPosition src, 
 	for(Component::waypoint_iter_t wi = component->getWaypoints().begin(); wi != component->getWaypoints().end(); ++wi) {
 		for(Component::waypoint_iter_t wj = wi; wj != component->getWaypoints().end(); ++wj) {
 			if(directReachable(component, **wi, **wj) && (wi != wj)) {
-				cdbg << "genMap: " << *wi << " " << (*wi)->getPosition()
-					<< " -- " << *wj << " " << (*wj)->getPosition() << "\n";
-				
-				// TODO: connect
-				//if(component->containsLine(*wi, *wj)) {
-				//}
 				(*wi)->linkBidirectional(**wj);
 			}
 			
@@ -165,7 +159,8 @@ VirtualPosition Ground::findBoundaryPoint(VirtualPosition source, VirtualPositio
 			}
 		}
 	}
-	return nearestPoint;
+	double ll = 10.0 / (source - target).length(); 
+	return nearestPoint + (source - target) * ll;
 }
 
 void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path) {
@@ -209,6 +204,8 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 	}
 	else {
 		nearTarget = findBoundaryPoint(source, target, c->getOuterBoundary());
+		cdbg << "----------------- nearTarget=" << nearTarget << "\n";
+		nearTarget_ = nearTarget;
 	}
 	
 	Waypoint *sourceWP, *targetWP;
@@ -224,7 +221,7 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 }
 
 void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
-	cdbg << "this is getPath\n\n";
+	//cdbg << "this is getPath\n\n";
 	bool foundPath = false;
 	vector<Waypoint*> border;
 	set<Waypoint*> inner;
@@ -236,20 +233,20 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 	push_heap(border.begin(), border.end(), Waypoint::comparePointer);
 	
 	while(!border.empty()) {
-		cdbg << "border size: " << border.size() << "\n";
+		//cdbg << "border size: " << border.size() << "\n";
 		
 		pop_heap(border.begin(), border.end(), Waypoint::comparePointer);
 		cheapestNode = border.back();
 		border.pop_back();
 		
-		cdbg << "cheapestNode: " <<  cheapestNode->getPosition()
-			<< " costSum: " << cheapestNode->getCostSum() << "\n";
+		//cdbg << "cheapestNode: " <<  cheapestNode->getPosition()
+			//<< " costSum: " << cheapestNode->getCostSum() << "\n";
 			//<< " neighbor count: " << cheapestNode->neighbours.size() <<   "\n";
 		
 		
 		Waypoint::NeighbourIterator iter;
 		for(iter = cheapestNode->beginNeighbours(); iter != cheapestNode->endNeighbours(); iter++) {
-			cdbg << "  neighbor: " << (*iter)->getPosition() << "\n";
+			//cdbg << "  neighbor: " << (*iter)->getPosition() << "\n";
 		
 			double cost = cheapestNode->costTo(*iter);
 			double newCost = cheapestNode->getCostSum() + cost;
@@ -258,7 +255,7 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 				// Node is totally new to us (neither in 'inner' or in 'border')
 				// ==> previous cost value is infinity
 				if(count(border.begin(), border.end(), *iter) < 1) {
-					cdbg << "  updating cost: infty -> " << newCost << "\n";
+					//cdbg << "  updating cost: infty -> " << newCost << "\n";
 					
 					(*iter)->setCostSum(newCost);
 					(*iter)->cheapestParent = cheapestNode;
@@ -267,7 +264,7 @@ void Ground::getPath(Waypoint& source, Waypoint& target, Path& path) {
 					make_heap(border.begin(), border.end(), Waypoint::comparePointer);
 				}
 				else if(newCost < (*iter)->getCostSum()) {
-					cdbg << "  updating cost: " << (*iter)->getCostSum() << " -> " << newCost << "\n";
+					//cdbg << "  updating cost: " << (*iter)->getCostSum() << " -> " << newCost << "\n";
 					
 					vector<Waypoint*>::iterator i;
 					i = find(border.begin(), border.end(), *iter);

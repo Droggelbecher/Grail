@@ -59,7 +59,7 @@ class Vector2d {
 		}
 		
 		//Scalar operator*(const Vector2d<T, N> other) { return _x * other._x + _y * other._y; }
-		Scalar cross(const Vector2d<T, N> other) { return _x * other._y - _y * other._x; }
+		Scalar cross(Vector2d<T, N> other) const; // { return _x * other._y - _y * other._x; }
 		
 		friend Vector2d<T, N> operator*<T, N>(double, Vector2d<T, N>);
 		friend Vector2d<T, N> operator*<T, N>(Vector2d<T, N>, double);
@@ -84,6 +84,8 @@ class Vector2d {
 		double length() const;
 		
 		Vector2d<T, N> getPosition() const { return *this; }
+		
+		Vector2d<T, N> norm() { return *this * (1.0 / length()); }
 };
 
 typedef Vector2d<int32_t, 0> VirtualPosition;
