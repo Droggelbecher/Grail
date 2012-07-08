@@ -159,17 +159,60 @@ VirtualPosition Ground::findBoundaryPoint(VirtualPosition source, VirtualPositio
 			}
 		}
 	}
-	double ll = 10.0 / (source - target).length(); 
-	return nearestPoint + (source - target) * ll;
+	
+	VirtualPosition p = nearestPoint; //findInnerPoint(nearestPoint, poly);
+	
+	cdbg << "-------- found boundary point. " << " p=" << p <<
+		" orig=" << nearestPoint << " inpoly=" << poly.hasPoint(p) << "\n";
+	
+	return p;
+	
+	//double ll = 10.0 / (source - target).length(); 
+	//return nearestPoint + (source - target) * ll;
+	
 }
 
+VirtualPosition Ground::findInnerPoint(VirtualPosition source, const Ground::Component::polygon_t& poly) {
+	int tries = 0;
+	int r = 1;
+	VirtualPosition p = source;
+	while(!poly.hasPoint(p) && (r <= 100)) {
+		for(int sx = -1; sx <= 1; sx += 2) {
+			for(int y = -r; y <= r; y++) {
+				tries++;
+				p = source + VirtualPosition(r * sx, y);
+				if(poly.hasPoint(p)) { break; }
+			}
+			if(poly.hasPoint(p)) { break; }
+		}
+		
+		for(int sy = -1; sy <= 1; sy += 2) {
+			for(int x = -r + 1; x < r; x++) {
+				tries++;
+				p = source + VirtualPosition(x, r * sy);
+				if(poly.hasPoint(p)) { break; }
+			}
+			if(poly.hasPoint(p)) { break; }
+		}
+		
+		r++;
+	}
+	
+	cdbg << "rescue from point " << source << " -> " << p << " in " << tries << " tries r=" << r << ".\n";
+	
+	return p;
+}
+	
+
 void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path) {
+	
+	cdbg << "Ground::getPath(" << source << ", " << target << ")\n";
 	
 	// find innermost walkable component that contains source
 	// (root component is walkable, holes of holes of walkable components are
 	// walkable)
 	
-	Component *island = rootComponent, *c;
+	Component *island = rootComponent, *c = 0;
 	do {
 		c = island;
 		island = 0;
@@ -188,6 +231,12 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 		}
 	} while(island);
 	
+	if(!c) {
+		cdbg << "Ground::getPath: no WA component that contains source found! --> aborting pathfinding!\n";
+		return;
+	}
+	
+	source = findInnerPoint(source, c->getOuterBoundary());
 	
 	// if target not in the component -> target := nearest polygon node
 	// to target
@@ -204,7 +253,7 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 	}
 	else {
 		nearTarget = findBoundaryPoint(source, target, c->getOuterBoundary());
-		cdbg << "----------------- nearTarget=" << nearTarget << "\n";
+		cdbg << "Ground::getPath: nearTarget=" << nearTarget << "\n";
 		nearTarget_ = nearTarget;
 	}
 	
@@ -214,7 +263,7 @@ void Ground::getPath(VirtualPosition source, VirtualPosition target, Path& path)
 	
 	// compute path
 		
-		cdbg << "sourceWP: " <<  sourceWP << " " << sourceWP->getPosition()
+		cdbg << "Ground::getPath: sourceWP: " <<  sourceWP << " " << sourceWP->getPosition()
 			<< " neighbor count: " << sourceWP->neighbours.size() <<   "\n";
 	
 	getPath(*sourceWP, *targetWP, path);

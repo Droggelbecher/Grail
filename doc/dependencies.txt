@@ -9,4 +9,5 @@ Development versions of the following are required for compiling:
 * libpng
 * alure
   source: http://www.kcat.strangesoft.net/alure.html
+* alut
 

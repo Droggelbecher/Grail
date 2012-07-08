@@ -247,6 +247,7 @@ class Ground {
 	#endif
 		
 		VirtualPosition findBoundaryPoint(VirtualPosition source, VirtualPosition target, const Component::polygon_t& poly);
+		VirtualPosition findInnerPoint(VirtualPosition p, const Ground::Component::polygon_t& poly);
 		
 	public:
 		Component *rootComponent;
