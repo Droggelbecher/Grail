@@ -4,6 +4,8 @@ require 'user_interface'
 require 'main_character'
 require 'scene1'
 
+require 'event'
+
 function test_cross()
 	local p = VP(0, 100)
 	print(p:cross(VP(0, 100)))
@@ -31,7 +33,7 @@ function initChapter(n)
 		s:addBackground(Image("/media/$res/scene1/mountains02.png"), VP(0, 1900), 0.50, 1.0)
 		s:addBackground(Image("/media/$res/scene1/mountains03.png"), VP(0, 2050), 0.75, 1.0)
 		s:addBackground(Image("/media/$res/scene1/walkable_area.png"), VP(0, 2500), 1.0, 1.0)
-		--s:addForeground(Image("/media/$res/scene1/foreground.png"), VP(700, 590), 1.2, 1.0)
+		s:addForeground(Image("/media/$res/scene1/foreground.png"), VP(700, 590), 1.2, 1.0)
 		
 		s.scarecrow = Actor("Scarecrow")
 		s.scarecrow:addAnimation("default", Image("/media/$res/scarecrow.png"))
@@ -110,9 +112,12 @@ function initChapter(n)
 
 		
 	end
+	return false
 end
 
-GAME:setInitChapterCallback(initChapter)
+event.on('initChapter', initChapter)
+--GAME:setInitChapterCallback(initChapter)
+--GAME:setEventCallback(event)
 GAME:getViewport():setup(800, 600, false)
 
 -- UI

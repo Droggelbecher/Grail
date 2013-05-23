@@ -122,13 +122,14 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
 			for(iter = actors.begin(); iter != actors.end(); iter++) {
 				if((*iter)->hasPoint(pos + cam)) {
 					Event::actorClick(*iter, pos + cam, event.button.button)->push();
-					
+					Game::getInstance().event("actorClick", *iter);
 					event_sent = true;
 					break;
 				}
 			} // for
 			if(!event_sent) {
 				Event::sceneClick(pos + cam, event.button.button)->push();
+				Game::getInstance().event("sceneClick", pos + cam);
 			}
 		} // if area has point
 	} // if mouse button down
@@ -148,12 +149,14 @@ EventState Scene::handleEvent(SDL_Event& event, uint32_t ticks) {
 					if(ui) {
 						hovered_something = true;
 						ui->setHovering(*iter);
+						Game::getInstance().event("actorHover", *iter);
 						break;
 					}
 				}
 			}
 			if(!hovered_something) {
 				ui->setHovering(Actor::Ptr());
+				Game::getInstance().event("sceneHover", pos + cam);
 			}
 		} // if area has point
 	} // if mouse motion
