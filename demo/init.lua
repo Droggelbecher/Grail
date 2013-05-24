@@ -57,7 +57,8 @@ function initChapter(n)
 		s.pumpkin3:setPosition(VP(6700, 2800))
 		--s.pumpkin3:setYOffset(-700)
 		s:addActor(s.pumpkin3)
-		
+	
+		--event.on("actorArrived",function() print("--- actorArrived"); return 0 end)
 		--
 		local p = Poly(
 			--VP(0, 2500), VP(2000, 1800), VP(4000, 2700), VP(5000, 2200),

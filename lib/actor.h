@@ -98,6 +98,7 @@ namespace grail {
 
 			void say(std::string, uint32_t);
 			bool isSpeaking();
+			bool isWalking;
 			boost::shared_ptr<DialogLine> getDialogLine();
 	};
 	
