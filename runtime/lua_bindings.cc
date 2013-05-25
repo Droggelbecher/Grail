@@ -66,7 +66,7 @@ extern "C" int init(lua_State* L) {
 			.def("getUserInterface", &GameWrapper::getUserInterface)
 			.def("setUserInterface", &GameWrapper::setUserInterface)
 			.def("initChapter", &GameWrapper::initChapter)
-			.def("setInitChapterCallback", &GameWrapper::setInitChapterCallback)
+			.def("setEventCallback", &GameWrapper::setEventCallback)
 			.def("setMainCharacter", &GameWrapper::setMainCharacter)
 			.def("getMainCharacter", &GameWrapper::getMainCharacter)
 			.def("runChapter", &GameWrapper::runChapter)
@@ -83,6 +83,7 @@ extern "C" int init(lua_State* L) {
 			.def("setPosition", &Actor::setPosition)
 			.def("setYOffset", &Actor::setYOffset)
 			.def("getPosition", &Actor::getPosition)
+			.def("getName", &Actor::getName)
 			.def("walk", &Actor::walk)
 			.def("walkTo", (void(Actor::*)(VirtualPosition))&Actor::walkTo)
 			.def("walkTo", (void(Actor::*)(Actor::Ptr))&Actor::walkTo)
@@ -201,6 +202,8 @@ extern "C" int init(lua_State* L) {
 			.def("addElement", &UserInterface::addElement)
 			.def("addAnimation", &UserInterface::addAnimation)
 			.def("setAction", &UserInterface::setAction)
+			.def("getAction", &UserInterface::getAction)
+			.def("getActionText", &UserInterface::getActionText)
 			.def(tostring(self))
 			,
 		

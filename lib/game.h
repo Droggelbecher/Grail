@@ -18,6 +18,7 @@
 #include "dialog_frontend.h"
 #include "actor.h"
 #include "mainloop.h"
+#include "vector2d.h"
 
 namespace grail {
 
@@ -69,6 +70,10 @@ class Game {
 		void enableUserControl(bool enable);
 		
 		void quit();
+		
+		virtual void event(std::string type, Actor::Ptr actor) {};
+		virtual void event(std::string type, Actor actor) {};
+		virtual void event(std::string type, VirtualPosition position) {};
 };
 
 } // namespace grail

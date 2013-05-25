@@ -4,19 +4,23 @@
 #define LUA_BINDINGS_H
 
 #include <iostream>
+#include <string>
 
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "lib/classes.h"
+#include "lib/actor.h"
 #include "lib/game.h"
 #include "lib/user_interface.h"
 #include "lib/debug.h"
+#include "lib/vector2d.h"
 #include "network_interface.h"
 
 class GameWrapper : public grail::Game {
 	private:
-		luabind::object initChapterCallback;
+		luabind::object eventCallback;
 		NetworkInterface *server;
 		boost::asio::io_service ioService;
 		
@@ -46,8 +50,8 @@ class GameWrapper : public grail::Game {
 		}
 		
 		virtual void initChapter(size_t n) {
-			if(initChapterCallback) {
-				luabind::call_function<size_t>(initChapterCallback, n);
+			if(eventCallback) {
+				luabind::call_function<size_t>(eventCallback, "initChapter", n);
 			}
 		}
 		
@@ -57,8 +61,26 @@ class GameWrapper : public grail::Game {
 			Game::eachFrame(ticks);
 		}
 		
-		void setInitChapterCallback(luabind::object cb) {
-			initChapterCallback = cb;
+		void setEventCallback(luabind::object cb) {
+			eventCallback = cb;
+		}
+		
+		void event(std::string type, grail::Actor::Ptr actor) {
+			if(eventCallback) {
+				luabind::call_function<size_t>(eventCallback, type, actor);
+			}
+		}
+		
+		void event(std::string type, grail::Actor actor) {
+			if(eventCallback) {
+				luabind::call_function<size_t>(eventCallback, type, actor);
+			}
+		}
+		
+		void event(std::string type, grail::VirtualPosition vp) {
+			if(eventCallback) {
+				luabind::call_function<size_t>(eventCallback, type, vp);
+			}
 		}
 }; // class GameWrapper
 

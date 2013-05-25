@@ -60,6 +60,13 @@ void Actor::addAnimation(std::string mode, Animation::Ptr animation) {
 }
 
 void Actor::setMode(std::string mode) {
+	if (mode.compare(this->mode) != 0) {
+		if(mode.compare("walk") == 0) {
+			Game::getInstance().event("actorMove", *this);
+		} else if (mode.compare("default") == 0) {
+			Game::getInstance().event("actorArrived", *this);
+		}
+	}
 	this->mode = mode;
 	if(animationModes.count(mode)) {
 		Animation::Ptr previous = animation;
