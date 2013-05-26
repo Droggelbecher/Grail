@@ -170,6 +170,7 @@ void Actor::eachFrame(uint32_t ticks) {
 			isWalking = false;
 			setMode("default");
 			Game::getInstance().event("abortWalking", *this);
+			Game::getInstance().event("actorArrived", *this);
 		} 
 	}// if walkPath not empty
 }
