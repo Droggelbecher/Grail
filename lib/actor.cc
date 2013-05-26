@@ -60,13 +60,6 @@ void Actor::addAnimation(std::string mode, Animation::Ptr animation) {
 }
 
 void Actor::setMode(std::string mode) {
-	if (mode.compare(this->mode) != 0) {
-		if(mode.compare("walk") == 0) {
-			Game::getInstance().event("actorMove", *this);
-		} else if (mode.compare("default") == 0) {
-			Game::getInstance().event("actorArrived", *this);
-		}
-	}
 	this->mode = mode;
 	if(animationModes.count(mode)) {
 		Animation::Ptr previous = animation;
@@ -137,7 +130,12 @@ void Actor::eachFrame(uint32_t ticks) {
 	}
 	
 	if(!walkPath.empty()) {
-		setMode("walk");
+		if(!isWalking){// start walking
+			isWalking = true;
+			setMode("walk");
+			Game::getInstance().event("actorMove", *this);
+		}
+
 		VirtualPosition target = walkPath.front();
 		VirtualPosition diff = target - position;
 		
@@ -162,10 +160,19 @@ void Actor::eachFrame(uint32_t ticks) {
 		if(position == target) {
 			walkPath.pop_front();
 			if(walkPath.empty()) {
+				isWalking = false;
 				setMode("default");
+				Game::getInstance().event("actorArrived", *this);
 			}
 		}
-	} // if walkPath not empty
+	} else {
+		if(isWalking){
+			isWalking = false;
+			setMode("default");
+			Game::getInstance().event("abortWalking", *this);
+			Game::getInstance().event("actorArrived", *this);
+		} 
+	}// if walkPath not empty
 }
 
 void Actor::say(std::string statement, uint32_t displayTime) {

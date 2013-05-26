@@ -12,10 +12,11 @@ function on(t, cb)
 end
 
 function throw(t, data)
+	print("--- " , t)
     if listeners[t] ~= nil then
         for i,v in pairs(listeners[t]) do
             if v(data) then
-               table.remove(listeners[t], i)
+               --table.remove(listeners[t], i)
             end
         end
     end
