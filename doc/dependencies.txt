@@ -11,3 +11,17 @@ Development versions of the following are required for compiling:
   source: http://www.kcat.strangesoft.net/alure.html
 * alut
 
+Ubuntu 13.04
+
+* liblua5.1-0-dev
+* libboost-dev
+* libboost-filesystem-dev
+* libboost-system-dev
+* libboost-regex-dev
+* libsdl-image1.2-dev
+* libsdl-ttf2.0-dev
+* libsdl-gfx1.2-dev
+* libopenal-dev
+* libalure-dev
+* libalut-dev
+* libluabind-dev
