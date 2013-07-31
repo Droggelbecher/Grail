@@ -85,6 +85,10 @@ VirtualPosition Actor::getUpperLeftCorner() const {
 	}
 }
 
+void Actor::setSpeed(double speed){
+	this->speed = speed;
+}
+
 void Actor::walkTo(Actor::Ptr actor) {
 	walkTo(actor->getInteractionPosition());
 }
