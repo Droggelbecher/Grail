@@ -2,7 +2,9 @@
 #include "surface.h"
 #include "utils.h"
 #include "debug.h"
+#include <SDL_rotozoom.h>
 
+extern uint32_t g_scale;
 namespace grail {
 
 SDL_Surface* Surface::createSDLSurface(uint16_t w, uint16_t h, uint32_t flags) {
@@ -32,14 +34,14 @@ SDL_Surface* Surface::createSDLSurface(uint16_t w, uint16_t h, uint32_t flags) {
 
 void Surface::loadFromFile(const std::string& filename) {
 	#ifdef WITH_OPENGL
-		sdlSurface = IMG_Load_RW(getRW(filename, MODE_READ), true);
+		sdlSurface = rotozoomSurface(IMG_Load_RW(getRW(filename, MODE_READ), true), 0, (double)g_scale/1920, 0);
 		if(!sdlSurface) {
 			throw SDLException(std::string("Could not load surface '") + filename + "'");
 		}
 		SDL_SetColorKey(sdlSurface, SDL_RLEACCEL, sdlSurface->format->colorkey);
 		buildGLTexture(sdlSurface);
 	#else
-		SDL_Surface* image = IMG_Load_RW(getRW(filename, MODE_READ), true);
+		SDL_Surface* image = rotozoomSurface(IMG_Load_RW(getRW(filename, MODE_READ), true), 0, (double)g_scale/1920, 0);
 		if(!image) {
 			throw SDLException(std::string("Could not load surface '") + filename + "'");
 		}
