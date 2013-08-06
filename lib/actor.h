@@ -92,6 +92,7 @@ namespace grail {
 			VirtualPosition getInteractionPosition() const { return position; }
 
 			void setSpeed(double speed);
+			double getSpeed();
 			
 			void walk(const Path& path);
 			void walkTo(Actor::Ptr actor);

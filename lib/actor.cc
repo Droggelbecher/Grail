@@ -89,6 +89,10 @@ void Actor::setSpeed(double speed){
 	this->speed = speed;
 }
 
+double Actor::getSpeed(){
+	return speed;
+}
+
 void Actor::walkTo(Actor::Ptr actor) {
 	walkTo(actor->getInteractionPosition());
 }
