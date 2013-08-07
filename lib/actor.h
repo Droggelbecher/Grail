@@ -90,6 +90,9 @@ namespace grail {
 			void setPosition(VirtualPosition position) { this->position = position; }
 			void setYOffset(VirtualPosition::Y offset) { yOffset = offset; }
 			VirtualPosition getInteractionPosition() const { return position; }
+
+			void setSpeed(double speed);
+			double getSpeed();
 			
 			void walk(const Path& path);
 			void walkTo(Actor::Ptr actor);

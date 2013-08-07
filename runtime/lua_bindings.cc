@@ -84,6 +84,8 @@ extern "C" int init(lua_State* L) {
 			.def("setYOffset", &Actor::setYOffset)
 			.def("getPosition", &Actor::getPosition)
 			.def("getName", &Actor::getName)
+			.def("setSpeed", &Actor::setSpeed)
+			.def("getSpeed", &Actor::getSpeed)
 			.def("walk", &Actor::walk)
 			.def("walkTo", (void(Actor::*)(VirtualPosition))&Actor::walkTo)
 			.def("walkTo", (void(Actor::*)(Actor::Ptr))&Actor::walkTo)
