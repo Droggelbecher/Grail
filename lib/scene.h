@@ -25,6 +25,7 @@ class Scene {
 			Parallax(Animation::Ptr animation, VirtualPosition offset, double scrollFactorX, double scrollFactorY) :
 				animation(animation), offset(offset), scrollFactorX(scrollFactorX), scrollFactorY(scrollFactorY) {
 			}
+			unsigned int id;
 		}; // Parallax
 		
 		Animation::Ptr background;
@@ -34,6 +35,8 @@ class Scene {
 		bool _actorsMoved;
 		Ground ground;
 		bool _drawWalls;
+		unsigned int background_id_counter;
+		unsigned int getBackgroundId();
 		
 	public:
 		typedef boost::shared_ptr<Scene> Ptr;
@@ -53,8 +56,11 @@ class Scene {
 		
 		void setBackground(Animation::Ptr background);
 		
-		void addBackground(Animation::Ptr background, VirtualPosition offset = VirtualPosition(), double scrollFactorX = 1.0, double scrollFactorY = 1.0);
-		void addForeground(Animation::Ptr forgeground, VirtualPosition offset = VirtualPosition(), double scrollFactorX = 1.0, double scrollFactorY = 1.0);
+		unsigned int addBackground(Animation::Ptr background, VirtualPosition offset = VirtualPosition(), double scrollFactorX = 1.0, double scrollFactorY = 1.0);
+		unsigned int addForeground(Animation::Ptr forgeground, VirtualPosition offset = VirtualPosition(), double scrollFactorX = 1.0, double scrollFactorY = 1.0);
+
+		void delBackground(unsigned int id);
+		void delForeground(unsigned int id);
 		
 		void addActor(Actor::Ptr entity) {
 			actors.push_back(entity);
