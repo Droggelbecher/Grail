@@ -62,13 +62,13 @@ VirtualSize Viewport::getVirtualSize() const { return virtualSize; }
 
 PhysicalSize::X Viewport::getPhysicalWidth() const {
 	if(!screen)
-		throw Exception("getWidth() called before setup()");
+		throw Exception("getPhysicalWidth() called before setup()");
 		
 	return screen->w;
 }
 PhysicalSize::Y Viewport::getPhysicalHeight() const {
 	if(!screen)
-		throw Exception("getWidth() called before setup()");
+		throw Exception("getPhysicalHeight() called before setup()");
 	return screen->h;
 }
 

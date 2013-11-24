@@ -30,7 +30,7 @@ namespace grail {
 				
 				if(event.type == SDL_MOUSEBUTTONDOWN) {
 					VirtualPosition clickPosition = conv<const SDL_MouseButtonEvent&, VirtualPosition>(event.button);
-					if(animation->hasPoint(clickPosition) && onClick) {
+					if(animation->hasPoint(clickPosition - this->getPosition()) && onClick) {
 						return onClick(*this, event, frameDuration);
 					}
 				}
