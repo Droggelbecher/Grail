@@ -69,6 +69,7 @@ extern "C" int init(lua_State* L) {
 			.def("setEventCallback", &GameWrapper::setEventCallback)
 			.def("setMainCharacter", &GameWrapper::setMainCharacter)
 			.def("getMainCharacter", &GameWrapper::getMainCharacter)
+			.def("setDialogFont", &GameWrapper::setDialogFont)
 			.def("runChapter", &GameWrapper::runChapter)
 			.def("enableUserControl", &GameWrapper::enableUserControl)
 			.def("quit", &GameWrapper::quit)
