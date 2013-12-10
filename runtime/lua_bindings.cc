@@ -162,6 +162,7 @@ extern "C" int init(lua_State* L) {
 			.def("delBackground", &Scene::delBackground)
 			.def("addForeground", &Scene::addForeground)
 			.def("delForeground", &Scene::delForeground)
+			.def("removeActor", &Scene::removeActor)
 			.def("addActor", &Scene::addActor)
 			.def("actorsMoved", &Scene::actorsMoved)
 			.def("getGround", &Scene::getGround)
