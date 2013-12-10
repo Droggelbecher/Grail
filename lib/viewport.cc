@@ -119,5 +119,10 @@ void Viewport::finishRendering() {
 	#endif
 }
 
+void Viewport::setWindowTitle(const char* title, const char* icon) {
+	SDL_WM_SetCaption(title, icon);
+}
+
+
 } // namespace grail
 

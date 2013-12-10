@@ -63,6 +63,8 @@ class Viewport {
 		void setNoFollowing() {
 			cameraTarget.reset();
 		}
+
+		void setWindowTitle(const char* title, const char* icon);
 };
 
 } // namespace grail
