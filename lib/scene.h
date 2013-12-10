@@ -66,7 +66,7 @@ class Scene {
 			actors.push_back(entity);
 			std::inplace_merge(actors.begin(), actors.end(), actors.end(), Actor::CompareByY());
 		}
-		
+		void removeActor(Actor::Ptr entity);
 		void actorsMoved() { _actorsMoved = true; }
 		void enableDrawWalls(bool t=true) { _drawWalls = t; }
 		

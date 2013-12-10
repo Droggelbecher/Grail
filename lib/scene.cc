@@ -98,6 +98,13 @@ void Scene::delForeground(unsigned int id) {
 	}
 }
 
+
+void Scene::removeActor(Actor::Ptr entity) {
+			actors.remove(entity);
+			std::inplace_merge(actors.begin(), actors.end(), actors.end(), Actor::CompareByY());
+		}
+
+
 void Scene::eachFrame(uint32_t ticks) {
 	if(_actorsMoved) {
 		actors.sort(Actor::CompareByY());
