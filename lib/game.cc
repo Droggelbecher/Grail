@@ -127,8 +127,13 @@ void Game::renderEverything(uint32_t ticks) {
 
 EventState Game::handleEvent(SDL_Event &event, uint32_t ticks) {
 	
-	if(event.type == SDL_QUIT) {
-		loop.exit();
+	switch(event.type) {	
+		case SDL_QUIT: 
+			loop.exit();
+			break;
+		case SDL_KEYDOWN:
+			if(event.key.keysym.sym==SDLK_ESCAPE) loop.exit();
+			break;
 	}
 
 	if(userControl) {
