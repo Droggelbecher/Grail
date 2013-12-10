@@ -90,6 +90,9 @@ namespace grail {
 			void setPosition(VirtualPosition position) { this->position = position; }
 			void setYOffset(VirtualPosition::Y offset) { yOffset = offset; }
 			VirtualPosition getInteractionPosition() const { return position; }
+
+			void setSpeed(double speed);
+			double getSpeed();
 			
 			void walk(const Path& path);
 			void walkTo(Actor::Ptr actor);
@@ -98,6 +101,7 @@ namespace grail {
 
 			void say(std::string, uint32_t);
 			bool isSpeaking();
+			bool isWalking;
 			boost::shared_ptr<DialogLine> getDialogLine();
 	};
 	

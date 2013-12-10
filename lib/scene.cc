@@ -17,18 +17,17 @@ using std::endl;
 #include "image.h"
 
 namespace grail {
-
 Scene::Scene(Animation::Ptr background) :
-	background(background), _actorsMoved(false), _drawWalls(false) {
+	background(background), _actorsMoved(false), _drawWalls(false), background_id_counter(0){
 }
 
 Scene::Scene(const std::string& backgroundPath) :
-	_actorsMoved(false), _drawWalls(false) {
+	_actorsMoved(false), _drawWalls(false), background_id_counter(0) {
 	this->background = Animation::Ptr(new Image(backgroundPath));
 }
 
 Scene::Scene(VirtualSize size) :
-	size(size), _actorsMoved(false), _drawWalls(false) {
+	size(size), _actorsMoved(false), _drawWalls(false), background_id_counter(0) {
 }
 
 Scene::~Scene() {
@@ -50,15 +49,61 @@ void Scene::setBackground(Animation::Ptr background) {
 	background = background;
 }
 
-void Scene::addBackground(Animation::Ptr background, VirtualPosition offset, double scrollFactorX, double scrollFactorY) {
-	Parallax* bg = new Parallax(background, offset, scrollFactorX, scrollFactorY);
-	backgrounds.push_back(bg);
+unsigned int Scene::getBackgroundId(){
+	background_id_counter++;
+	if(background_id_counter == UINT_MAX)
+		throw Exception("-- Too much Background's added");
+	return background_id_counter;
 }
 
-void Scene::addForeground(Animation::Ptr foreground, VirtualPosition offset, double scrollFactorX, double scrollFactorY) {
-	Parallax* bg = new Parallax(foreground, offset, scrollFactorX, scrollFactorY);
-	foregrounds.push_back(bg);
+unsigned int Scene::addBackground(Animation::Ptr background, VirtualPosition offset, double scrollFactorX, double scrollFactorY) {
+	Parallax* bg = new Parallax(background, offset, scrollFactorX, scrollFactorY);
+	bg->id = getBackgroundId();
+  cdbg << "Add Background id: " << bg->id << "\n";
+	backgrounds.push_back(bg);
+	return bg->id;
 }
+
+void Scene::delBackground(unsigned int id) {
+	list<Parallax*>::const_iterator iter;
+  for(iter = backgrounds.begin(); iter != backgrounds.end(); iter++){
+    if(id == (*iter)->id){
+      Parallax* bg = (*iter);
+      cdbg << "Del Background id: " << bg->id << "\n";
+      backgrounds.remove(bg);
+      delete bg;
+			return;
+    }
+  }
+}
+
+unsigned int Scene::addForeground(Animation::Ptr foreground, VirtualPosition offset, double scrollFactorX, double scrollFactorY) {
+	Parallax* bg = new Parallax(foreground, offset, scrollFactorX, scrollFactorY);
+	bg->id = getBackgroundId();
+  cdbg << "Add Foreground id: " << bg->id << "\n";
+	foregrounds.push_back(bg);
+	return bg->id;
+}
+
+void Scene::delForeground(unsigned int id) {
+	list<Parallax*>::const_iterator iter;
+	for(iter = foregrounds.begin(); iter != foregrounds.end(); iter++){
+		if(id == (*iter)->id){
+			Parallax* bg = (*iter);
+  		cdbg << "Del Foreground id: " << bg->id << "\n";
+			foregrounds.remove(bg);
+			delete bg;
+			return;
+		}
+	}
+}
+
+
+void Scene::removeActor(Actor::Ptr entity) {
+			actors.remove(entity);
+			std::inplace_merge(actors.begin(), actors.end(), actors.end(), Actor::CompareByY());
+		}
+
 
 void Scene::eachFrame(uint32_t ticks) {
 	if(_actorsMoved) {

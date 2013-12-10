@@ -10,7 +10,7 @@
 #ifdef WITH_OPENGL
 	#include <GL/gl.h>
 #endif
-
+uint32_t g_scale;
 namespace grail {
 
 Viewport::Viewport() : screen(0),
@@ -55,19 +55,20 @@ void Viewport::setup(uint32_t w, uint32_t h, bool fullscreen) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	#endif
+	g_scale = w;
 }
 
 VirtualSize Viewport::getVirtualSize() const { return virtualSize; }
 
 PhysicalSize::X Viewport::getPhysicalWidth() const {
 	if(!screen)
-		throw Exception("getWidth() called before setup()");
+		throw Exception("getPhysicalWidth() called before setup()");
 		
 	return screen->w;
 }
 PhysicalSize::Y Viewport::getPhysicalHeight() const {
 	if(!screen)
-		throw Exception("getWidth() called before setup()");
+		throw Exception("getPhysicalHeight() called before setup()");
 	return screen->h;
 }
 
@@ -117,6 +118,11 @@ void Viewport::finishRendering() {
 		SDL_Flip(screen);
 	#endif
 }
+
+void Viewport::setWindowTitle(const char* title, const char* icon) {
+	SDL_WM_SetCaption(title, icon);
+}
+
 
 } // namespace grail
 

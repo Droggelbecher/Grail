@@ -18,8 +18,7 @@ namespace grail {
 		// show speaker's name by default
 		showSpeakersName = true;
 
-		// default font to be used
-		setFont("fonts/crkdwno1.ttf");
+		// default font unused!
 	}
 
 	void DialogFrontendSubtitle::say(DialogLine::Ptr line) {

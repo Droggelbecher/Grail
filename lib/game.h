@@ -16,6 +16,7 @@
 #include "scene.h"
 #include "user_interface.h"
 #include "dialog_frontend.h"
+#include "dialog_frontend_subtitle.h"
 #include "actor.h"
 #include "mainloop.h"
 #include "vector2d.h"
@@ -31,6 +32,7 @@ class Game {
 		ResourceManager* resourceManager;
 		UserInterface::Ptr userInterface;
 		DialogFrontend::Ptr dialogFrontend;
+		DialogFrontendSubtitle* dialogFrontendSubtitle;
 		Actor::Ptr mainCharacter;
 		std::map<std::string, Scene::Ptr> scenes;
 		MainLoop loop;
@@ -58,6 +60,7 @@ class Game {
 		void setUserInterface(UserInterface::Ptr ui);
 		UserInterface::Ptr getUserInterface();
 		DialogFrontend::Ptr getDialogFrontend();
+		void setDialogFont(std::string font) {dialogFrontendSubtitle->setFont(font);}
 		MainLoop& getMainLoop() { return loop; }
 		
 		Actor::Ptr getMainCharacter() const;
