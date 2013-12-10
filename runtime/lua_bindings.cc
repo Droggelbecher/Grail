@@ -258,6 +258,7 @@ extern "C" int init(lua_State* L) {
 			.def("setup", &Viewport::setup)
 			.def("setFollowing", &Viewport::setFollowing)
 			.def("setNoFollowing", &Viewport::setNoFollowing)
+			.def("setTitle", &Viewport::setWindowTitle)
 			,
 		
 		class_<Task, TaskWrapper, Task::Ptr>("Task")
